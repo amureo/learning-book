@@ -16,4 +16,10 @@ public class UserController {
 	public String index(){
 		return "index.html";
 	}
+	
+	// about
+	@GetMapping("/about")
+	public String about(){
+		return "about.html";
+	}
 }
