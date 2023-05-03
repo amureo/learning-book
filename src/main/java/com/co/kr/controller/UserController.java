@@ -16,4 +16,11 @@ public class UserController {
 	public String index(){
 		return "index.html";
 	}
+	
+
+	// 진입점
+	@GetMapping("workbook")
+	public String workbook(){
+		return "workbook.html";
+	}
 }
