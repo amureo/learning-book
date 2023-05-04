@@ -5,22 +5,101 @@
 
     <!-- insert -->
     <insert id="insertWorkbook" parameterType="com.co.kr.domain.WorkbookDomain">
-       	INSERT INTO jsp.workbook(
-       		id,
-       		title)
+       	INSERT INTO 
+       		jsp.workbook(
+	       		id,
+	       		title)
        	VALUES(
        		#{id},
        		#{title})
     </insert>
     
     
-    <!-- select -->
+    <!-- select all -->
     <select id="selectAllWorkbook" resultType="com.co.kr.domain.WorkbookDomain">
        	SELECT
        		id,
        		title
-       	FROM jsp.workbook
+       	FROM
+       		jsp.workbook
     </select>
+    
+    <!-- select one -->
+    <select id="selectOneWorkbook" parameterType="hashMap" resultType="com.co.kr.domain.WorkbookDomain">
+       	SELECT
+       		id,
+       		title
+       	FROM
+       		jsp.workbook
+       	WHERE
+       		id=#{id}
+    </select>
+    
+    <!-- update -->
+    <update id="updateWorkbook" parameterType="com.co.kr.domain.WorkbookDomain">
+       	UPDATE
+       		jsp.workbook
+       	SET
+       		title=#{title}
+       	WHERE
+       		id=#{id}
+    </update>
+    
+    
+    <!-- delete -->
+    <delete id="deleteWorkbook" parameterType="hashMap">
+       	DELETE 
+       	FROM
+       		jsp.workbook
+       	WHERE
+       		id=#{id}
+    </delete>
+    
+    
+    
+    <!-- problem select by workbook -->
+    <select id="selectByWorkbook" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
+       	SELECT
+       		id,
+       		workbook,
+       		question,
+       		answer
+       	FROM
+       		jsp.problem
+       	WHERE
+       		workbook=#{id}
+       	ORDER BY
+       		ranking ASC
+    </select>
+    <!-- problem select by id -->
+    <select id="selectById" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
+       	SELECT
+       		id,
+       		workbook,
+       		question,
+       		answer
+       	FROM
+       		jsp.problem
+       	WHERE
+       		id=#{id}
+    </select>
+    
+    <!-- problem insert -->
+    <insert id="insertProblem" parameterType="com.co.kr.domain.ProblemDomain">
+		INSERT INTO 
+       		jsp.problem(
+	       		id,
+	       		workbook,
+	       		question,
+	       		answer,
+	       		ranking)
+       	VALUES(
+       		#{id},
+       		#{workbook},
+       		#{question},
+       		#{answer},
+       		(SELECT count(*) as c from jsp.problem as p)+1)
+	</insert>
     
     
     
