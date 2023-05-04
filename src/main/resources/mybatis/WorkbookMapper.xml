@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.co.kr.mapper.WorkbookMapper">
+
+    <!-- insert -->
+    <insert id="insertWorkbook" parameterType="com.co.kr.domain.WorkbookDomain">
+       	INSERT INTO jsp.workbook(
+       		id,
+       		title)
+       	VALUES(
+       		#{id},
+       		#{title})
+    </insert>
+    
+    
+    <!-- select -->
+    <select id="selectAllWorkbook" resultType="com.co.kr.domain.WorkbookDomain">
+       	SELECT
+       		id,
+       		title
+       	FROM jsp.workbook
+    </select>
+    
+    
+    
+</mapper>
