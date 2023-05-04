@@ -150,4 +150,42 @@ public class UserController {
 		
 		return mav;
 	}
+	
+	@GetMapping("problem/update/{id}")
+	public ModelAndView pUpdate(@PathVariable("id") String id) {
+		ModelAndView mav=new ModelAndView();
+		
+		Map map = new HashMap<String, String>();
+		map.put("id", id);
+		
+		ProblemDomain item = workbookService.selectById(map);
+		System.out.println("detail("+id+") ==> "+ item);
+		mav.addObject("item", item);
+		mav.setViewName("workBook/pUpdate.html"); 
+		
+		return mav;
+	}
+
+	@PostMapping("problem/update/upload")
+	public String pUpdateUpload(ProblemDomain problemDomain) {
+		System.out.println("update ==> "+ problemDomain);
+		
+		workbookService.updateProblem(problemDomain);
+		
+		return "redirect:/problem/"+problemDomain.getId();
+	}
+	
+
+	
+	@GetMapping("problem/delete/{id}")
+	public String pDelete(@PathVariable("id") String id) {
+		System.out.println("delete ==> "+ id);
+		
+		Map map = new HashMap<String, String>();
+		map.put("id", id);
+		ProblemDomain problemDomain=workbookService.selectById(map);
+		workbookService.deleteProblem(map);
+
+		return "redirect:/workbook/"+problemDomain.getWorkbook();
+	}
 }

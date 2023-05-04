@@ -33,4 +33,8 @@ public interface WorkbookMapper {
     public ProblemDomain selectById(Map map);
     // problem insert
     public void insertProblem(ProblemDomain problemDoamin);
+    // problem update
+    public void updateProblem(ProblemDomain problemDoamin);
+    // problem delete
+    public void deleteProblem(Map map);
 }

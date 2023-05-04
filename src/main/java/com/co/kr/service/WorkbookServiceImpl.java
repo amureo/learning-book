@@ -67,5 +67,15 @@ public class WorkbookServiceImpl implements WorkbookService{
 	public void insertProblem(ProblemDomain problemDomain) {
 		workbookMapper.insertProblem(problemDomain);
 	}
+	@Override
+	public void updateProblem(ProblemDomain problemDomain) {
+		workbookMapper.updateProblem(problemDomain);
+	}
+	@Override
+	public void deleteProblem(Map map) {
+		workbookMapper.deleteProblem(map);
+	}
+	
+
 	
 }

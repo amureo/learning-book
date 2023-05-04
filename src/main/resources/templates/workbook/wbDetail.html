@@ -20,8 +20,10 @@
 				<a th:href="@{/workbook/pnew(workbook=${item.id})}">문제 추가</a>
 			</div>
 			<div th:if="${#lists.size(items)} > 0">
-				<ul th:each="item : ${items}">
-					<li><a href="/problem/" th:attrappend="href=${item.id}" th:text="${item.question}"></a></li>
+				<ul>
+					<li th:each="item : ${items}">
+						<a href="/problem/" th:attrappend="href=${item.id}" th:text="${item.question}"></a>
+					</li>
 				</ul>
 			</div>
 			<div th:unless="${#lists.size(items)} > 0">

@@ -8,7 +8,18 @@
     <div layout:fragment="content">
 		<!-- content -->
 		<h3>문제 디테일</h3>
-		
+		<div>
+			<a href="/problem/update/" th:attrappend="href=${item.id}">수정</a>
+			<a href="/problem/delete/" th:attrappend="href=${item.id}">삭제</a>
+			<a href="#"><del>왼쪽</del></a>
+			<a href="#"><del>오른쪽</del></a>
+			<a href="/workbook/" th:attrappend="href=${item.workbook}">목록으로</a><br>
+			
+			<a href="#"><del>겹쳐보기</del></a>
+			<a href="#"><del>상하보기</del></a>
+			<a href="#"><del>좌우보기</del></a>
+		</div>
+		<hr>
 		<div>
 			<p>문제: <span th:text="${item.question}"></span></p>
 			<p>답: <span th:text="${item.answer}"></span></p>

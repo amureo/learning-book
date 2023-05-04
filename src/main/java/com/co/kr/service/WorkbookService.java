@@ -21,5 +21,7 @@ public interface WorkbookService {
 	public List<ProblemDomain> selectByWorkbook(Map map);
 	public ProblemDomain selectById(Map map);
 	public void insertProblem(ProblemDomain problemDomain);
+	public void updateProblem(ProblemDomain problemDomain);
+	public void deleteProblem(Map map);
 	
 }

@@ -8,4 +8,5 @@ public class ProblemDomain {
 	private String question;
 	private String answer;
 	private Integer workbook;
+	private Integer ranking;
 }

@@ -63,7 +63,8 @@
        		id,
        		workbook,
        		question,
-       		answer
+       		answer,
+       		ranking
        	FROM
        		jsp.problem
        	WHERE
@@ -77,7 +78,8 @@
        		id,
        		workbook,
        		question,
-       		answer
+       		answer,
+       		ranking
        	FROM
        		jsp.problem
        	WHERE
@@ -100,6 +102,28 @@
        		#{answer},
        		(SELECT count(*) as c from jsp.problem as p)+1)
 	</insert>
+	
+	<!-- problem update -->
+    <update id="updateProblem" parameterType="com.co.kr.domain.ProblemDomain">
+       	UPDATE
+       		jsp.problem
+       	SET
+       		question=#{question},
+       		answer=#{answer}
+       	WHERE
+       		id=#{id}
+    </update>
+    <!-- problem delete -->
+    <delete id="deleteProblem" parameterType="hashMap">
+       	DELETE 
+       	FROM
+       		jsp.problem
+       	WHERE
+       		id=#{id}
+    </delete>
+    
+	
+	
     
     
     
