@@ -7,13 +7,17 @@
     </head>
     <div layout:fragment="content">
 		<!-- content -->
-		<h3>워크북 추가하기</h3>
+		<h3>워크북 수정하기</h3>
 		
 		<form role="form" action="upload" method="post">
+			카테고리: <select name="category">
+				<option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.title}" th:selected="${category.id}==${item.category}"></option>
+			</select><br>
+			
             <input type="hidden" name="id" placeholder="워크북번호" th:value="${item.id}" required/>
-			<input type="text" name="title" placeholder="변경할 제목을 입력하세요" th:value="${item.title}" required>
+			제목: <input type="text" name="title" placeholder="변경할 제목을 입력하세요" th:value="${item.title}" required>
+			<br>
 			<input type="submit" value="수정">
 		</form>
-		
 	</div>
 </html>

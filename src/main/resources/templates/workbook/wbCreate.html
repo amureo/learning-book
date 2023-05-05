@@ -10,8 +10,13 @@
 		<h3>워크북 추가하기</h3>
 		
 		<form role="form" action="new/upload" method="post">
+			카테고리: <select name="category">
+				<option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.title}" th:selected="${category.id}==0"></option>
+			</select><br>
+			
             <input type="hidden" name="id" placeholder="워크북번호" required/>
-			<input type="text" name="title" placeholder="제목을 입력하세요" required>
+			제목: <input type="text" name="title" placeholder="제목을 입력하세요" required>
+			<br>
 			<input type="submit" value="만들기">
 		</form>
 		

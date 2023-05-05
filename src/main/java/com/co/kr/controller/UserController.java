@@ -52,8 +52,13 @@ public class UserController {
 	}
 	
 	@GetMapping("workbook/new")
-	public String wbCreate(){
-		return "workBook/wbCreate.html";
+	public ModelAndView wbCreate(){
+		ModelAndView mav=new ModelAndView();
+		List<CategoryDomain> categoryList = workbookService.selectAllCategory();
+		mav.addObject("categoryList", categoryList);
+		mav.setViewName("workBook/wbCreate.html"); 
+		
+		return mav;
 	}
 
 	@PostMapping("workbook/new/upload")
@@ -77,6 +82,10 @@ public class UserController {
 		List<ProblemDomain> items = workbookService.selectByWorkbook(map);
 		System.out.println("detail("+id+") problem ==> "+ items);
 		mav.addObject("items", items);
+
+		map.put("id", item.getCategory());
+		CategoryDomain category = workbookService.selectOneCategory(map);
+		mav.addObject("category", category);
 		
 		mav.setViewName("workBook/wbDetail.html"); 
 		
@@ -93,6 +102,11 @@ public class UserController {
 		WorkbookDomain item = workbookService.selectOneWorkbook(map);
 		System.out.println("detail("+id+") ==> "+ item);
 		mav.addObject("item", item);
+		
+
+		List<CategoryDomain> categoryList = workbookService.selectAllCategory();
+		mav.addObject("categoryList", categoryList);
+		
 		mav.setViewName("workBook/wbUpdate.html"); 
 		
 		return mav;
@@ -327,12 +341,10 @@ public class UserController {
 		mav.setViewName("category.html"); 
 		return mav;
 	}
-	
 	@GetMapping("category/new")
 	public String categoryCreate() {
 		return "workbook/cCreate.html";
 	}
-
 	@PostMapping("category/new/upload")
 	public String categoryCreate(CategoryDomain categoryDomain) {
 		workbookService.insertCategory(categoryDomain);
@@ -345,7 +357,6 @@ public class UserController {
 		workbookService.deleteCategory(map);
 		return "redirect:/category";
 	}
-	
 	@GetMapping("category/{id}")
 	public ModelAndView categoryDetail(@PathVariable("id") String id) {
 		ModelAndView mav=new ModelAndView();
@@ -356,7 +367,6 @@ public class UserController {
 		mav.setViewName("workbook/cDetail.html"); 
 		return mav;
 	}
-
 	@GetMapping("category/update/{id}")
 	public ModelAndView categoryUpdate(@PathVariable("id") String id) {
 		ModelAndView mav=new ModelAndView();

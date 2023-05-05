@@ -7,7 +7,7 @@
     </head>
     <div layout:fragment="content">
 		<!-- content -->
-		<h3><span th:text="${item.title}"></span> 워크북</h3>
+		<h3><span th:text="${item.title}"></span> 워크북 - <span th:text="${category.title}"></span></h3>
 		<div>
 			<a href="/workbook/update/" th:attrappend="href=${item.id}">수정</a>
 			<a href="/workbook/delete/" th:attrappend="href=${item.id}">삭제</a>

@@ -44,7 +44,8 @@
        	UPDATE
        		jsp.workbook
        	SET
-       		title=#{title}
+       		title=#{title},
+       		category=#{category}
        	WHERE
        		id=#{id}
     </update>
