@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.co.kr.domain.ProblemDomain;
+import com.co.kr.domain.RecordDomain;
 import com.co.kr.domain.WorkbookDomain;
 
 public interface WorkbookService {
@@ -24,4 +25,8 @@ public interface WorkbookService {
 	public void updateProblem(ProblemDomain problemDomain);
 	public void deleteProblem(Map map);
 	
+	//record
+	public void insertRecord(RecordDomain recordDomain);
+	public List<RecordDomain> selectRecord();
+	public void deleteRecord(Map map);
 }

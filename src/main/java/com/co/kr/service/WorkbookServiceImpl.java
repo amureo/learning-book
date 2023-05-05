@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.co.kr.domain.ProblemDomain;
+import com.co.kr.domain.RecordDomain;
 import com.co.kr.domain.WorkbookDomain;
 import com.co.kr.mapper.WorkbookMapper;
 
@@ -76,6 +77,18 @@ public class WorkbookServiceImpl implements WorkbookService{
 		workbookMapper.deleteProblem(map);
 	}
 	
-
 	
+	//record
+	
+
+	//record
+	public void insertRecord(RecordDomain recordDomain) {
+		workbookMapper.insertRecord(recordDomain);
+	}
+	public List<RecordDomain> selectRecord(){
+		return workbookMapper.selectRecord();
+	}
+	public void deleteRecord(Map map){
+		workbookMapper.deleteRecord(map);
+	}
 }

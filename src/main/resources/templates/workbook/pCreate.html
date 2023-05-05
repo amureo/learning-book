@@ -8,6 +8,8 @@
     <div layout:fragment="content">
 		<!-- content -->
 		<h3>문제 추가하기</h3>
+		<a href="/workbook/" th:attrappend="href=${workbook}">뒤로가기</a>
+		<br>
 		
 		<form role="form" action="pnew/upload" method="post">
             <input type="hidden" name="id" placeholder="문제번호" required/>

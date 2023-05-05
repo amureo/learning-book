@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.co.kr.domain.ProblemDomain;
+import com.co.kr.domain.RecordDomain;
 import com.co.kr.domain.WorkbookDomain;
 
 @Mapper
@@ -37,4 +38,13 @@ public interface WorkbookMapper {
     public void updateProblem(ProblemDomain problemDoamin);
     // problem delete
     public void deleteProblem(Map map);
+    
+    // record insert
+	public void insertRecord(RecordDomain recordDomain);
+	// record select
+	public List<RecordDomain> selectRecord();
+	// record delete
+	public void deleteRecord(Map map);
+	
+	
 }

@@ -11,24 +11,26 @@
 		<div>
 			<a href="/workbook/update/" th:attrappend="href=${item.id}">수정</a>
 			<a href="/workbook/delete/" th:attrappend="href=${item.id}">삭제</a>
-			<a href="#"><del>테스트하기</del></a>
+			<a th:href="@{/testing(workbook=${item.id})}">테스트하기</a>
+			<a href="/workbook">목록으로</a>
+		</div>
+		<div>
+			<a href="#"><del>표보기</del></a>
+			<a href="#"><del>카드보기</del></a>
 		</div>
 		<hr>
-		<div>
-			<h3>문제들(표, 카드)</h3>
-			<div>
-				<a th:href="@{/workbook/pnew(workbook=${item.id})}">문제 추가</a>
-			</div>
-			<div th:if="${#lists.size(items)} > 0">
-				<ul>
-					<li th:each="item : ${items}">
-						<a href="/problem/" th:attrappend="href=${item.id}" th:text="${item.question}"></a>
-					</li>
-				</ul>
-			</div>
-			<div th:unless="${#lists.size(items)} > 0">
-				문제들이 없습니다
-			</div>
+		<div th:if="${#lists.size(items)} > 0">
+			<ul>
+				<li>
+					<a th:href="@{/workbook/pnew(workbook=${item.id})}">문제 추가</a>
+				</li>
+				<li th:each="item : ${items}">
+					<a href="/problem/" th:attrappend="href=${item.id}" th:text="${item.question}"></a>
+				</li>
+			</ul>
+		</div>
+		<div th:unless="${#lists.size(items)} > 0">
+			문제들이 없습니다
 		</div>
 	</div>
 </html>

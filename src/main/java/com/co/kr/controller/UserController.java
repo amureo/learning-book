@@ -1,5 +1,6 @@
 package com.co.kr.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.co.kr.domain.ProblemDomain;
+import com.co.kr.domain.RecordDomain;
 import com.co.kr.domain.WorkbookDomain;
 import com.co.kr.service.WorkbookService;
+import com.co.kr.vo.TestingVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -188,4 +191,121 @@ public class UserController {
 
 		return "redirect:/workbook/"+problemDomain.getWorkbook();
 	}
+
+	@GetMapping("testing")
+	public ModelAndView testing(@RequestParam("workbook") String workbook) {
+		System.out.println("testing ==> "+ workbook);
+		
+		ModelAndView mav=new ModelAndView();
+		
+		Map map = new HashMap<String, String>();
+		map.put("id", workbook);
+		
+		List<ProblemDomain> items = workbookService.selectByWorkbook(map);
+		
+		mav.addObject("workbook", workbook);
+		mav.addObject("total", items.size());
+		mav.addObject("current", "0");
+		mav.addObject("score", "0");
+		mav.setViewName("testing.html"); 
+	
+		
+		return mav;
+	}
+	
+	@PostMapping("testing")
+	public ModelAndView testingProgress(TestingVO testingVO) {
+		int current=testingVO.getCurrent();
+		int workbook=testingVO.getWorkbook();
+		int score=testingVO.getScore();
+		List<Integer> list=(List) testingVO.getList();
+		
+		System.out.println("testing problem ==> "+ current);
+		
+		ModelAndView mav=new ModelAndView();
+		
+		Map map = new HashMap<String, String>();
+		map.put("id", workbook);
+		
+		List<ProblemDomain> items = workbookService.selectByWorkbook(map);
+		ProblemDomain item=null;
+		
+		
+		// 정답 검사 -> 문제 로드 -> 끝내기
+		//문제가 처음인가?	
+		if(current>0) {
+			
+			// 오답 처리
+			
+			if(list==null) list=new ArrayList() {};
+			
+			// 오답 시 처리
+			if(testingVO.getIsRight()==0) {
+				int problem=testingVO.getProblem();
+				list.add(problem);
+			}else {
+				// 정답 시 처리
+				score++;
+			}
+			
+			// 오답 넣기
+			mav.addObject("list", list);
+		}
+		
+		//어떤 문제를 가져오는가?
+		if(current<=items.size()) {
+			item=items.get(current-1);
+		}else if(score<=items.size()){
+			map.put("id", list.get(0));
+			list.remove(0);
+			item=workbookService.selectById(map);
+		}
+
+		
+
+		//문제가 끝인가?
+		if (score>items.size()){
+			mav.addObject("end",0);
+			RecordDomain recordDomain=new RecordDomain();
+			recordDomain.setWorkbook(testingVO.getWorkbook());
+			workbookService.insertRecord(recordDomain);
+		}
+		
+
+		// 문제 넣기
+		mav.addObject("item", item);
+
+		//점수 초기화
+		mav.addObject("score",score);
+		mav.addObject("workbook", workbook);
+		mav.addObject("total", items.size());
+		mav.addObject("current", current);
+		mav.setViewName("testing.html"); 
+		
+		return mav;
+	}
+	
+	@GetMapping("record")
+	public ModelAndView record() {
+		ModelAndView mav=new ModelAndView();
+		
+		List<RecordDomain> items = workbookService.selectRecord();
+
+		mav.addObject("items",items);
+		mav.setViewName("record.html"); 
+		return mav;
+	}
+	
+
+	@GetMapping("record/delete/{id}")
+	public String rDelete(@PathVariable("id") String id) {
+		System.out.println("delete record ==> "+ id);
+		
+		Map map = new HashMap<String, String>();
+		map.put("id", id);
+		workbookService.deleteRecord(map);
+
+		return "redirect:/record";
+	}
+
 }

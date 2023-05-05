@@ -9,27 +9,21 @@
 		<!-- content -->
 		
 		<div>
-			<h3>컨트롤 영역</h3>
-		<a th:href="@{workbook/new}">워크북 추가하기</a>
+		<a href="#"><del>리스트 보기</del></a>
+		<a href="#"><del>카드형 보기</del></a>
+		<a href="#"><del>선택</del></a>
 		</div>
-		
 		<hr>
 		<div>
-			<h3>워크북들이 보여지는 영역, 리스트 또는 카드형</h3>
+			<a th:href="@{workbook/new}">워크북 추가하기</a>
 			<div th:if="${items}">
-				<ul th:each="item : ${items}">
-					<li><a href="/workbook/" th:attrappend="href=${item.id}" th:text="${item.title}"></a></li>
+				<ul>
+					<li th:each="item : ${items}"><a href="/workbook/" th:attrappend="href=${item.id}" th:text="${item.title}"></a></li>
 				</ul>
 			</div>
 			<div th:if="!${items}">
 				워크북이 없습니다
 			</div>
-		</div>
-		<hr>
-		
-		<div>
-			<h3>추후</h3>
-			<li>선택 및 삭제가 가능하도록 수정</li>
 		</div>
 	</div>
 </html>

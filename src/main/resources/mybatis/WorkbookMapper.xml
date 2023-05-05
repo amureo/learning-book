@@ -123,7 +123,37 @@
     </delete>
     
 	
-	
+	<!-- record insert -->
+	<insert id="insertRecord" parameterType="com.co.kr.domain.RecordDomain">
+		INSERT INTO
+			jsp.record(
+				id,
+				workbook,
+				createAt)
+		VALUES(
+			#{id},
+			#{workbook},
+			NOW())
+	</insert>
+	<!-- record select -->
+	<select id="selectRecord" resultType="com.co.kr.domain.RecordDomain">
+		SELECT
+			id,
+			workbook,
+			createAt
+		FROM
+			jsp.record
+		ORDER BY
+			id
+	</select>
+	<!-- record delete -->
+	<delete id="deleteRecord" parameterType="hashMap">
+		DELETE 
+       	FROM
+       		jsp.record
+       	WHERE
+       		id=#{id}
+	</delete>
     
     
     
