@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.co.kr.domain.CategoryDomain;
 import com.co.kr.domain.ProblemDomain;
 import com.co.kr.domain.RecordDomain;
 import com.co.kr.domain.WorkbookDomain;
@@ -29,4 +30,13 @@ public interface WorkbookService {
 	public void insertRecord(RecordDomain recordDomain);
 	public List<RecordDomain> selectRecord();
 	public void deleteRecord(Map map);
+	
+	// category
+	public void insertCategory(CategoryDomain categoryDomain);
+	public List<CategoryDomain> selectAllCategory();
+	public CategoryDomain selectOneCategory(Map map);
+	public void updateCategory(CategoryDomain categoryDomain);
+	public void deleteCategory(Map map);
+	
+	
 }

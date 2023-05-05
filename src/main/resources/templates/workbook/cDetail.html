@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout}">
+    <head>
+        <title>workbook new</title>
+    </head>
+    <div layout:fragment="content">
+		<!-- content -->
+		<h3>카테고리 디테일</h3>
+		<div>
+			<a href="/category/update/" th:attrappend="href=${item.id}">수정</a>
+			<a href="/category/delete/" th:attrappend="href=${item.id}">삭제</a>
+			<a href="/category">목록으로</a><br>
+		</div>
+		<hr>
+		<div>
+			<p>이름: <span th:text="${item.title}"></span></p>
+		</div>
+		
+	</div>
+</html>

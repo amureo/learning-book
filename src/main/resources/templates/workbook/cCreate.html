@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout}">
+    <head>
+        <title>workbook new</title>
+    </head>
+    <div layout:fragment="content">
+		<!-- content -->
+		<h3>카테고리 추가하기</h3>
+		<a href="/category">뒤로가기</a>
+		<br>
+		
+		<form role="form" action="new/upload" method="post">
+            <input type="hidden" name="id" placeholder="카테고리 번호" required/>
+			<input type="text" name="title" placeholder="카테고리 이름을 입력하세요" required/>
+			<input type="submit" value="생성">
+		</form>
+		
+	</div>
+</html>

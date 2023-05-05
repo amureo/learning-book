@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.co.kr.domain.CategoryDomain;
 import com.co.kr.domain.ProblemDomain;
 import com.co.kr.domain.RecordDomain;
 import com.co.kr.domain.WorkbookDomain;
@@ -46,5 +47,16 @@ public interface WorkbookMapper {
 	// record delete
 	public void deleteRecord(Map map);
 	
+	
+	// category create
+	public void insertCategory(CategoryDomain categoryDomain);
+	// category select all
+	public List<CategoryDomain> selectAllCategory();
+	// category select one by category id
+	public CategoryDomain selectOneCategory(Map map);
+	// category update
+	public void updateCategory(CategoryDomain categoryDomain);
+	// category delete by category id
+	public void deleteCategory(Map map);
 	
 }

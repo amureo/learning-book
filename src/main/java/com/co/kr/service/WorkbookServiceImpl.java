@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.co.kr.domain.CategoryDomain;
 import com.co.kr.domain.ProblemDomain;
 import com.co.kr.domain.RecordDomain;
 import com.co.kr.domain.WorkbookDomain;
@@ -91,4 +92,31 @@ public class WorkbookServiceImpl implements WorkbookService{
 	public void deleteRecord(Map map){
 		workbookMapper.deleteRecord(map);
 	}
+	
+	
+	
+	
+	// category
+
+	public void insertCategory(CategoryDomain categoryDomain) {
+		workbookMapper.insertCategory(categoryDomain);
+	}
+	public List<CategoryDomain> selectAllCategory(){
+		return workbookMapper.selectAllCategory();
+	}
+	public CategoryDomain selectOneCategory(Map map) {
+		return workbookMapper.selectOneCategory(map);
+	}
+	public void updateCategory(CategoryDomain categoryDomain) {
+		workbookMapper.updateCategory(categoryDomain);
+	}
+	public void deleteCategory(Map map) {
+		workbookMapper.deleteCategory(map);
+		
+	}
+	
+	
+	
+	
+	
 }

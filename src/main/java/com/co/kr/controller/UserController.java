@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.co.kr.domain.CategoryDomain;
 import com.co.kr.domain.ProblemDomain;
 import com.co.kr.domain.RecordDomain;
 import com.co.kr.domain.WorkbookDomain;
@@ -308,4 +309,68 @@ public class UserController {
 		return "redirect:/record";
 	}
 
+	
+	
+	/*
+	 * 
+	 * category
+	 * 
+	 */
+
+	@GetMapping("category")
+	public ModelAndView category() {
+		ModelAndView mav=new ModelAndView();
+		
+		List<CategoryDomain> categoryList = workbookService.selectAllCategory();
+
+		mav.addObject("categoryList",categoryList);
+		mav.setViewName("category.html"); 
+		return mav;
+	}
+	
+	@GetMapping("category/new")
+	public String categoryCreate() {
+		return "workbook/cCreate.html";
+	}
+
+	@PostMapping("category/new/upload")
+	public String categoryCreate(CategoryDomain categoryDomain) {
+		workbookService.insertCategory(categoryDomain);
+		return "redirect:/category";
+	}
+	@GetMapping("category/delete/{id}")
+	public String categoryCreateUpload(@PathVariable("id") String id) {
+		Map map = new HashMap<String, String>();
+		map.put("id", id);
+		workbookService.deleteCategory(map);
+		return "redirect:/category";
+	}
+	
+	@GetMapping("category/{id}")
+	public ModelAndView categoryDetail(@PathVariable("id") String id) {
+		ModelAndView mav=new ModelAndView();
+		Map map = new HashMap<String, String>();
+		map.put("id", id);
+		CategoryDomain category = workbookService.selectOneCategory(map);
+		mav.addObject("item",category);
+		mav.setViewName("workbook/cDetail.html"); 
+		return mav;
+	}
+
+	@GetMapping("category/update/{id}")
+	public ModelAndView categoryUpdate(@PathVariable("id") String id) {
+		ModelAndView mav=new ModelAndView();
+		Map map = new HashMap<String, String>();
+		map.put("id", id);
+		CategoryDomain category = workbookService.selectOneCategory(map);
+		mav.addObject("item",category);
+		mav.setViewName("workbook/cUpdate.html"); 
+		return mav;
+	}
+	@PostMapping("category/update/upload")
+	public String categoryUpdateUpload(CategoryDomain categoryDomain) {
+		workbookService.updateCategory(categoryDomain);
+		return "redirect:/category";
+	}
+	
 }

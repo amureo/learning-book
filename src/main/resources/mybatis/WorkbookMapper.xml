@@ -8,10 +8,12 @@
        	INSERT INTO 
        		jsp.workbook(
 	       		id,
-	       		title)
+	       		title,
+	       		category)
        	VALUES(
        		#{id},
-       		#{title})
+       		#{title},
+       		#{category})
     </insert>
     
     
@@ -19,7 +21,8 @@
     <select id="selectAllWorkbook" resultType="com.co.kr.domain.WorkbookDomain">
        	SELECT
        		id,
-       		title
+       		title,
+       		category
        	FROM
        		jsp.workbook
     </select>
@@ -28,7 +31,8 @@
     <select id="selectOneWorkbook" parameterType="hashMap" resultType="com.co.kr.domain.WorkbookDomain">
        	SELECT
        		id,
-       		title
+       		title,
+       		category
        	FROM
        		jsp.workbook
        	WHERE
@@ -156,5 +160,58 @@
 	</delete>
     
     
+    <!-- category -->
+    
+    
+    <!-- category insert -->
+	<insert id="insertCategory" parameterType="com.co.kr.domain.CategoryDomain">
+		INSERT INTO
+			jsp.category(
+				id,
+				title)
+		VALUES(
+			#{id},
+			#{title});
+	</insert>
+    
+    <!-- category select all -->
+	<select id="selectAllCategory" resultType="com.co.kr.domain.CategoryDomain">
+		SELECT
+			id,
+			title
+		FROM
+			jsp.category
+		ORDER BY
+			id
+	</select>
+	
+    <!-- category select one by category id -->
+	<select id="selectOneCategory" parameterType="hashMap" resultType="com.co.kr.domain.CategoryDomain">
+		SELECT
+			id,
+			title
+		FROM
+			jsp.category
+		WHERE
+			id=#{id};
+	</select>
+	
+    <!-- category update -->
+	<update id="updateCategory" parameterType="com.co.kr.domain.CategoryDomain">
+		UPDATE
+			jsp.category
+		SET
+			title=#{title}
+		WHERE
+			id=#{id};
+	</update>
+	
+    <!-- category delete -->
+	<delete id="deleteCategory" parameterType="hashMap">
+		DELETE FROM
+			jsp.category
+		WHERE
+			id=#{id};
+	</delete>
     
 </mapper>
