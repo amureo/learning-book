@@ -154,7 +154,64 @@ public class UserController {
 		mav.setViewName("index.html");
 		return mav;
 	}
+	
+	
+	@RequestMapping("/info")
+	public ModelAndView info(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		Map map=CommonUtils.getMember(request);
+		
+		map.put("mbSeq", map.get("owner"));
+		LoginDomain loginDomain=userService.mbSelectList(map);
+		mav.addObject("userInfo",loginDomain);
+		mav.setViewName("info.html");
+		
+		return mav;
+	}
+	
+	@RequestMapping("/info/delete/{id}")
+	public String infoDelete(@PathVariable("id") String id, HttpServletRequest request) {
+		Map map=CommonUtils.getMember(request);
+		
+		map.put("mbSeq", map.get("owner"));
+		userService.mbRemove(map);
+		
+		return "redirect:/";
+	}
+	
+	@RequestMapping("/info/update/{id}")
+	public ModelAndView infoUpdate(@PathVariable("id") String id, HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		Map map=CommonUtils.getMember(request);
+		
+		map.put("mbSeq", map.get("owner"));
+		LoginDomain loginDomain=userService.mbSelectList(map);
+		
+		mav.addObject("userInfo",loginDomain);
+		mav.setViewName("workbook/infoUpdate.html");
+		
+		return mav;
+	}
 
+	@PostMapping("/info/update/upload")
+	public String infoUpdateUpload(LoginDomain loginDomain) {
+		
+		userService.mbUpdate(loginDomain);
+		
+		return "redirect:/info";
+	}
+	
+	
+	
+	
+	/*
+	 * 
+	 * home
+	 * 
+	 */
+	
+	
+	
 	// 진입점
 	@GetMapping("home")
 	public ModelAndView home(){

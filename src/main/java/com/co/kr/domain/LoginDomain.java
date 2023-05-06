@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Builder(builderMethodName="builder")
 public class LoginDomain {
-
 	private Integer mbSeq;
 	private String mbId;
 	private String mbPw;
@@ -17,5 +16,4 @@ public class LoginDomain {
 	private String mbUse;
 	private String mbCreateAt;
 	private String mbUpdateAt;
-	
 }

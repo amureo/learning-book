@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout}">
+    <head>
+        <title>workbook</title>
+    </head>
+    <div th:if=${session.id} layout:fragment="content">
+		<!-- content -->
+		<h3>유저 정보</h3>
+		
+		<a href="info/delete/" th:attrappend="href=${userInfo.mbSeq}">탈퇴하기</a>
+		<a href="info/update/" th:attrappend="href=${userInfo.mbSeq}">비밀번호 변경하기</a>
+		<hr>
+		
+		<p>id: <span th:text="${userInfo.mbId}"></span></p>
+		<p>pw: <span th:text="${userInfo.mbPw}"></span></p>
+		<p>mbLevel: <span th:text="${userInfo.mbLevel}"></span></p>
+		<p>mbCreateAt: <span th:text="${userInfo.mbCreateAt}"></span></p>
+	</div>
+</html>

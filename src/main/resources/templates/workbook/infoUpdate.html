@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout}">
+    <head>
+        <title>workbook</title>
+    </head>
+    <div th:if=${session.id} layout:fragment="content">
+		<!-- content -->
+		<h3>유저 정보 수정하기</h3>
+		<hr>
+		
+		<form action="upload" method="post">
+			<input type="hidden" name="mbUse" th:value="${userInfo.mbUse}" required>
+			<input type="hidden" name="mbIp" th:value="${userInfo.mbIp}" required>
+			<input type="hidden" name="mbSeq" th:value="${userInfo.mbSeq}" required>
+			<p>id: <input type="text" name="mbId" th:value="${userInfo.mbId}" required readonly></p>
+			<p>pw: <input type="text" name="mbPw" placeholder="새로운 비밀번호를 입력해주세요" required></p>
+			<p>mbLevel: <input type="text" name="mbLevel" th:value="${userInfo.mbLevel}" required readonly></p>
+			<p>mbCreateAt: <input type="text" name="mbSeq" th:value="${userInfo.mbCreateAt}" required readonly></p>
+			<input type="submit" value="변경하기">
+		</form>
+	</div>
+</html>
