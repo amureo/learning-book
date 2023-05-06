@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.co.kr.domain.CategoryDomain;
 import com.co.kr.domain.ProblemDomain;
 import com.co.kr.domain.RecordDomain;
+import com.co.kr.domain.SearchDomain;
 import com.co.kr.domain.WorkbookDomain;
 
 public interface WorkbookService {
@@ -38,5 +39,8 @@ public interface WorkbookService {
 	public void updateCategory(CategoryDomain categoryDomain);
 	public void deleteCategory(Map map);
 	
+
+//	search
+	public List<SearchDomain> searchProblem(Map map);
 	
 }

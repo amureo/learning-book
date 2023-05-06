@@ -23,6 +23,7 @@ import com.co.kr.domain.CategoryDomain;
 import com.co.kr.domain.LoginDomain;
 import com.co.kr.domain.ProblemDomain;
 import com.co.kr.domain.RecordDomain;
+import com.co.kr.domain.SearchDomain;
 import com.co.kr.domain.WorkbookDomain;
 import com.co.kr.service.UserService;
 import com.co.kr.service.WorkbookService;
@@ -593,5 +594,27 @@ public class UserController {
 		workbookService.updateCategory(categoryDomain);
 		return "redirect:/category";
 	}
+
+	
+	
+	
+	@GetMapping("search")
+	public String search() {
+		return "search.html";
+	}
+	@GetMapping("search/result")
+	public ModelAndView searchResult(@RequestParam("search_query") String search_query, HttpServletRequest request) {
+		ModelAndView mav=new ModelAndView();
+		Map map=CommonUtils.getMember(request);
+		
+		map.put("search_query", search_query);
+		List<SearchDomain> resultList= workbookService.searchProblem(map);
+		mav.addObject("resultList",resultList);
+		mav.setViewName("searchResult.html"); 
+		
+		
+		return mav;
+	}
+	
 	
 }

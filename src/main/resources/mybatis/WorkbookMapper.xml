@@ -224,4 +224,25 @@
 			id=#{id};
 	</delete>
     
+    
+    
+    <!-- search problem -->
+    <select id="searchProblem" parameterType="hashMap" resultType="com.co.kr.domain.SearchDomain">
+		SELECT
+			id,
+			workbook,
+			question,
+			answer,
+			owner
+		FROM 
+			search_problem
+		WHERE
+			owner=#{owner} AND (
+				question LIKE '%${search_query}%' OR
+				answer LIKE '%${search_query}%'
+			)
+		ORDER BY
+			id ASC
+	</select>
+    
 </mapper>

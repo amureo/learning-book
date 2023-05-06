@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.co.kr.domain.CategoryDomain;
 import com.co.kr.domain.ProblemDomain;
 import com.co.kr.domain.RecordDomain;
+import com.co.kr.domain.SearchDomain;
 import com.co.kr.domain.WorkbookDomain;
 
 @Mapper
@@ -57,5 +58,10 @@ public interface WorkbookMapper {
 	public void updateCategory(CategoryDomain categoryDomain);
 	// category delete by category id
 	public void deleteCategory(Map map);
+	
+	
+	//search
+	public List<SearchDomain> searchProblem(Map map);
+	
 	
 }

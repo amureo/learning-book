@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout}">
+    <head>
+        <title>workbook</title>
+    </head>
+    <div th:if=${session.id} layout:fragment="content">
+		<!-- content -->
+		<h3>검색</h3>
+		
+		<form action="/search/result" method="get">
+			<input type="text" name="search_query" placehorder="검색어를 입력하세요" required>
+			<input type="submit" value="검색">
+		</form>
+		
+		<div th:if="${#lists.size(resultList)} > 0">
+			<li th:each="result : ${resultList}">
+				<span th:text="${result.id}"></span> | 
+				<span th:text="${result.workbook}"></span> | 
+				<span th:text="${result.question}"></span> | 
+				<span th:text="${result.answer}"></span>
+			</li>
+		</div>
+	</div>
+</html>

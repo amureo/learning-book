@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.co.kr.domain.CategoryDomain;
 import com.co.kr.domain.ProblemDomain;
 import com.co.kr.domain.RecordDomain;
+import com.co.kr.domain.SearchDomain;
 import com.co.kr.domain.WorkbookDomain;
 import com.co.kr.mapper.WorkbookMapper;
 
@@ -117,6 +118,9 @@ public class WorkbookServiceImpl implements WorkbookService{
 	
 	
 	
-	
+//	search
+	public List<SearchDomain> searchProblem(Map map){
+		return workbookMapper.searchProblem(map);
+	}
 	
 }
