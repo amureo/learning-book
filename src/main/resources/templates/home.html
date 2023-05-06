@@ -7,15 +7,12 @@
     </head>
     <div th:if=${session.id} layout:fragment="content">
 		<!-- content -->
-		<h3>카테고리</h3>
+		<h3>홈</h3>
 		<div>
-			<a href="/category/new">카테고리 추가</a>
+			카테고리별 보기,
+			문제집 보기,
+			최근 기록,
 		</div>
 		<br>
-		<ul>
-			<li th:each="category : ${categoryList}">
-				<a th:text="${category.title}" href="/category/" th:attrappend="href=${category.id}"></a>
-			</li>
-		</ul>
 	</div>
 </html>

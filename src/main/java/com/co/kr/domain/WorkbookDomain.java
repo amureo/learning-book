@@ -7,4 +7,5 @@ public class WorkbookDomain {
 	private Integer id;
 	private String title;
 	private Integer category;
+	private Integer owner;
 }

@@ -9,22 +9,26 @@
        		jsp.workbook(
 	       		id,
 	       		title,
-	       		category)
+	       		category,
+	       		owner)
        	VALUES(
        		#{id},
        		#{title},
-       		#{category})
+       		#{category},
+       		#{owner})
     </insert>
     
     
     <!-- select all -->
-    <select id="selectAllWorkbook" resultType="com.co.kr.domain.WorkbookDomain">
+    <select id="selectAllWorkbook" parameterType="hashMap" resultType="com.co.kr.domain.WorkbookDomain">
        	SELECT
        		id,
        		title,
        		category
        	FROM
        		jsp.workbook
+       	WHERE
+       		owner=#{owner}
     </select>
     
     <!-- select one -->
@@ -36,7 +40,7 @@
        	FROM
        		jsp.workbook
        	WHERE
-       		id=#{id}
+       		id=#{id} AND owner=#{owner}
     </select>
     
     <!-- update -->
@@ -47,7 +51,7 @@
        		title=#{title},
        		category=#{category}
        	WHERE
-       		id=#{id}
+       		id=#{id} AND owner=#{owner}
     </update>
     
     
@@ -57,7 +61,7 @@
        	FROM
        		jsp.workbook
        	WHERE
-       		id=#{id}
+       		id=#{id} AND owner=#{owner}
     </delete>
     
     
@@ -134,20 +138,25 @@
 			jsp.record(
 				id,
 				workbook,
-				createAt)
+				createAt,
+				owner)
 		VALUES(
 			#{id},
 			#{workbook},
-			NOW())
+			NOW(),
+			#{owner})
 	</insert>
 	<!-- record select -->
-	<select id="selectRecord" resultType="com.co.kr.domain.RecordDomain">
+	<select id="selectRecord" parameterType="hashMap" resultType="com.co.kr.domain.RecordDomain">
 		SELECT
 			id,
 			workbook,
-			createAt
+			createAt,
+			owner
 		FROM
 			jsp.record
+		WHERE
+			owner=#{owner}
 		ORDER BY
 			id
 	</select>

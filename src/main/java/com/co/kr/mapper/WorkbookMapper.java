@@ -13,19 +13,18 @@ import com.co.kr.domain.WorkbookDomain;
 @Mapper
 public interface WorkbookMapper {
 
+	/*
+	 * workbook
+	 */
     //insert
     public void insertWorkbook(WorkbookDomain workbookDomain);
-    
     //select all
-    public List<WorkbookDomain> selectAllWorkbook();
-    
-    //select one
+    public List<WorkbookDomain> selectAllWorkbook(Map map);
+    //select one by workbook id
     public WorkbookDomain selectOneWorkbook(Map map);
-    
     // update
     public void updateWorkbook(WorkbookDomain workbookDomain);
-
-    //delete
+    // delete
     public void deleteWorkbook(Map map);
     
 
@@ -43,7 +42,7 @@ public interface WorkbookMapper {
     // record insert
 	public void insertRecord(RecordDomain recordDomain);
 	// record select
-	public List<RecordDomain> selectRecord();
+	public List<RecordDomain> selectRecord(Map map);
 	// record delete
 	public void deleteRecord(Map map);
 	

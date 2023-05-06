@@ -31,8 +31,8 @@ public class WorkbookServiceImpl implements WorkbookService{
 	}
 
 	@Override
-	public List<WorkbookDomain> selectAllWorkbook(){
-		return workbookMapper.selectAllWorkbook();
+	public List<WorkbookDomain> selectAllWorkbook(Map map){
+		return workbookMapper.selectAllWorkbook(map);
 	}
 	
 	@Override
@@ -86,8 +86,8 @@ public class WorkbookServiceImpl implements WorkbookService{
 	public void insertRecord(RecordDomain recordDomain) {
 		workbookMapper.insertRecord(recordDomain);
 	}
-	public List<RecordDomain> selectRecord(){
-		return workbookMapper.selectRecord();
+	public List<RecordDomain> selectRecord(Map map){
+		return workbookMapper.selectRecord(map);
 	}
 	public void deleteRecord(Map map){
 		workbookMapper.deleteRecord(map);

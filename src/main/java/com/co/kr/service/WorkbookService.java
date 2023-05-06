@@ -14,7 +14,7 @@ public interface WorkbookService {
 	
 	// workbook
 	public void insertWorkbook(WorkbookDomain workbookDomain, HttpServletRequest request, HttpServletRequest httpReq);
-	public List<WorkbookDomain> selectAllWorkbook();
+	public List<WorkbookDomain> selectAllWorkbook(Map map);
 	public WorkbookDomain selectOneWorkbook(Map map);
 	public void updateWorkbook(WorkbookDomain workbookDomain);
 	public void deleteWorkbook(Map map);
@@ -28,7 +28,7 @@ public interface WorkbookService {
 	
 	//record
 	public void insertRecord(RecordDomain recordDomain);
-	public List<RecordDomain> selectRecord();
+	public List<RecordDomain> selectRecord(Map map);
 	public void deleteRecord(Map map);
 	
 	// category

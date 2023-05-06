@@ -9,4 +9,5 @@ public class RecordDomain {
 	private Integer id;
 	private Integer workbook;
 	private LocalDateTime createAt;
+	private Integer owner;
 }
