@@ -2,28 +2,130 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout}">
-    <head>
-        <title>workbook new</title>
-    </head>
-    <div th:if=${session.id} layout:fragment="content">
-		<!-- content -->
-		<h3>문제 디테일</h3>
-		<div>
-			<a href="/problem/update/" th:attrappend="href=${item.id}">수정</a>
-			<a href="/problem/delete/" th:attrappend="href=${item.id}">삭제</a>
-			<a href="#"><del>왼쪽</del></a>
-			<a href="#"><del>오른쪽</del></a>
-			<a href="/workbook/" th:attrappend="href=${item.workbook}">목록으로</a><br>
-			
-			<a href="#"><del>겹쳐보기</del></a>
-			<a href="#"><del>상하보기</del></a>
-			<a href="#"><del>좌우보기</del></a>
+<head>
+    <title>workbook detail</title>
+</head>
+
+<div th:if=${session.id} layout:fragment="header">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<div class="d-flex">
+			<a href="/workbook/" th:attrappend="href=${item.workbook}" class="float-md-start mb-0 text-decoration-none">
+				<i class="bi bi-arrow-left"></i>
+			</a>
+			<h3 class="float-md-end mb-0">
+				문제 디테일
+			</h3>
 		</div>
-		<hr>
-		<div>
-			<p>문제: <span th:text="${item.question}"></span></p>
-			<p>답: <span th:text="${item.answer}"></span></p>
+		<div class="justify-content-between float-md-end">
+			<a href="/problem/update/" th:attrappend="href=${item.id}" class="text-decoration-none">
+				<i class="bi bi-pencil"></i>
+			</a>
+			<a href="/problem/delete/" th:attrappend="href=${item.id}" class="text-decoration-none">
+				<i class="bi bi-trash"></i>
+			</a>
 		</div>
-		
 	</div>
+</div>
+
+<div th:if=${session.id} layout:fragment="toolbar">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-1 border-bottom">
+		<div class="float-md-first"></div>
+		<div class="justify-content-center float-none">
+			<a href="#"><del>왼쪽</del></a>
+			<span><del> 1 / 2</del></span>
+			<a href="#"><del>오른쪽</del></a>
+		</div>
+		<div class="justify-content-between float-md-end">
+			<button id="showVertical">
+				<a href="#"><i class="bi bi-view-stacked"></i></a>
+			</button>
+			<button id="showHorizontal">
+				<a href="#"><i class="bi bi-vr"></i></a>
+			</button>
+		</div>
+	</div>
+</div>	
+
+<div th:if=${session.id} layout:fragment="content" class="mb-auto">
+	<!-- content -->
+	
+	<!-- Vertical -->
+	<div class="showVertical">
+		<div class="row row-cols-1 g-1">
+			<div class="col">
+         		<div class="card shadow-sm">
+            		<div class="card-body">
+              			<p class="card-text">
+							문제: <span th:text="${item.question}"></span>
+			  			</p>
+            		</div>
+          		</div>
+        	</div>
+        
+			<div class="col">
+	          	<div class="card shadow-sm">
+	            	<div class="card-body">
+		              	<p class="card-text">
+						  	답: <span th:text="${item.answer}"></span>
+					  	</p>
+	            	</div>
+	          	</div>
+	        </div>
+        </div>
+    </div>
+    
+    <!-- Horizontal -->
+    <div class="showHorizontal">
+		<div class="row row-cols-2 g-2">
+			<div class="col">
+	        	<div class="card shadow-sm">
+	            	<div class="card-body">
+	              		<p class="card-text">
+							문제: <span th:text="${item.question}"></span>
+				  		</p>
+            		</div>
+	          	</div>
+	        </div>
+	        
+			<div class="col">
+	          	<div class="card shadow-sm">
+	            	<div class="card-body">
+		              	<p class="card-text">
+						  	답: <span th:text="${item.answer}"></span>
+					  	</p>
+            		</div>
+	          	</div>
+	    	</div>
+		</div>
+	</div>
+</div>
+
+<div th:if=${session.id} layout:fragment="etc">
+<style>
+.hide{display:none;}
+.select{background:#999;}
+</style>
+<script>
+$(document).ready(function(){
+	$(".showHorizontal").addClass("hide");
+	$("#showVertical").addClass("select");
+	 
+	$("#showHorizontal").on("click",function(){
+		$(".showHorizontal").removeClass("hide");
+		$(".showVertical").addClass("hide");
+		
+		$("#showVertical").removeClass("select");
+		$("#showHorizontal").addClass("select");
+	});
+	$("#showVertical").on("click",function(){
+		$(".showHorizontal").addClass("hide");
+		$(".showVertical").removeClass("hide");
+		
+		$("#showVertical").addClass("select");
+		$("#showHorizontal").removeClass("select");
+	});
+})
+</script>
+</div>
+
 </html>

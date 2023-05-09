@@ -1,18 +1,62 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<header th:fragment="headerFragment">
-	   <!-- Sidebar-->
-	    <div class="border-end bg-white" id="sidebar-wrapper">
-	        <div class="sidebar-heading border-bottom bg-light">Learning book</div>
-	        <div class="list-group list-group-flush">
-	            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/home}">Home</a>
-	            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/search}">Search</a>
-	            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/category}">Category</a>
-	            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/workbook}">Workbook</a>
-	            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/record}">My Record</a>
-	            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/info}">My Information</a>
-	            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/logout}">Logout</a>
-	        </div>
+<header th:fragment="headerFragment" class="d-flex flex-nowrap">
+<!-- Sidebar-->
+	<div class="d-flex flex-column flex-shrink-0 p-3 bg-light border-end" style="width: 280px;"  id="sidebar-wrapper">
+    	<a th:href="@{/home}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+      		<svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+      		<span class="fs-4">Learning book</span>
+    	</a>
+    	<hr>
+    	<ul class="nav nav-pills flex-column mb-auto sidebar1">
+      		<li class="nav-item">
+       			<a th:href="@{/home}" class="nav-link link-dark" aria-current="page">
+        	  		<i class="bi bi-house"></i>
+          			Home
+        		</a>
+      		</li>
+      		<li>
+		        <a th:href="@{/search}" class="nav-link link-dark">
+			    	<i class="bi bi-search"></i>
+			        Search
+			    </a>
+		    </li>
+      		<li>
+		        <a th:href="@{/category}" class="nav-link link-dark">
+			    	<i class="bi bi-tags"></i>
+			        category
+			    </a>
+		    </li>
+      		<li>
+		        <a th:href="@{/workbook}" class="nav-link link-dark">
+			    	<i class="bi bi-journals"></i>
+			        workbook
+			    </a>
+		    </li>
+      		<li>
+		        <a th:href="@{/record}" class="nav-link link-dark">
+			    	<i class="bi bi-calendar"></i>
+			        record
+			    </a>
+		    </li>
+      		<li>
+		        <a th:href="@{/info}" class="nav-link link-dark">
+			    	<i class="bi bi-info-circle"></i>
+			        info
+			    </a>
+		    </li>
+      		<li>
+		        
+		    </li>
+		</ul>
+		<hr>
+		<div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto">
+			<a th:href="@{/logout}" class="nav-link link-dark fs-4">
+		    	<i class="bi bi-box-arrow-left"></i>
+		        <span>Logout</span>
+		    </a>
+	      
 	    </div>
-	</header>
+	</div>
+</header>
 </html>

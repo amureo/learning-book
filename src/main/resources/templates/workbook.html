@@ -2,28 +2,93 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout}">
-    <head>
-        <title>workbook</title>
-    </head>
-    <div th:if=${session.id} layout:fragment="content">
-		<!-- content -->
-		
-		<div>
-		<a href="#"><del>리스트 보기</del></a>
-		<a href="#"><del>카드형 보기</del></a>
-		<a href="#"><del>선택</del></a>
-		</div>
-		<hr>
-		<div>
-			<a th:href="@{workbook/new}">워크북 추가하기</a>
-			<div th:if="${items}">
-				<ul>
-					<li th:each="item : ${items}"><a href="/workbook/" th:attrappend="href=${item.id}" th:text="${item.title}"></a></li>
-				</ul>
-			</div>
-			<div th:if="!${items}">
-				워크북이 없습니다
-			</div>
+<head>
+    <title>workbook</title>
+</head>
+
+
+<div th:if=${session.id} layout:fragment="header">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<h3 class="float-md-start mb-0">워크북</h3>
+		<div class="justify-content-between float-md-end">
+			<a href="#">
+				<del>선택
+					<i class="bi bi-check-circle"></i>
+				</del>
+			</a>
+			<button id="showList">
+				<i class="bi bi-list-ul"></i>
+			</button>
 		</div>
 	</div>
+</div>
+
+<div th:if=${session.id} layout:fragment="content" class="mb-auto">
+	<!-- content -->
+	
+	<!-- Card View -->   
+	<div class="showCard">
+		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+			<div class="col">
+		        <div class="card shadow-sm">
+		            <div class="card-body">
+						<p class="card-text">
+							<a th:href="@{workbook/new}">워크북 추가하기</a>
+				    	</p>
+		            </div>
+	          	</div>
+			</div>
+	    
+	      	<div th:if="!${items}">워크북이 없습니다</div>
+		        
+	        <div class="col" th:each="item : ${items}">
+				<div class="card shadow-sm">
+					<div class="card-body">
+		            	<p class="card-text">
+							<a href="/workbook/" th:attrappend="href=${item.id}" th:text="${item.title}"></a>
+					  	</p>
+		            </div>
+	          	</div>
+	        </div>
+	 	 </div>
+	</div>
+	<!-- List View -->      
+	<div class="showList">
+		<div class="list-group w-auto">
+			<a th:href="@{workbook/new}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+				<div class="d-flex gap-2 w-100 justify-content-between">
+					<div>
+						<h6 class="mb-0">워크북 추가하기</h6>
+					</div>
+				</div>
+			</a>
+	
+			<a href="/workbook/" th:attrappend="href=${item.id}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true" th:each="item : ${items}">
+				<div class="d-flex gap-2 w-100 justify-content-between">
+	  				<div>
+	   					<h6 class="mb-0" th:text="${item.title}"></h6>
+	  				</div>
+				</div>
+			</a>
+		</div>
+	</div>
+</div>
+
+<div th:if=${session.id} layout:fragment="etc">
+<style>
+.hide{display:none;}
+.select{background:#999;}
+</style>
+<script>
+$(document).ready(function(){
+	$(".showList").addClass("hide");
+	$("#showList").on("click",function(){
+		$(".showList").toggleClass("hide");
+		$(".showCard").toggleClass("hide");
+		$("#showList").toggleClass("select");
+	});
+})
+</script>
+</div>
+
 </html>

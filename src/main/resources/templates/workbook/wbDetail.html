@@ -2,35 +2,114 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout}">
-    <head>
-        <title>workbook detail</title>
-    </head>
-    <div th:if=${session.id} layout:fragment="content">
-		<!-- content -->
-		<h3><span th:text="${item.title}"></span> 워크북 - <span th:text="${category.title}"></span></h3>
-		<div>
-			<a href="/workbook/update/" th:attrappend="href=${item.id}">수정</a>
-			<a href="/workbook/delete/" th:attrappend="href=${item.id}">삭제</a>
-			<a th:href="@{/testing(workbook=${item.id})}">테스트하기</a>
-			<a href="/workbook">목록으로</a>
+<head>
+    <title>workbook detail</title>
+</head>
+
+<div th:if=${session.id} layout:fragment="header">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<div class="d-flex">
+			<a href="/workbook" class="float-md-start mb-0 text-decoration-none"><i class="bi bi-arrow-left"></i></a>
+			<h3 class="float-md-end mb-0">
+				<span th:text="${item.title}"></span> 워크북 - <span th:text="${category.title}"></span>
+			</h3>
 		</div>
-		<div>
-			<a href="#"><del>표보기</del></a>
-			<a href="#"><del>카드보기</del></a>
-		</div>
-		<hr>
-		<div th:if="${#lists.size(items)} > 0">
-			<ul>
-				<li>
-					<a th:href="@{/workbook/pnew(workbook=${item.id})}">문제 추가</a>
-				</li>
-				<li th:each="item : ${items}">
-					<a href="/problem/" th:attrappend="href=${item.id}" th:text="${item.question}"></a>
-				</li>
-			</ul>
-		</div>
-		<div th:unless="${#lists.size(items)} > 0">
-			문제들이 없습니다
+		<div class="justify-content-between float-md-end">
+			<a th:href="@{/testing(workbook=${item.id})}" class="text-decoration-none">
+				테스트하기
+			</a>
+			<a href="#" class="text-decoration-none">
+				<del>선택<i class="bi bi-check-circle"></i></del>
+			</a>
+			<a href="/workbook/update/" th:attrappend="href=${item.id}" class="text-decoration-none">
+				<i class="bi bi-pencil"></i>
+			</a>
+			<a href="/workbook/delete/" th:attrappend="href=${item.id}" class="text-decoration-none">
+				<i class="bi bi-trash"></i>
+			</a>
 		</div>
 	</div>
+</div>
+			
+<div th:if=${session.id} layout:fragment="toolbar">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-1 border-bottom">
+		<div class="justify-content-between"></div>
+		<div class="justify-content-center">
+			<del>정렬</del>
+		</div>
+		<div class="justify-content-between float-md-end">
+			<button id="showList">
+				<i class="bi bi-list-ul"></i>
+			</button>
+		</div>
+	</div>
+</div>	
+
+<div th:if=${session.id} layout:fragment="content" class="mb-auto">
+	<!-- content -->
+	
+	<!-- Card View -->   
+	<div class="showCard">
+		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+			<div class="col">
+		        <div class="card shadow-sm">
+		            <div class="card-body">
+						<p class="card-text">
+				  			<a th:href="@{/workbook/pnew(workbook=${item.id})}">문제 추가하기</a>
+				    	</p>
+		            </div>
+	          	</div>
+			</div>
+		        
+	        <div class="col" th:each="item : ${items}">
+				<div class="card shadow-sm">
+					<div class="card-body">
+		            	<p class="card-text">
+				  			<a href="/problem/" th:attrappend="href=${item.id}" th:text="${item.question}"></a>
+					  	</p>
+		            </div>
+	          	</div>
+	        </div>
+	 	 </div>
+	</div>
+	<!-- List View -->      
+	<div class="showList">
+		<div class="list-group w-auto">
+			<a th:href="@{workbook/new}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+				<div class="d-flex gap-2 w-100 justify-content-between">
+					<div>
+						<h6 class="mb-0">문제 추가하기</h6>
+					</div>
+				</div>
+			</a>
+	
+			<a href="/workbook/" th:attrappend="href=${item.id}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true" th:each="item : ${items}">
+				<div class="d-flex gap-2 w-100 justify-content-between">
+	  				<div>
+	   					<h6 class="mb-0" th:text="${item.question}"></h6>
+	  				</div>
+				</div>
+			</a>
+		</div>
+	</div>
+</div>
+
+<div th:if=${session.id} layout:fragment="etc">
+<style>
+.hide{display:none;}
+.select{background:#999;}
+</style>
+<script>
+$(document).ready(function(){
+	$(".showList").addClass("hide");
+	 
+	$("#showList").on("click",function(){
+		$(".showList").toggleClass("hide");
+		$(".showCard").toggleClass("hide");
+		$("#showList").toggleClass("select");
+	});
+})
+</script>
+</div>
+
 </html>

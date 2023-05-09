@@ -2,25 +2,34 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout}">
-    <head>
-        <title>workbook</title>
-    </head>
-    <div th:if=${session.id} layout:fragment="content">
-		<!-- content -->
-		<h3>검색</h3>
-		
-		<form action="/search/result" method="get">
-			<input type="text" name="search_query" placehorder="검색어를 입력하세요" required>
-			<input type="submit" value="검색">
-		</form>
-		
-		<div th:if="${#lists.size(resultList)} > 0">
-			<li th:each="result : ${resultList}">
-				<span th:text="${result.id}"></span> | 
-				<span th:text="${result.workbook}"></span> | 
-				<span th:text="${result.question}"></span> | 
-				<span th:text="${result.answer}"></span>
-			</li>
-		</div>
+<head>
+    <title>Search </title>
+</head>
+
+
+<div th:if=${session.id} layout:fragment="header">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<h3 class="float-md-start mb-0">'<span>미완성</span>'에 대한 검색 결과</h3>
 	</div>
+</div>
+
+<div th:if=${session.id} layout:fragment="content" >
+	<!-- content -->
+	<form action="/search/result" method="get" class="area_search">
+		<div class="input-group input-group-lg mb-3">
+			<input type="text" id="search_query" name="search_query" placeholder="검색어를 입력해주세요." class="form-control">
+			<input type="reset" id="search_cancel" value="취소" class="input-group-text">
+			<input type="submit" id="search_submit" value="검색" class="input-group-text">
+		</div>
+	</form>
+	
+	<div th:if="${#lists.size(resultList)} > 0">
+		<li th:each="result : ${resultList}">
+			<span th:text="${result.id}"></span> | 
+			<span th:text="${result.workbook}"></span> | 
+			<span th:text="${result.question}"></span> | 
+			<span th:text="${result.answer}"></span>
+		</li>
+	</div>
+</div>
 </html>

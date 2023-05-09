@@ -2,20 +2,39 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout}">
-    <head>
-        <title>workbook</title>
-    </head>
-    <div th:if=${session.id} layout:fragment="content">
-		<!-- content -->
-		<h3>카테고리</h3>
-		<div>
-			<a href="/category/new">카테고리 추가</a>
-		</div>
-		<br>
-		<ul>
-			<li th:each="category : ${categoryList}">
-				<a th:text="${category.title}" href="/category/" th:attrappend="href=${category.id}"></a>
-			</li>
-		</ul>
+<head>
+    <title>Category</title>
+</head>
+
+
+<div th:if=${session.id} layout:fragment="header">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<h3 class="float-md-start mb-0">카테고리</h3>
 	</div>
+</div>
+<div>
+
+<div th:if=${session.id} layout:fragment="content" class="mb-auto">
+	<!-- content -->
+	<!-- List View -->      
+	<div class="showList">
+		<div class="list-group w-auto">
+			<a th:href="@{/category/new}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+				<div class="d-flex gap-2 w-100 justify-content-between">
+					<div>
+						<h6 class="mb-0">카테고리 추가하기</h6>
+					</div>
+				</div>
+			</a>
+	
+			<a href="/category/" th:attrappend="href=${category.id}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true" th:each="category : ${categoryList}">
+				<div class="d-flex gap-2 w-100 justify-content-between">
+	  				<div>
+	   					<h6 class="mb-0" th:text="${category.title}"></h6>
+	  				</div>
+				</div>
+			</a>
+		</div>
+	</div>
+</div>
 </html>

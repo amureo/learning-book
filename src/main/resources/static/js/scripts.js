@@ -24,3 +24,9 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
 });
+
+
+$(function(){
+	$('.sidebar1 a.active').removeClass("active");
+    $('.sidebar1 a').filter(function(e){return this.href==location.href;}).addClass('active').removeClass('link-dark');
+})
