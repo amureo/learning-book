@@ -2,20 +2,74 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout}">
-    <head>
-        <title>workbook</title>
-    </head>
-    <div th:if=${session.id} layout:fragment="content">
-		<!-- content -->
-		<h3>유저 정보</h3>
-		
-		<a href="info/delete/" th:attrappend="href=${userInfo.mbSeq}">탈퇴하기</a>
-		<a href="info/update/" th:attrappend="href=${userInfo.mbSeq}">비밀번호 변경하기</a>
-		<hr>
-		
-		<p>id: <span th:text="${userInfo.mbId}"></span></p>
-		<p>pw: <span th:text="${userInfo.mbPw}"></span></p>
-		<p>mbLevel: <span th:text="${userInfo.mbLevel}"></span></p>
-		<p>mbCreateAt: <span th:text="${userInfo.mbCreateAt}"></span></p>
+<head>
+    <title>Information</title>
+</head>
+
+<div th:if=${session.id} layout:fragment="header">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<h3 class="float-md-start mb-0">유저 정보</h3>
 	</div>
+</div>
+
+<div th:if=${session.id} layout:fragment="content" >
+	<!-- content -->
+	
+	<table class="table table-hover table-bordered">
+  		<tbody>
+    		<tr>
+	      		<th scope="col">아이디</th>
+	      		<th scope="col"><span th:text="${userInfo.mbId}"></span></th>
+	    	</tr>
+    		<tr>
+	      		<th scope="col">비밀번호</th>
+	      		<th scope="col"><span th:text="${userInfo.mbPw}"></span></th>
+	    	</tr>
+    		<tr>
+	      		<th scope="col">가입일</th>
+	      		<th scope="col"><span th:text="${userInfo.mbCreateAt}"></span></th>
+	    	</tr>
+  		</tbody>
+	</table>
+	
+	<div>
+		<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+		  	탈퇴하기
+		</button>
+		<a href="info/update/" th:attrappend="href=${userInfo.mbSeq}" class="btn btn-primary">비밀번호 변경하기</a>
+	</div>
+</div>
+
+
+<div th:if=${session.id} layout:fragment="etc" >
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">탈퇴하시겠습니까?</h5>
+        			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     			</div>
+      			<div class="modal-body">
+        			<p>탈퇴하시겠습니까? 탈퇴 후 복구하실 수 없습니다.</p>
+      			</div>
+      			<div class="modal-footer">
+    				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        			<button type="button" class="btn btn-danger" id="deleteUser">탈퇴하기</button>
+      			</div>
+    		</div>
+  		</div>
+	</div>
+
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+const btnDeleteUser = document.getElementById('deleteUser');
+btnDeleteUser.addEventListener('click', event => {
+	var message = [[${userInfo.mbSeq}]];
+	location.href="/info/delete/"+message;
+})
+/*]]>*/
+
+</script>
+</div>
 </html>

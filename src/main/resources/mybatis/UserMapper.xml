@@ -38,9 +38,6 @@
 	<update id="mbUpdate" parameterType="com.co.kr.domain.LoginDomain">
 		UPDATE jsp.member SET
 		        mb_pw=#{mbPw},
-		        mb_level=#{mbLevel},
-	            mb_ip=#{mbIp},
-	            mb_use=#{mbUse}, 
 	            mb_update_at=now()  
 	    WHERE mb_seq=#{mbSeq}
 	</update>

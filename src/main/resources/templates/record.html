@@ -2,19 +2,65 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout}">
-    <head>
-        <title>workbook</title>
-    </head>
-    <div th:if=${session.id} layout:fragment="content">
-		<!-- content -->
-		<h3>record</h3>
-		<ul>
-			<li th:each="item : ${items}">
-				<span th:text="${item.id}"></span> |
-				<span th:text="${item.workbook}"></span> |
-				<span th:text="${item.createAt}"></span> |
-				<a href="/record/delete/" th:attrappend="href=${item.id}">삭제</a>
-			</li>
-		</ul>
+<head>
+    <title>record</title>
+</head>
+
+
+<div th:if=${session.id} layout:fragment="header">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<h3 class="float-md-start mb-0">기록</h3>
 	</div>
+</div>
+
+<div th:if=${session.id} layout:fragment="content" class="mb-auto">
+	<!-- content -->
+	
+	<!-- Calendar
+	<a th:href="@{/record(year=${year},month=${month}-1)}" th:if="${month}!=1">이전 달</a>
+	<a th:href="@{/record(year=${year}-1,month=${12})}" th:if="${month}==1">이전 달</a>
+	<a th:href="@{/record(year=${year},month=${month}+1)}" th:if="${month}!=12">다음 달</a>
+	<a th:href="@{/record(year=${year}+1,month=${1})}" th:if="${month}==12">다음 달</a>
+	
+	<table class="table table-bordered">
+  		<thead>
+    		<tr>
+	      		<th scope="col" class="text-center"><span style="color:red">일</span></th>
+	      		<th scope="col" class="text-center">월</th>
+	      		<th scope="col" class="text-center">화</th>
+	      		<th scope="col" class="text-center">수</th>
+	      		<th scope="col" class="text-center">목</th>
+	      		<th scope="col" class="text-center">금</th>
+	      		<th scope="col" class="text-center"><span style="color:blue">토</span></th>
+	    	</tr>
+  		</thead>
+  		<tbody th:with="
+  			startDayOfMonth=${#dates.dayOfWeek(#dates.create(year,month,1))},
+  			lastDayOfMonth=${#dates.dayOfWeek(#dates.create(year,month+1,0))},
+  			dayOfMonth=${#dates.day(#dates.create(year,month+1,0))},
+  			months=${month}">
+			  <tr>
+			  	<td th:each="num : ${#numbers.sequence(1,startDayOfMonth-1)}">w</td>
+			  	<td th:each="num : ${#numbers.sequence(1,8-startDayOfMonth)}" th:text="${num}" class="text-center"></td>
+			  </tr>
+			  <tr th:each="week : ${#numbers.sequence(0,(dayOfMonth-7+startDayOfMonth-1)/7-1)}">
+				  <td th:each="num : ${#numbers.sequence(1,7)}" th:text="${week}*7+${num}-2+${startDayOfMonth}" class="text-center" th:id="day+${num}"></td>
+			  </tr>
+			  <tr>
+				  <td th:each="num : ${#numbers.sequence(dayOfMonth-(lastDayOfMonth-8+startDayOfMonth)%7+1,dayOfMonth)}" class="text-center" th:text="${num}" th:id="day+${num}"></td>
+				  <td th:each="num : ${#numbers.sequence(1,(lastDayOfMonth-8+startDayOfMonth)%7-1)}">w</td>
+			  </tr>
+		</tbody>		  
+	</table>
+	 -->
+	
+	<ul>
+		<li th:each="item : ${items}">
+			<span th:text="${item.id}"></span> |
+			<span th:text="${item.workbook}"></span> |
+			<span th:text="${item.createAt}"></span> |
+			<a href="/record/delete/" th:attrappend="href=${item.id}">삭제</a>
+		</li>
+	</ul>
+</div>
 </html>

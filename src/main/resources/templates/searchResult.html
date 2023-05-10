@@ -9,7 +9,9 @@
 
 <div th:if=${session.id} layout:fragment="header">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-		<h3 class="float-md-start mb-0">'<span>미완성</span>'에 대한 검색 결과</h3>
+		<h3 class="float-md-start mb-0">
+			'<span th:text="${search_query}"></span>'에 대한 검색 결과 '<span th:text="${#lists.size(resultList)}"></span>'건
+			</h3>
 	</div>
 </div>
 
@@ -17,19 +19,49 @@
 	<!-- content -->
 	<form action="/search/result" method="get" class="area_search">
 		<div class="input-group input-group-lg mb-3">
-			<input type="text" id="search_query" name="search_query" placeholder="검색어를 입력해주세요." class="form-control">
+			<input type="text" id="search_query" name="search_query" placeholder="검색어를 입력해주세요." class="form-control" th:value="${search_query}">
 			<input type="reset" id="search_cancel" value="취소" class="input-group-text">
 			<input type="submit" id="search_submit" value="검색" class="input-group-text">
 		</div>
 	</form>
-	
-	<div th:if="${#lists.size(resultList)} > 0">
-		<li th:each="result : ${resultList}">
-			<span th:text="${result.id}"></span> | 
-			<span th:text="${result.workbook}"></span> | 
-			<span th:text="${result.question}"></span> | 
-			<span th:text="${result.answer}"></span>
-		</li>
+	<hr>
+
+	<table class="table table-hover table-bordered" th:if="${#lists.size(resultList)} > 0">
+  		<thead>
+    		<tr>
+	      		<th scope="col">번호</th>
+	      		<th scope="col">문제집 링크</th>
+	      		<th scope="col">문제 링크</th>
+	      		<th scope="col">문제</th>
+	      		<th scope="col">답안</th>
+	    	</tr>
+  		</thead>
+  		<tbody>
+    		<tr th:each="result,resultStat : ${resultList}">
+	      		<th scope="col">
+					<span th:text="${resultStat.index}+1"></span>
+				</th>
+	      		<th scope="col">
+					<a href="/workbook/" th:attrappend="href=${result.workbook}" class="text-decoration-none text-black">
+						문제집 바로가기
+					</a>
+				</th>
+				<th scope="col">
+					<a href="/problem/" th:attrappend="href=${result.id}" class="text-decoration-none text-black">
+						문제 바로가기
+					</a>
+				</th>
+				<th scope="col">
+					<span th:utext="${#strings.replace(result.question,search_query, '<span style=&quot;color:red&quot;>'+search_query+'</span>')}"></span>
+				</th>
+				<th scope="col">
+					<span th:utext="${#strings.replace(result.answer,search_query, '<span style=&quot;color:red&quot;>'+search_query+'</span>')}"></span>
+				</th>
+	    	</tr>
+  		</tbody>
+	</table>
+	<div th:unless="${#lists.size(resultList)} > 0">
+		검색 결과가 없습니다.	
 	</div>
 </div>
 </html>

@@ -2,23 +2,30 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout}">
-    <head>
-        <title>workbook</title>
-    </head>
-    <div th:if=${session.id} layout:fragment="content">
-		<!-- content -->
-		<h3>유저 정보 수정하기</h3>
-		<hr>
-		
-		<form action="upload" method="post">
-			<input type="hidden" name="mbUse" th:value="${userInfo.mbUse}" required>
-			<input type="hidden" name="mbIp" th:value="${userInfo.mbIp}" required>
-			<input type="hidden" name="mbSeq" th:value="${userInfo.mbSeq}" required>
-			<p>id: <input type="text" name="mbId" th:value="${userInfo.mbId}" required readonly></p>
-			<p>pw: <input type="text" name="mbPw" placeholder="새로운 비밀번호를 입력해주세요" required></p>
-			<p>mbLevel: <input type="text" name="mbLevel" th:value="${userInfo.mbLevel}" required readonly></p>
-			<p>mbCreateAt: <input type="text" name="mbSeq" th:value="${userInfo.mbCreateAt}" required readonly></p>
-			<input type="submit" value="변경하기">
-		</form>
+<head>
+    <title>Information</title>
+</head>
+
+<div th:if=${session.id} layout:fragment="header">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<h3 class="float-md-start mb-0">비밀번호 변경하기</h3>
 	</div>
+</div>
+
+<div th:if=${session.id} layout:fragment="content" >
+	<!-- content -->
+	<form action="upload" method="post">
+		<input type="hidden" name="mbSeq" th:value="${userInfo.mbSeq}">
+		<table class="table table-bordered">
+	  		<tbody>
+	    		<tr>
+		      		<th scope="col">비밀번호</th>
+		      		<th scope="col"><input type="text" name="mbPw" placeholder="새로운 비밀번호를 입력해주세요" class="form-control" required></th>
+		    	</tr>
+	  		</tbody>
+		</table>
+		<a href="/info" class="btn btn-secondary">취소</a>
+		<input type="submit" value="변경하기" class="btn btn-primary">
+	</form>
+</div>
 </html>

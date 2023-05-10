@@ -2,6 +2,7 @@ package com.co.kr.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -419,7 +420,7 @@ public class UserController {
 	
 	/*
 	 * 
-	 * record
+	 * `
 	 * 
 	 */
 	
@@ -513,11 +514,15 @@ public class UserController {
 		return mav;
 	}
 	@GetMapping("record")
-	public ModelAndView record(HttpServletRequest request) {
+	public ModelAndView record(@RequestParam(value="year",defaultValue="") String year,@RequestParam(value="month",defaultValue="") String month,HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
 		Map map=CommonUtils.getMember(request);
+		Calendar today = Calendar.getInstance();
 		
 		List<RecordDomain> items = workbookService.selectRecord(map);
+		
+		mav.addObject("year",year.equals("")?today.get(Calendar.YEAR):year);
+		mav.addObject("month",month.equals("")?today.get(Calendar.MONTH)+1:month);
 		mav.addObject("items",items);
 		mav.setViewName("record.html"); 
 		
@@ -598,6 +603,12 @@ public class UserController {
 	
 	
 	
+	/*
+	 * 
+	 * search
+	 * 
+	 */
+	
 	@GetMapping("search")
 	public String search() {
 		return "search.html";
@@ -610,6 +621,7 @@ public class UserController {
 		map.put("search_query", search_query);
 		List<SearchDomain> resultList= workbookService.searchProblem(map);
 		mav.addObject("resultList",resultList);
+		mav.addObject("search_query",search_query);
 		mav.setViewName("searchResult.html"); 
 		
 		
