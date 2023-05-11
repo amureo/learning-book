@@ -15,52 +15,99 @@
 
 <div th:if=${session.id} layout:fragment="content" class="mb-auto">
 	<!-- content -->
+	<div id='calendar'></div>
+</div>
+
+<div th:if=${session.id} layout:fragment="etc">
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">기록</h5>
+        			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     			</div>
+      			<div class="modal-body">
+        			기록 내용입니다.
+      			</div>
+      			<div class="modal-footer">
+    				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        			<button type="button" class="btn btn-danger" id="deleteRecord">삭제</button>
+      			</div>
+    		</div>
+  		</div>
+	</div>
 	
-	<!-- Calendar
-	<a th:href="@{/record(year=${year},month=${month}-1)}" th:if="${month}!=1">이전 달</a>
-	<a th:href="@{/record(year=${year}-1,month=${12})}" th:if="${month}==1">이전 달</a>
-	<a th:href="@{/record(year=${year},month=${month}+1)}" th:if="${month}!=12">다음 달</a>
-	<a th:href="@{/record(year=${year}+1,month=${1})}" th:if="${month}==12">다음 달</a>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js'></script>
+<script>
+let calendar;
+let myModal;
+
+document.addEventListener('DOMContentLoaded', function() {
+	myModal=new bootstrap.Modal('#exampleModal')
 	
-	<table class="table table-bordered">
-  		<thead>
-    		<tr>
-	      		<th scope="col" class="text-center"><span style="color:red">일</span></th>
-	      		<th scope="col" class="text-center">월</th>
-	      		<th scope="col" class="text-center">화</th>
-	      		<th scope="col" class="text-center">수</th>
-	      		<th scope="col" class="text-center">목</th>
-	      		<th scope="col" class="text-center">금</th>
-	      		<th scope="col" class="text-center"><span style="color:blue">토</span></th>
-	    	</tr>
-  		</thead>
-  		<tbody th:with="
-  			startDayOfMonth=${#dates.dayOfWeek(#dates.create(year,month,1))},
-  			lastDayOfMonth=${#dates.dayOfWeek(#dates.create(year,month+1,0))},
-  			dayOfMonth=${#dates.day(#dates.create(year,month+1,0))},
-  			months=${month}">
-			  <tr>
-			  	<td th:each="num : ${#numbers.sequence(1,startDayOfMonth-1)}">w</td>
-			  	<td th:each="num : ${#numbers.sequence(1,8-startDayOfMonth)}" th:text="${num}" class="text-center"></td>
-			  </tr>
-			  <tr th:each="week : ${#numbers.sequence(0,(dayOfMonth-7+startDayOfMonth-1)/7-1)}">
-				  <td th:each="num : ${#numbers.sequence(1,7)}" th:text="${week}*7+${num}-2+${startDayOfMonth}" class="text-center" th:id="day+${num}"></td>
-			  </tr>
-			  <tr>
-				  <td th:each="num : ${#numbers.sequence(dayOfMonth-(lastDayOfMonth-8+startDayOfMonth)%7+1,dayOfMonth)}" class="text-center" th:text="${num}" th:id="day+${num}"></td>
-				  <td th:each="num : ${#numbers.sequence(1,(lastDayOfMonth-8+startDayOfMonth)%7-1)}">w</td>
-			  </tr>
-		</tbody>		  
-	</table>
-	 -->
+    var calendarEl = document.getElementById('calendar');
+    calendar = new FullCalendar.Calendar(calendarEl, {
+		initialView: 'dayGridMonth',
+		eventClick: detailRecord
+    });
+    calendar.render();
+	addEvent(calendar);
+});
+
+function detailRecord(info){
+	let id=info.event.id;
+	$.ajax({
+		url:"/api/record/"+id,
+		type:"GET",
+		contentType : 'application/json; charset=utf-8',
+		success:function(response){
+			$(".modal-body").html(`<p>워크북 번호: ${response.workbook}</p>
+				<p>시기: ${response.createAt}</p>`)
+			$(".modal-footer").html(`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        			<button type="button" class="btn btn-danger" onclick="deleteRecord(${response.id})">삭제</button>`)
+			
+   			myModal.show();
+		},
+		error:function(request, status, error){
+			console.log(error);
+		}
+	})
+}
+
+function deleteRecord(id){
 	
-	<ul>
-		<li th:each="item : ${items}">
-			<span th:text="${item.id}"></span> |
-			<span th:text="${item.workbook}"></span> |
-			<span th:text="${item.createAt}"></span> |
-			<a href="/record/delete/" th:attrappend="href=${item.id}">삭제</a>
-		</li>
-	</ul>
+	if ( !confirm('선택하신 기록을 삭제할까요?') ) {
+        return false;
+    }
+	$.ajax({
+		url:"/api/record/"+id,
+		type:"DELETE",
+		success:function(response){
+			let event=calendar.getEventById(id);
+			event.remove();
+   			myModal.hide();
+		},
+		error:function(request, status, error){
+			console.log(error);
+		}
+	})
+}
+</script>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+function addEvent(calendar){
+	const items=[[${items}]];
+	items.forEach(item=>{
+		calendar.addEvent({
+			id:item.id,
+			workbook: item.workbook,
+			title: item.workbook,
+			start: item.createAt.slice(0,10)
+		})
+	})
+}
+/*]]>*/
+</script>
 </div>
 </html>

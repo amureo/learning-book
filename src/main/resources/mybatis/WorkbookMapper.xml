@@ -146,8 +146,8 @@
 			NOW(),
 			#{owner})
 	</insert>
-	<!-- record select -->
-	<select id="selectRecord" parameterType="hashMap" resultType="com.co.kr.domain.RecordDomain">
+	<!-- record all select -->
+	<select id="selectAllRecord" parameterType="hashMap" resultType="com.co.kr.domain.RecordDomain">
 		SELECT
 			id,
 			workbook,
@@ -157,6 +157,21 @@
 			jsp.record
 		WHERE
 			owner=#{owner}
+		ORDER BY
+			id
+	</select>
+	<!-- record one select -->
+	<select id="selectOneRecord" parameterType="hashMap" resultType="com.co.kr.domain.RecordDomain">
+		SELECT
+			id,
+			workbook,
+			createAt,
+			owner
+		FROM
+			jsp.record
+		WHERE
+			owner=#{owner} AND
+			id=#{id}
 		ORDER BY
 			id
 	</select>

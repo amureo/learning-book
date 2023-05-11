@@ -29,8 +29,10 @@ public interface WorkbookService {
 	
 	//record
 	public void insertRecord(RecordDomain recordDomain);
-	public List<RecordDomain> selectRecord(Map map);
+	public List<RecordDomain> selectAllRecord(Map map);
+	public RecordDomain selectOneRecord(Map map);
 	public void deleteRecord(Map map);
+	
 	
 	// category
 	public void insertCategory(CategoryDomain categoryDomain);

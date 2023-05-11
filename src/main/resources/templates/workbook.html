@@ -10,12 +10,11 @@
 <div th:if=${session.id} layout:fragment="header">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
 		<h3 class="float-md-start mb-0">워크북</h3>
+		
 		<div class="justify-content-between float-md-end">
-			<a href="#">
-				<del>선택
-					<i class="bi bi-check-circle"></i>
-				</del>
-			</a>
+			<button class="text-decoration-none btn btn-outline-primary">
+				<del><i class="bi bi-check-circle"></i>선택</del>
+			</button>
 		</div>
 	</div>
 </div>
@@ -23,11 +22,13 @@
 <div th:if=${session.id} layout:fragment="toolbar">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-1 border-bottom">
 		<div class="justify-content-between"></div>
-		<div class="justify-content-center">
-			<del>정렬</del>
+		<div class="justify-content-center btn-group">
+			<button class="btn btn-secondary"><del>이름순</del></button>
+			<button class="btn btn-secondary"><del>생성순</del></button>
+			<button class="btn btn-secondary"><del>수정순</del></button>
 		</div>
 		<div class="justify-content-between float-md-end">
-			<button id="showList">
+			<button id="showList" class="btn btn-secondary" data-bs-toggle="button">
 				<i class="bi bi-list-ul"></i>
 			</button>
 		</div>
@@ -42,9 +43,11 @@
 		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 			<div class="col">
 		        <div class="card shadow-sm">
-		            <div class="card-body">
-						<p class="card-text">
-							<a th:href="@{workbook/new}">워크북 추가하기</a>
+		            <div class="card-body text-center">
+						<p class="card-text text-center">
+							<button onclick="crateWorkbook()" class="btn">
+								<i class="bi bi-plus-square-dotted"></i> 워크북 추가하기
+							</button>
 				    	</p>
 		            </div>
 	          	</div>
@@ -66,13 +69,11 @@
 	<!-- List View -->      
 	<div class="showList">
 		<div class="list-group w-auto">
-			<a th:href="@{workbook/new}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
-				<div class="d-flex gap-2 w-100 justify-content-between">
-					<div>
-						<h6 class="mb-0">워크북 추가하기</h6>
-					</div>
-				</div>
-			</a>
+			<div class="list-group-item d-flex gap-3 py-3 w-100 justify-content-between">
+				<button onclick="crateWorkbook()" class="btn mb-0 text-center">
+					<i class="bi bi-plus-square-dotted"></i> 워크북 추가하기
+				</button>
+			</div>
 	
 			<a href="/workbook/" th:attrappend="href=${item.id}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true" th:each="item : ${items}">
 				<div class="d-flex gap-2 w-100 justify-content-between">
@@ -86,19 +87,86 @@
 </div>
 
 <div th:if=${session.id} layout:fragment="etc">
+	<div class="modal fade" id="createWorkbookModal" tabindex="-1" aria-labelledby="createWorkbookModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">워크북 추가하기</h5>
+        			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     			</div>
+      			<div class="modal-body">
+					<table class="table table-bordered">
+				  		<tbody>
+				    		<tr>
+					      		<td scope="col">제목</td>
+					      		<td scope="col"><input type="text" class="form-control" id="workbook_title" placeholder="제목을 입력하세요" required></td>
+					    	</tr>
+				    		<tr>
+					      		<td scope="col">카테고리</td>
+					      		<td scope="col"><select id="workbook_category" class="form-select"></select></td>
+					    	</tr>
+				  		</tbody>
+					</table>
+      			</div>
+      			<div class="modal-footer">
+    				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        			<button type="button" class="btn btn-primary" th:onclick="createOkWorkbook()">생성</button>
+      			</div>
+    		</div>
+  		</div>
+	</div>
 <style>
 .hide{display:none;}
-.select{background:#999;}
 </style>
 <script>
+let myModal;
 $(document).ready(function(){
+	myModal=new bootstrap.Modal('#createWorkbookModal')
+	
 	$(".showList").addClass("hide");
 	$("#showList").on("click",function(){
 		$(".showList").toggleClass("hide");
 		$(".showCard").toggleClass("hide");
-		$("#showList").toggleClass("select");
+		$("#showList").toggleClass("active");
 	});
 })
+
+function crateWorkbook(){
+	myModal.show();
+	$.ajax({
+		url:"/api/category",
+		type:"GET",
+		success:function(response){
+			categoryListHtml='';
+			response.forEach(row=>{
+				categoryListHtml+=`<option value="${row.id}">${row.title}</option>`;
+			})
+			$("#workbook_category").append(categoryListHtml);
+			$("#workbook_category").val(0).prop("selected", true);
+		},
+		error:function(request, status, error){
+			console.log(error);
+		}
+	})
+}
+function createOkWorkbook(){
+	const param={
+		title:$("#workbook_title").val(),
+		category:$("#workbook_category").val()
+	}
+	$.ajax({
+		url:"/api/workbook",
+		type:"POST",
+		contentType : 'application/json; charset=utf-8',
+        data : JSON.stringify(param),
+		success:function(response){
+			location.href="/workbook";
+		},
+		error:function(request, status, error){
+			console.log(error);
+		}
+	})
+}
 </script>
 </div>
 

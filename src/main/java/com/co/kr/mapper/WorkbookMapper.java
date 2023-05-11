@@ -43,7 +43,8 @@ public interface WorkbookMapper {
     // record insert
 	public void insertRecord(RecordDomain recordDomain);
 	// record select
-	public List<RecordDomain> selectRecord(Map map);
+	public List<RecordDomain> selectAllRecord(Map map);
+	public RecordDomain selectOneRecord(Map map);
 	// record delete
 	public void deleteRecord(Map map);
 	

@@ -80,21 +80,21 @@ public class WorkbookServiceImpl implements WorkbookService{
 	}
 	
 	
-	//record
 	
 
 	//record
 	public void insertRecord(RecordDomain recordDomain) {
 		workbookMapper.insertRecord(recordDomain);
 	}
-	public List<RecordDomain> selectRecord(Map map){
-		return workbookMapper.selectRecord(map);
+	public List<RecordDomain> selectAllRecord(Map map){
+		return workbookMapper.selectAllRecord(map);
+	}
+	public RecordDomain selectOneRecord(Map map){
+		return workbookMapper.selectOneRecord(map);
 	}
 	public void deleteRecord(Map map){
 		workbookMapper.deleteRecord(map);
 	}
-	
-	
 	
 	
 	// category

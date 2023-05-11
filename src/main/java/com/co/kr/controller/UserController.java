@@ -247,29 +247,7 @@ public class UserController {
 		
 		return mav;
 	}
-	
-	@GetMapping("workbook/new")
-	public ModelAndView wbCreate(){
-		ModelAndView mav=new ModelAndView();
-		
-		List<CategoryDomain> categoryList = workbookService.selectAllCategory();
-		mav.addObject("categoryList", categoryList);
-		mav.setViewName("workBook/wbCreate.html"); 
-		
-		return mav;
-	}
 
-	@PostMapping("workbook/new/upload")
-	public String wbCreateUpload(WorkbookDomain workbookDomain, HttpServletRequest request, HttpServletRequest httpReq){
-		Map map=CommonUtils.getMember(request);
-		
-		System.out.println("insert items ==> "+ workbookDomain);
-		
-		workbookDomain.setOwner((Integer)map.get("owner"));
-		workbookService.insertWorkbook(workbookDomain,request,httpReq);
-		
-		return "redirect:/workbook";
-	}
 	
 	@GetMapping("workbook/{id}")
 	public ModelAndView wbDetail(@PathVariable("id") String id, HttpServletRequest request) {
@@ -294,6 +272,31 @@ public class UserController {
 		
 		return mav;
 	}
+	/*
+	@GetMapping("workbook/new")
+	public ModelAndView wbCreate(){
+		ModelAndView mav=new ModelAndView();
+		
+		List<CategoryDomain> categoryList = workbookService.selectAllCategory();
+		mav.addObject("categoryList", categoryList);
+		mav.setViewName("workBook/wbCreate.html"); 
+		
+		return mav;
+	}
+
+	@PostMapping("workbook/new/upload")
+	public String wbCreateUpload(WorkbookDomain workbookDomain, HttpServletRequest request, HttpServletRequest httpReq){
+		Map map=CommonUtils.getMember(request);
+		
+		System.out.println("insert items ==> "+ workbookDomain);
+		
+		workbookDomain.setOwner((Integer)map.get("owner"));
+		workbookService.insertWorkbook(workbookDomain,request,httpReq);
+		
+		return "redirect:/workbook";
+	}
+	
+	
 	
 	@GetMapping("workbook/update/{id}")
 	public ModelAndView wbUpdate(@PathVariable("id") String id, HttpServletRequest request) {
@@ -337,6 +340,8 @@ public class UserController {
 
 		return "redirect:/workbook";
 	}
+	
+	*/
 	
 	
 	/*
@@ -420,7 +425,7 @@ public class UserController {
 	
 	/*
 	 * 
-	 * `
+	 * test & record
 	 * 
 	 */
 	
@@ -514,20 +519,18 @@ public class UserController {
 		return mav;
 	}
 	@GetMapping("record")
-	public ModelAndView record(@RequestParam(value="year",defaultValue="") String year,@RequestParam(value="month",defaultValue="") String month,HttpServletRequest request) {
+	public ModelAndView record(HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
 		Map map=CommonUtils.getMember(request);
-		Calendar today = Calendar.getInstance();
 		
-		List<RecordDomain> items = workbookService.selectRecord(map);
+		List<RecordDomain> items = workbookService.selectAllRecord(map);
 		
-		mav.addObject("year",year.equals("")?today.get(Calendar.YEAR):year);
-		mav.addObject("month",month.equals("")?today.get(Calendar.MONTH)+1:month);
 		mav.addObject("items",items);
 		mav.setViewName("record.html"); 
 		
 		return mav;
 	}
+	/*
 	@GetMapping("record/delete/{id}")
 	public String rDelete(@PathVariable("id") String id) {
 		System.out.println("delete record ==> "+ id);
@@ -537,7 +540,7 @@ public class UserController {
 		workbookService.deleteRecord(map);
 
 		return "redirect:/record";
-	}
+	}*/
 
 	
 	
@@ -546,7 +549,6 @@ public class UserController {
 	 * category
 	 * 
 	 */
-	
 
 	@GetMapping("category")
 	public ModelAndView category() {
@@ -558,6 +560,8 @@ public class UserController {
 		mav.setViewName("category.html"); 
 		return mav;
 	}
+	
+	/* category
 	@GetMapping("category/new")
 	public String categoryCreate() {
 		return "workbook/cCreate.html";
@@ -599,7 +603,7 @@ public class UserController {
 		workbookService.updateCategory(categoryDomain);
 		return "redirect:/category";
 	}
-
+	*/
 	
 	
 	
