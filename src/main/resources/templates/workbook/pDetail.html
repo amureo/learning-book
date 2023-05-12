@@ -3,48 +3,56 @@
     xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout}">
 <head>
-    <title>workbook detail</title>
+    <title>problem detail</title>
 </head>
 
 <div th:if=${session.id} layout:fragment="header">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
 		<div class="d-flex">
-			<a href="/workbook/" th:attrappend="href=${item.workbook}" class="float-md-start mb-0 text-decoration-none">
-				<i class="bi bi-arrow-left"></i>
+			<a href="/workbook/" th:attrappend="href=${item.workbook}" class="float-md-start mb-0 me-4 text-decoration-none btn btn-outline-primary">
+				<i class="bi bi-chevron-left"></i>
 			</a>
 			<h3 class="float-md-end mb-0">
 				문제 디테일
 			</h3>
 		</div>
-		<div class="justify-content-between float-md-end">
-			<a href="/problem/update/" th:attrappend="href=${item.id}" class="text-decoration-none">
-				<i class="bi bi-pencil"></i>
-			</a>
-			<a href="/problem/delete/" th:attrappend="href=${item.id}" class="text-decoration-none">
-				<i class="bi bi-trash"></i>
-			</a>
+		<div class="justify-content-between float-md-end" id="problem_tool">
+			<button class="text-decoration-none btn btn-outline-primary" th:onclick="|updateProblem(${item.id})|">
+				<i class="bi bi-pencil"></i> 수정
+			</button>
+			<button class="text-decoration-none btn btn-outline-danger" th:onclick="|deleteProblem(${item.id},${item.workbook})|">
+				<i class="bi bi-trash"></i> 삭제
+			</button>
+		</div>
+		<div class="justify-content-between float-md-end hide" id="problem_tool_update">
+			<button class="text-decoration-none btn btn-outline-secondary" th:onclick="|updateCancelProblem(${item.id})|">
+				취소
+			</button>
+			<button class="text-decoration-none btn btn-outline-primary" th:onclick="|updateOkProblem(${item.id})|">
+				변경
+			</button>
 		</div>
 	</div>
 </div>
 
 <div th:if=${session.id} layout:fragment="toolbar">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-1 border-bottom">
-		<div class="float-md-first"></div>
-		<div class="justify-content-center float-none">
-			<a href="#"><del>왼쪽</del></a>
-			<span><del> 1 / 2</del></span>
-			<a href="#"><del>오른쪽</del></a>
+		<div class="justify-content-between"></div>
+		<div class="justify-content-center btn-group">
+			<button class="btn btn-secondary"><del>왼쪽</del></button>
+			<button class="btn btn-secondary"><del>1 / 2</del></button>
+			<button class="btn btn-secondary"><del>오른쪽</del></button>
 		</div>
 		<div class="justify-content-between float-md-end">
-			<button id="showVertical">
-				<a href="#"><i class="bi bi-view-stacked"></i></a>
+			<button id="showVertical" class="btn btn-outline-secondary">
+				<i class="bi bi-view-stacked"></i>
 			</button>
-			<button id="showHorizontal">
-				<a href="#"><i class="bi bi-vr"></i></a>
+			<button id="showHorizontal" class="btn btn-outline-secondary">
+				<i class="bi bi-vr"></i>
 			</button>
 		</div>
 	</div>
-</div>	
+</div>
 
 <div th:if=${session.id} layout:fragment="content" class="mb-auto">
 	<!-- content -->
@@ -56,7 +64,8 @@
          		<div class="card shadow-sm">
             		<div class="card-body">
               			<p class="card-text">
-							문제: <span th:text="${item.question}"></span>
+							<label for="problem_question" class="form-label">문제</label>
+  							<input type="text" class="form-control" id="problem_question" th:value="${item.question}" placeholder="문제를 입력하세요"  readonly>
 			  			</p>
             		</div>
           		</div>
@@ -66,7 +75,8 @@
 	          	<div class="card shadow-sm">
 	            	<div class="card-body">
 		              	<p class="card-text">
-						  	답: <span th:text="${item.answer}"></span>
+							<label for="problem_answer" class="form-label">정답</label>
+  							<input type="text" class="form-control" id="problem_answer" th:value="${item.answer}" placeholder="정답을 입력하세요" readonly>
 					  	</p>
 	            	</div>
 	          	</div>
@@ -81,7 +91,8 @@
 	        	<div class="card shadow-sm">
 	            	<div class="card-body">
 	              		<p class="card-text">
-							문제: <span th:text="${item.question}"></span>
+							<label for="problem_question" class="form-label">문제</label>
+  							<input type="text" class="form-control" id="problem_question" th:value="${item.question}" placeholder="문제를 입력하세요"  readonly>
 				  		</p>
             		</div>
 	          	</div>
@@ -91,7 +102,8 @@
 	          	<div class="card shadow-sm">
 	            	<div class="card-body">
 		              	<p class="card-text">
-						  	답: <span th:text="${item.answer}"></span>
+						  	<label for="problem_answer" class="form-label">정답</label>
+  							<input type="text" class="form-control" id="problem_answer" th:value="${item.answer}" placeholder="정답을 입력하세요" readonly>
 					  	</p>
             		</div>
 	          	</div>
@@ -101,30 +113,74 @@
 </div>
 
 <div th:if=${session.id} layout:fragment="etc">
+	
 <style>
 .hide{display:none;}
-.select{background:#999;}
 </style>
 <script>
 $(document).ready(function(){
 	$(".showHorizontal").addClass("hide");
-	$("#showVertical").addClass("select");
+	$("#showVertical").addClass("active");
 	 
 	$("#showHorizontal").on("click",function(){
 		$(".showHorizontal").removeClass("hide");
 		$(".showVertical").addClass("hide");
 		
-		$("#showVertical").removeClass("select");
-		$("#showHorizontal").addClass("select");
+		$("#showVertical").removeClass("active");
+		$("#showHorizontal").addClass("active");
 	});
 	$("#showVertical").on("click",function(){
 		$(".showHorizontal").addClass("hide");
 		$(".showVertical").removeClass("hide");
 		
-		$("#showVertical").addClass("select");
-		$("#showHorizontal").removeClass("select");
+		$("#showVertical").addClass("active");
+		$("#showHorizontal").removeClass("active");
 	});
 })
+
+function deleteProblem(id,workbook){
+	if ( !confirm('선택하신 문제를 삭제할까요?') ) {
+        return false;
+    }
+	$.ajax({
+		url:"/api/problem/"+id,
+		type:"DELETE",
+		success:function(response){
+			location.href="/workbook/"+workbook;
+		},
+		error:function(request, status, error){
+			console.log(error);
+		}
+	})
+}
+function updateProblem(id){
+	$("#problem_question").attr("readonly",false);
+	$("#problem_answer").attr("readonly",false);
+	$("#problem_tool").addClass("hide")
+	$("#problem_tool_update").removeClass('hide')
+}
+function updateCancelProblem(id){
+	location.href="/problem/"+id;
+}
+function updateOkProblem(id){
+	const param={
+		id:id,
+		answer:$("#problem_answer").val(),
+		question:$("#problem_question").val(),
+	}
+	$.ajax({
+		url:"/api/problem/"+id,
+		type:"PUT",
+		contentType : 'application/json; charset=utf-8',
+        data : JSON.stringify(param),
+		success:function(response){
+			location.href="/problem/"+id;
+		},
+		error:function(request, status, error){
+			console.log(error);
+		}
+	})
+}
 </script>
 </div>
 

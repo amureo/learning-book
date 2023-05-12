@@ -30,9 +30,9 @@ public interface WorkbookMapper {
     
 
     // problem select by workbook
-    public List<ProblemDomain> selectByWorkbook(Map map);
+    public List<ProblemDomain> selectAllProblem(Map map);
     // problem select by id
-    public ProblemDomain selectById(Map map);
+    public ProblemDomain selectOneProblem(Map map);
     // problem insert
     public void insertProblem(ProblemDomain problemDoamin);
     // problem update
@@ -65,4 +65,6 @@ public interface WorkbookMapper {
 	public List<SearchDomain> searchProblem(Map map);
 	
 	
+	//home
+	public List<ProblemDomain> selectRandomProblem(Map map);
 }

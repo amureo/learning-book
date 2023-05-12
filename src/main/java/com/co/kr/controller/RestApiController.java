@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.co.kr.domain.CategoryDomain;
+import com.co.kr.domain.ProblemDomain;
 import com.co.kr.domain.RecordDomain;
 import com.co.kr.domain.WorkbookDomain;
 import com.co.kr.service.WorkbookService;
@@ -71,34 +72,36 @@ public class RestApiController {
 	 * 
 	 */
 	
-	@RequestMapping(value="/api/workbook",method=RequestMethod.POST)
-	public void workbookCreate(@RequestBody WorkbookDomain workbookDomain, HttpServletRequest request, HttpServletRequest httpReq) {
-		Map map=CommonUtils.getMember(request);
-		workbookDomain.setOwner((Integer)map.get("owner"));
-		workbookService.insertWorkbook(workbookDomain,request,httpReq);
+	@RequestMapping(value="/api/problem",method=RequestMethod.POST)
+	public ProblemDomain problemCreate(@RequestBody ProblemDomain problemDomain) {
+		Map map = new HashMap<String, String>();
+		workbookService.insertProblemBlank(problemDomain);
+		map.put("id", problemDomain.getId());
+		return workbookService.selectOneProblem(map);
 	}
-	@RequestMapping(value="/api/workbook",method=RequestMethod.GET)
-	public List<WorkbookDomain> workbookList(HttpServletRequest request) {
-		Map map=CommonUtils.getMember(request);
-		return workbookService.selectAllWorkbook(map);
-	}
-	@RequestMapping(value="/api/workbook/{id}",method=RequestMethod.GET)
-	public WorkbookDomain workbookOne(@PathVariable("id") String id, HttpServletRequest request) {
-		Map map=CommonUtils.getMember(request);
+	@RequestMapping(value="/api/problem/w/{id}",method=RequestMethod.GET)
+	public List<ProblemDomain> problemList(@PathVariable("id") String id) {
+		Map map = new HashMap<String, String>();
 		map.put("id", id);
-		return workbookService.selectOneWorkbook(map);
+		return workbookService.selectAllProblem(map);
 	}
-	@RequestMapping(value="/api/workbook/{id}",method=RequestMethod.PUT)
-	public void workbookModify(@PathVariable("id") String id, @RequestBody WorkbookDomain workbookDomain, HttpServletRequest request) {
-		Map map=CommonUtils.getMember(request);
-		workbookDomain.setOwner((Integer)map.get("owner"));
-		workbookService.updateWorkbook(workbookDomain);
-	}
-	@RequestMapping(value="/api/workbook/{id}",method=RequestMethod.DELETE)
-	public void workbookRemove(@PathVariable("id") String id, HttpServletRequest request) {
-		Map map=CommonUtils.getMember(request);
+	@RequestMapping(value="/api/problem/p/{id}",method=RequestMethod.GET)
+	public ProblemDomain problemOne(@PathVariable("id") String id, HttpServletRequest request) {
+		Map map = new HashMap<String, String>();
 		map.put("id", id);
-		workbookService.deleteWorkbook(map);
+		return workbookService.selectOneProblem(map);
+	}
+	@RequestMapping(value="/api/problem/{id}",method=RequestMethod.PUT)
+	public void problemModify(@PathVariable("id") String id, @RequestBody ProblemDomain problemDomain) {
+		Map map = new HashMap<String, String>();
+		map.put("id", id);
+		workbookService.updateProblem(problemDomain);
+	}
+	@RequestMapping(value="/api/problem/{id}",method=RequestMethod.DELETE)
+	public void problemRemove(@PathVariable("id") String id) {
+		Map map = new HashMap<String, String>();
+		map.put("id", id);
+		workbookService.deleteProblem(map);
 	}
 	
 	

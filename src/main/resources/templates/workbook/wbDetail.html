@@ -13,12 +13,12 @@
 				<i class="bi bi-chevron-left"></i>
 			</a>
 			<h3 class="float-md-end mb-0">
-				<span th:text="${item.title}"></span> 워크북 - <span th:text="${category.title}"></span>
+				<span th:text="${item.title}"></span> - <span th:text="${category.title}"></span>
 			</h3>
 		</div>
 		<div class="justify-content-between float-md-end">
 			<a th:href="@{/testing(workbook=${item.id})}" class="text-decoration-none btn btn-outline-primary">
-				테스트하기
+				<i class="bi bi-journal-check"></i> 테스트
 			</a>
 			<button class="text-decoration-none btn btn-outline-primary">
 				<del><i class="bi bi-clipboard-data"></i> 통계</del>
@@ -45,7 +45,7 @@
 			<button class="btn btn-secondary"><del>수정순</del></button>
 		</div>
 		<div class="justify-content-between float-md-end">
-			<button id="showList" class="btn btn-secondary" data-bs-toggle="button">
+			<button id="showList" class="btn btn-outline-secondary" data-bs-toggle="button">
 				<i class="bi bi-list-ul"></i>
 			</button>
 		</div>
@@ -61,8 +61,10 @@
 			<div class="col">
 		        <div class="card shadow-sm">
 		            <div class="card-body">
-						<p class="card-text">
-				  			<a th:href="@{/workbook/pnew(workbook=${item.id})}"><i class="bi bi-plus-square-dotted"></i>문제 추가하기</a>
+						<p class="card-text text-center">
+							<button th:onclick="|createProblem(${item.id})|" class="btn">
+								<i class="bi bi-plus-square-dotted"></i> 문제 추가하기
+							</button>
 				    	</p>
 		            </div>
 	          	</div>
@@ -72,7 +74,10 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 		            	<p class="card-text">
-				  			<a href="/problem/" th:attrappend="href=${item.id}" th:text="${item.question}"></a>
+				  			<a href="/problem/" th:attrappend="href=${item.id}" class="list-group w-auto text-decoration-none">
+								<span class="list-group-item" th:text="${item.question}">q</span>
+								<span class="list-group-item" th:text="${item.answer}">a</span>
+						  	</a>
 					  	</p>
 		            </div>
 	          	</div>
@@ -211,7 +216,25 @@ function updateOkWorkbook(id){
 		}
 	})
 }
-	
+</script>
+<script>
+function createProblem(workbook){
+	const param={
+		workbook:workbook
+	}
+	$.ajax({
+		url:"/api/problem",
+		type:"POST",
+		contentType : 'application/json; charset=utf-8',
+        data : JSON.stringify(param),
+		success:function(response){
+			location.href="/problem/"+response.id;
+		},
+		error:function(request, status, error){
+			console.log(error);
+		}
+	})
+}
 </script>
 </div>
 

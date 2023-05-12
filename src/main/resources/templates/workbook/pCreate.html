@@ -2,22 +2,57 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout}">
-    <head>
-        <title>workbook new</title>
-    </head>
-    <div th:if=${session.id} layout:fragment="content">
-		<!-- content -->
-		<h3>문제 추가하기</h3>
-		<a href="/workbook/" th:attrappend="href=${workbook}">뒤로가기</a>
-		<br>
-		
-		<form role="form" action="pnew/upload" method="post">
-            <input type="hidden" name="id" placeholder="문제번호" required/>
-            <input type="hidden" name="workbook" placeholder="문제집번호" th:value="${workbook}" required/>
-			<input type="text" name="question" placeholder="문제을 입력하세요">
-			<input type="text" name="answer" placeholder="정답을 입력하세요">
-			<input type="submit" value="만들기">
-		</form>
-		
+<head>
+    <title>problem new</title>
+</head>
+
+<div th:if=${session.id} layout:fragment="header">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<div class="d-flex">
+			<a href="/workbook/" th:attrappend="href=${workbook}" class="float-md-start mb-0 me-4 text-decoration-none btn btn-outline-primary">
+				<i class="bi bi-chevron-left"></i>
+			</a>
+			<h3 class="float-md-end mb-0">문제 추가하기</h3>
+		</div>
 	</div>
+</div>
+
+<div th:if=${session.id} layout:fragment="content">
+	<!-- content -->
+	<!-- Vertical -->
+	<div class="showVertical">
+		<div class="row row-cols-1 g-1">
+			<div class="col">
+         		<div class="card shadow-sm">
+            		<div class="card-body">
+              			<p class="card-text">
+							<label for="problem_question" class="form-label">문제</label>
+  							<input type="text" class="form-control" id="problem_question" placeholder="문제를 입력하세요">
+			  			</p>
+            		</div>
+          		</div>
+        	</div>
+        
+			<div class="col">
+	          	<div class="card shadow-sm">
+	            	<div class="card-body">
+		              	<p class="card-text">
+							<label for="problem_answer" class="form-label">정답</label>
+  							<input type="text" class="form-control" id="problem_answer" placeholder="정답을 입력하세요">
+					  	</p>
+	            	</div>
+	          	</div>
+	        </div>
+        </div>
+    </div>
+	<form role="form" action="pnew/upload" method="post">
+        <input type="hidden" name="id" placeholder="문제번호" required/>
+        <input type="hidden" name="workbook" placeholder="문제집번호" th:value="${workbook}" required/>
+		<input type="text" name="question" placeholder="문제을 입력하세요">
+
+		<input type="text" name="answer" placeholder="정답을 입력하세요">
+		<input type="submit" value="만들기">
+	</form>
+	
+</div>
 </html>

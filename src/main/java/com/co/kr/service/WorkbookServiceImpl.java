@@ -54,21 +54,26 @@ public class WorkbookServiceImpl implements WorkbookService{
 	
 	
 	
-	
-	// problem
-
-	@Override
-	public List<ProblemDomain> selectByWorkbook(Map map){
-		return workbookMapper.selectByWorkbook(map);
-	}
-	@Override
-	public ProblemDomain selectById(Map map){
-		return workbookMapper.selectById(map);
-	}
-	
+	/*
+	 * 
+	 * problem
+	 * 
+	 */
 	@Override
 	public void insertProblem(ProblemDomain problemDomain) {
 		workbookMapper.insertProblem(problemDomain);
+	}
+	@Override
+	public void insertProblemBlank(ProblemDomain problemDomain) {
+		workbookMapper.insertProblem(problemDomain);
+	}
+	@Override
+	public List<ProblemDomain> selectAllProblem(Map map){
+		return workbookMapper.selectAllProblem(map);
+	}
+	@Override
+	public ProblemDomain selectOneProblem(Map map){
+		return workbookMapper.selectOneProblem(map);
 	}
 	@Override
 	public void updateProblem(ProblemDomain problemDomain) {
@@ -82,16 +87,25 @@ public class WorkbookServiceImpl implements WorkbookService{
 	
 	
 
-	//record
+	/*
+	 * 
+	 * record
+	 * 
+	 */
+	
+	@Override
 	public void insertRecord(RecordDomain recordDomain) {
 		workbookMapper.insertRecord(recordDomain);
 	}
+	@Override
 	public List<RecordDomain> selectAllRecord(Map map){
 		return workbookMapper.selectAllRecord(map);
 	}
+	@Override
 	public RecordDomain selectOneRecord(Map map){
 		return workbookMapper.selectOneRecord(map);
 	}
+	@Override
 	public void deleteRecord(Map map){
 		workbookMapper.deleteRecord(map);
 	}
@@ -118,9 +132,16 @@ public class WorkbookServiceImpl implements WorkbookService{
 	
 	
 	
-//	search
+	//search
+	@Override
 	public List<SearchDomain> searchProblem(Map map){
 		return workbookMapper.searchProblem(map);
 	}
 	
+	//home
+	@Override
+	public List<ProblemDomain> selectRandomProblem(Map map){
+		return workbookMapper.selectRandomProblem(map);
+		
+	}
 }

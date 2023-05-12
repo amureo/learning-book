@@ -67,7 +67,7 @@
     
     
     <!-- problem select by workbook -->
-    <select id="selectByWorkbook" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
+    <select id="selectAllProblem" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
        	SELECT
        		id,
        		workbook,
@@ -82,7 +82,7 @@
        		ranking ASC
     </select>
     <!-- problem select by id -->
-    <select id="selectById" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
+    <select id="selectOneProblem" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
        	SELECT
        		id,
        		workbook,
@@ -96,7 +96,7 @@
     </select>
     
     <!-- problem insert -->
-    <insert id="insertProblem" parameterType="com.co.kr.domain.ProblemDomain">
+    <insert id="insertProblem" parameterType="com.co.kr.domain.ProblemDomain" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO 
        		jsp.problem(
 	       		id,
@@ -250,7 +250,7 @@
 			answer,
 			owner
 		FROM 
-			search_problem
+			jsp.search_problem
 		WHERE
 			owner=#{owner} AND (
 				question LIKE '%${search_query}%' OR
@@ -259,5 +259,36 @@
 		ORDER BY
 			id ASC
 	</select>
-    
+	
+	
+	
+	<!-- home -->
+	<select id="selectRandomProblem" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
+		SELECT
+			id,
+       		workbook,
+       		question,
+       		answer,
+       		ranking
+		FROM 
+			jsp.problem
+		WHERE
+			workbook=(SELECT
+					workbook
+				FROM 
+					jsp.search_problem
+				WHERE
+					owner=#{owner}
+				GROUP BY 
+				    workbook
+				HAVING
+					count(*)>0
+				ORDER BY
+					RAND()
+				LIMIT
+					1
+				)
+		ORDER BY
+       		ranking ASC
+	</select>
 </mapper>

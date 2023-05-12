@@ -216,9 +216,19 @@ public class UserController {
 	
 	// 진입점
 	@GetMapping("home")
-	public ModelAndView home(){
+	public ModelAndView home(HttpServletRequest request){
+		Map map=CommonUtils.getMember(request);
 		ModelAndView mav = new ModelAndView();
 
+		List<CategoryDomain> categoryList=workbookService.selectAllCategory();
+		mav.addObject("categoryList", categoryList);
+		
+		List<ProblemDomain> problemList=workbookService.selectRandomProblem(map);
+		mav.addObject("problemList", problemList);
+		
+		List<RecordDomain> recordList=workbookService.selectAllRecord(map);
+		mav.addObject("recordList", recordList);
+		
 		mav.setViewName("home.html"); 
 		return mav;
 	}
@@ -255,13 +265,10 @@ public class UserController {
 		Map map=CommonUtils.getMember(request);
 		
 		map.put("id", id);
-		
 		WorkbookDomain item = workbookService.selectOneWorkbook(map);
-		System.out.println("detail("+id+") ==> "+ item);
 		mav.addObject("item", item);
 		
-		List<ProblemDomain> items = workbookService.selectByWorkbook(map);
-		System.out.println("detail("+id+") problem ==> "+ items);
+		List<ProblemDomain> items = workbookService.selectAllProblem(map);
 		mav.addObject("items", items);
 
 		map.put("id", item.getCategory());
@@ -351,6 +358,23 @@ public class UserController {
 	 */
 
 	
+	@GetMapping("problem/{id}")
+	public ModelAndView pDetail(@PathVariable("id") String id) {
+		ModelAndView mav=new ModelAndView();
+		
+		Map map = new HashMap<String, String>();
+		map.put("id", id);
+		
+		ProblemDomain item = workbookService.selectOneProblem(map);
+		System.out.println("detail("+id+") ==> "+ item);
+		mav.addObject("item", item);
+		
+		mav.setViewName("workBook/pDetail.html"); 
+		
+		return mav;
+	}
+	
+	/*
 	@GetMapping("workbook/pnew")
 	public ModelAndView wbProblemNew(@RequestParam("workbook") String workbook) {
 		ModelAndView mav=new ModelAndView();
@@ -371,22 +395,6 @@ public class UserController {
 		return "redirect:/workbook/"+problemDomain.getWorkbook();
 	}
 	
-	@GetMapping("problem/{id}")
-	public ModelAndView pDetail(@PathVariable("id") String id) {
-		ModelAndView mav=new ModelAndView();
-		
-		Map map = new HashMap<String, String>();
-		map.put("id", id);
-		
-		ProblemDomain item = workbookService.selectById(map);
-		System.out.println("detail("+id+") ==> "+ item);
-		mav.addObject("item", item);
-		
-		mav.setViewName("workBook/pDetail.html"); 
-		
-		return mav;
-	}
-	
 	@GetMapping("problem/update/{id}")
 	public ModelAndView pUpdate(@PathVariable("id") String id) {
 		ModelAndView mav=new ModelAndView();
@@ -394,7 +402,7 @@ public class UserController {
 		Map map = new HashMap<String, String>();
 		map.put("id", id);
 		
-		ProblemDomain item = workbookService.selectById(map);
+		ProblemDomain item = workbookService.selectOneProblem(map);
 		System.out.println("detail("+id+") ==> "+ item);
 		mav.addObject("item", item);
 		mav.setViewName("workBook/pUpdate.html"); 
@@ -416,12 +424,12 @@ public class UserController {
 		
 		Map map = new HashMap<String, String>();
 		map.put("id", id);
-		ProblemDomain problemDomain=workbookService.selectById(map);
+		ProblemDomain problemDomain=workbookService.selectOneProblem(map);
 		workbookService.deleteProblem(map);
 
 		return "redirect:/workbook/"+problemDomain.getWorkbook();
 	}
-
+	 */
 	
 	/*
 	 * 
@@ -439,7 +447,7 @@ public class UserController {
 		Map map = new HashMap<String, String>();
 		map.put("id", workbook);
 		
-		List<ProblemDomain> items = workbookService.selectByWorkbook(map);
+		List<ProblemDomain> items = workbookService.selectAllProblem(map);
 		
 		mav.addObject("workbook", workbook);
 		mav.addObject("total", items.size());
@@ -464,7 +472,7 @@ public class UserController {
 		Map map = new HashMap<String, String>();
 		map.put("id", workbook);
 		
-		List<ProblemDomain> items = workbookService.selectByWorkbook(map);
+		List<ProblemDomain> items = workbookService.selectAllProblem(map);
 		ProblemDomain item=null;
 		
 		// 정답 검사 -> 문제 로드 -> 끝내기
@@ -494,7 +502,7 @@ public class UserController {
 		}else if(score<=items.size()){
 			map.put("id", list.get(0));
 			list.remove(0);
-			item=workbookService.selectById(map);
+			item=workbookService.selectOneProblem(map);
 		}
 
 		//문제가 끝인가?

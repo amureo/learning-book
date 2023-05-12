@@ -28,7 +28,7 @@
 			<button class="btn btn-secondary"><del>수정순</del></button>
 		</div>
 		<div class="justify-content-between float-md-end">
-			<button id="showList" class="btn btn-secondary" data-bs-toggle="button">
+			<button id="showList" class="btn btn-outline-secondary" data-bs-toggle="button">
 				<i class="bi bi-list-ul"></i>
 			</button>
 		</div>
@@ -42,7 +42,7 @@
 	<div class="showCard">
 		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 			<div class="col">
-		        <div class="card shadow-sm">
+		        <div class="card shadow-sm h-100">
 		            <div class="card-body text-center">
 						<p class="card-text text-center">
 							<button onclick="crateWorkbook()" class="btn">
@@ -56,7 +56,7 @@
 	      	<div th:if="!${items}">워크북이 없습니다</div>
 		        
 	        <div class="col" th:each="item : ${items}">
-				<div class="card shadow-sm">
+				<div class="card shadow-sm h-100">
 					<div class="card-body">
 		            	<p class="card-text">
 							<a href="/workbook/" th:attrappend="href=${item.id}" th:text="${item.title}"></a>

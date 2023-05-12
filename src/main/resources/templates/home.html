@@ -2,17 +2,83 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
     xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout}">
-    <head>
-        <title>workbook</title>
-    </head>
-    <div th:if=${session.id} layout:fragment="content">
-		<!-- content -->
-		<h3>홈</h3>
-		<div>
-			카테고리별 보기,
-			문제집 보기,
-			최근 기록,
-		</div>
-		<br>
+<head>
+    <title>workbook</title>
+</head>
+
+<div th:if=${session.id} layout:fragment="content">
+	<!-- content -->
+	
+	<!--
+	<div class="text-bg-warning">
+			<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="..." class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>First slide label</h5>
+        <p>Some representative placeholder content for the first slide.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="..." class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Second slide label</h5>
+        <p>Some representative placeholder content for the second slide.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="..." class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Third slide label</h5>
+        <p>Some representative placeholder content for the third slide.</p>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+</div>
+			-->
+			
+			
+	<h3>카테고리들</h3>
+	<hr>
+	<div class="overflow-auto text-nowrap">
+		<div class="card h-100 w-25 p-5 mx-2 my-4 fs-5 d-inline-block text-center" th:each="category : ${categoryList}" th:text="${category.title}"></div>
 	</div>
+	<h3>한개의 카테고리 문제집들</h3>
+	<hr>
+	<div class="overflow-auto text-nowrap">
+		<div class="card h-100 w-25 px-2 py-5 mx-2 my-4 fs-5 d-inline-block text-center" th:each="problem : ${problemList}" th:text="${problem.question}"></div>
+	</div>
+	<h3>최근 기록</h3>
+	<hr>
+	<div class="overflow-auto text-nowrap">
+		<div class="card h-100 w-25 px-2 py-5 mx-2 my-4 fs-5 d-inline-block text-center" th:each="record : ${recordList}" th:text="${record.workbook}+' - '+${record.createAt}"></div>
+	</div>
+</div>
+
+
+<div th:if=${session.id} layout:fragment="etc">
+<script>
+$(function() {
+    $(".card").each(function() {
+        var hue = 'rgb(' + (Math.floor((256-199)*Math.random()) + 200) + ',' + (Math.floor((256-199)*Math.random()) + 200) + ',' + (Math.floor((256-199)*Math.random()) + 200) + ')';
+         $(this).css("background-color", hue);
+    });
+});
+</script>
+</div>
 </html>

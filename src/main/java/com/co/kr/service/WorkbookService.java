@@ -21,9 +21,10 @@ public interface WorkbookService {
 	public void deleteWorkbook(Map map);
 	
 	//problem
-	public List<ProblemDomain> selectByWorkbook(Map map);
-	public ProblemDomain selectById(Map map);
 	public void insertProblem(ProblemDomain problemDomain);
+	public void insertProblemBlank(ProblemDomain problemDomain);
+	public List<ProblemDomain> selectAllProblem(Map map);
+	public ProblemDomain selectOneProblem(Map map);
 	public void updateProblem(ProblemDomain problemDomain);
 	public void deleteProblem(Map map);
 	
@@ -44,5 +45,9 @@ public interface WorkbookService {
 
 //	search
 	public List<SearchDomain> searchProblem(Map map);
+	
+	
+	//home
+	public List<ProblemDomain> selectRandomProblem(Map map);
 	
 }
