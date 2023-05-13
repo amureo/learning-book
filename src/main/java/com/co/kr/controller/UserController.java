@@ -1,17 +1,20 @@
 package com.co.kr.controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,8 +31,11 @@ import com.co.kr.domain.SearchDomain;
 import com.co.kr.domain.WorkbookDomain;
 import com.co.kr.service.UserService;
 import com.co.kr.service.WorkbookService;
+import com.co.kr.sort.ProblemSort;
+import com.co.kr.sort.ProblemSortStd;
 import com.co.kr.util.CommonUtils;
 import com.co.kr.vo.LoginVO;
+import com.co.kr.vo.SortVO;
 import com.co.kr.vo.TestingVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +48,6 @@ public class UserController {
 	UserService userService;
 	@Autowired
 	WorkbookService workbookService;
-	
 	
 	@PostMapping("login")
 	public ModelAndView login(LoginVO loginDTO, HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -212,8 +217,6 @@ public class UserController {
 	 * 
 	 */
 	
-	
-	
 	// 진입점
 	@GetMapping("home")
 	public ModelAndView home(HttpServletRequest request){
@@ -222,7 +225,7 @@ public class UserController {
 
 		List<CategoryDomain> categoryList=workbookService.selectAllCategory();
 		mav.addObject("categoryList", categoryList);
-		
+
 		List<ProblemDomain> problemList=workbookService.selectRandomProblem(map);
 		mav.addObject("problemList", problemList);
 		
@@ -250,105 +253,53 @@ public class UserController {
 		Map map=CommonUtils.getMember(request);
 		
 		List<WorkbookDomain> items = workbookService.selectAllWorkbook(map);
-		System.out.println("items ==> "+ items);
 		
 		mav.addObject("items", items);
 		mav.setViewName("workbook.html"); 
 		
 		return mav;
 	}
-
 	
 	@GetMapping("workbook/{id}")
-	public ModelAndView wbDetail(@PathVariable("id") String id, HttpServletRequest request) {
+	public ModelAndView wbDetail(@PathVariable("id") String id, HttpServletRequest request, SortVO sort) {
+			//@RequestParam(value="sort",required=false) ProblemSort sort, 
+			//@RequestParam(value="sortStd",required=false, defaultValue="ranking") String sortStd) {
 		ModelAndView mav=new ModelAndView();
 		Map map=CommonUtils.getMember(request);
 		
+		// this workbook
 		map.put("id", id);
 		WorkbookDomain item = workbookService.selectOneWorkbook(map);
 		mav.addObject("item", item);
 		
-		List<ProblemDomain> items = workbookService.selectAllProblem(map);
-		mav.addObject("items", items);
+		// sort setting
+		map.put("sort", sort.getSort());
+		map.put("sortStd", sort.getSortStd());
+		List<String> sortList = Stream.of(ProblemSort.values())
+ 				.map(Enum::name)
+ 				.collect(Collectors.toList());
+		List<String> sortStdList = Stream.of(ProblemSortStd.values())
+ 				.map(Enum::name)
+ 				.collect(Collectors.toList());
 
+		if(!sortList.contains(map.get("sort"))) map.put("sort", "ASC");
+		if(!sortStdList.contains(map.get("sortStd"))) map.put("sortStd", "ranking");
+		mav.addObject("sort", map.get("sort"));
+		mav.addObject("sortStd", map.get("sortStd"));
+		
+		// this workbook's all problem
+		List<ProblemDomain> items = workbookService.selectAllProblemSort(map);
+		mav.addObject("items", items);
+		System.out.println(items);
+
+		// this workbook's category
 		map.put("id", item.getCategory());
 		CategoryDomain category = workbookService.selectOneCategory(map);
 		mav.addObject("category", category);
 		
 		mav.setViewName("workBook/wbDetail.html"); 
-		
 		return mav;
 	}
-	/*
-	@GetMapping("workbook/new")
-	public ModelAndView wbCreate(){
-		ModelAndView mav=new ModelAndView();
-		
-		List<CategoryDomain> categoryList = workbookService.selectAllCategory();
-		mav.addObject("categoryList", categoryList);
-		mav.setViewName("workBook/wbCreate.html"); 
-		
-		return mav;
-	}
-
-	@PostMapping("workbook/new/upload")
-	public String wbCreateUpload(WorkbookDomain workbookDomain, HttpServletRequest request, HttpServletRequest httpReq){
-		Map map=CommonUtils.getMember(request);
-		
-		System.out.println("insert items ==> "+ workbookDomain);
-		
-		workbookDomain.setOwner((Integer)map.get("owner"));
-		workbookService.insertWorkbook(workbookDomain,request,httpReq);
-		
-		return "redirect:/workbook";
-	}
-	
-	
-	
-	@GetMapping("workbook/update/{id}")
-	public ModelAndView wbUpdate(@PathVariable("id") String id, HttpServletRequest request) {
-		ModelAndView mav=new ModelAndView();
-		Map map=CommonUtils.getMember(request);
-		
-		map.put("id", id);
-		
-		WorkbookDomain item = workbookService.selectOneWorkbook(map);
-		System.out.println("detail("+id+") ==> "+ item);
-		mav.addObject("item", item);
-		
-
-		List<CategoryDomain> categoryList = workbookService.selectAllCategory();
-		mav.addObject("categoryList", categoryList);
-		
-		mav.setViewName("workBook/wbUpdate.html"); 
-		
-		return mav;
-	}
-	@PostMapping("workbook/update/upload")
-	public String wbUpdateUpload(WorkbookDomain workbookDomain, HttpServletRequest request) {
-		Map map=CommonUtils.getMember(request);
-		
-		System.out.println("update ==> "+ workbookDomain);
-		
-		workbookDomain.setOwner((Integer)map.get("owner"));
-		workbookService.updateWorkbook(workbookDomain);
-		
-		return "redirect:/workbook";
-	}
-	
-	@GetMapping("workbook/delete/{id}")
-	public String wbDelete(@PathVariable("id") String id, HttpServletRequest request) {
-		Map map=CommonUtils.getMember(request);
-		
-		System.out.println("delete ==> "+ id);
-		
-		map.put("id", id);
-		workbookService.deleteWorkbook(map);
-
-		return "redirect:/workbook";
-	}
-	
-	*/
 	
 	
 	/*
@@ -356,80 +307,35 @@ public class UserController {
 	 * problem
 	 * 
 	 */
-
 	
 	@GetMapping("problem/{id}")
-	public ModelAndView pDetail(@PathVariable("id") String id) {
+	public ModelAndView pDetail(@PathVariable("id") String id) throws ConversionFailedException{
 		ModelAndView mav=new ModelAndView();
 		
 		Map map = new HashMap<String, String>();
 		map.put("id", id);
 		
-		ProblemDomain item = workbookService.selectOneProblem(map);
-		System.out.println("detail("+id+") ==> "+ item);
-		mav.addObject("item", item);
+		// current problem
+		ProblemDomain currProblem = workbookService.selectOneProblem(map);
+		mav.addObject("currProblem", currProblem);
+		
+		// navigation
+		map.put("problemId", id);
+		// navigation next
+		ProblemDomain nextProblem = workbookService.selectNextProblem(map);
+		mav.addObject("nextProblem", nextProblem);
+		// navigation prev
+		ProblemDomain prevProblem = workbookService.selectPrevProblem(map);
+		mav.addObject("prevProblem", prevProblem);
+		// navigation total
+		map.put("workbookId", currProblem.getWorkbook());
+		int total=workbookService.getTotalProblemByWorkbookId(map);
+		mav.addObject("totalProblem", total);
 		
 		mav.setViewName("workBook/pDetail.html"); 
-		
-		return mav;
-	}
-	
-	/*
-	@GetMapping("workbook/pnew")
-	public ModelAndView wbProblemNew(@RequestParam("workbook") String workbook) {
-		ModelAndView mav=new ModelAndView();
-		
-		mav.addObject("workbook", workbook);
-		mav.setViewName("workBook/pCreate.html"); 
-		
-		return mav;
-	}
-	
-
-	@PostMapping("workbook/pnew/upload")
-	public String wbProblemNewUpload(ProblemDomain problemDomain) {
-		
-		System.out.println("insert items ==> "+ problemDomain);
-		workbookService.insertProblem(problemDomain);
-		
-		return "redirect:/workbook/"+problemDomain.getWorkbook();
-	}
-	
-	@GetMapping("problem/update/{id}")
-	public ModelAndView pUpdate(@PathVariable("id") String id) {
-		ModelAndView mav=new ModelAndView();
-		
-		Map map = new HashMap<String, String>();
-		map.put("id", id);
-		
-		ProblemDomain item = workbookService.selectOneProblem(map);
-		System.out.println("detail("+id+") ==> "+ item);
-		mav.addObject("item", item);
-		mav.setViewName("workBook/pUpdate.html"); 
-		
 		return mav;
 	}
 
-	@PostMapping("problem/update/upload")
-	public String pUpdateUpload(ProblemDomain problemDomain) {
-		System.out.println("update ==> "+ problemDomain);
-		
-		workbookService.updateProblem(problemDomain);
-		
-		return "redirect:/problem/"+problemDomain.getId();
-	}
-	@GetMapping("problem/delete/{id}")
-	public String pDelete(@PathVariable("id") String id) {
-		System.out.println("delete ==> "+ id);
-		
-		Map map = new HashMap<String, String>();
-		map.put("id", id);
-		ProblemDomain problemDomain=workbookService.selectOneProblem(map);
-		workbookService.deleteProblem(map);
-
-		return "redirect:/workbook/"+problemDomain.getWorkbook();
-	}
-	 */
 	
 	/*
 	 * 
@@ -538,18 +444,6 @@ public class UserController {
 		
 		return mav;
 	}
-	/*
-	@GetMapping("record/delete/{id}")
-	public String rDelete(@PathVariable("id") String id) {
-		System.out.println("delete record ==> "+ id);
-		
-		Map map = new HashMap<String, String>();
-		map.put("id", id);
-		workbookService.deleteRecord(map);
-
-		return "redirect:/record";
-	}*/
-
 	
 	
 	/*
@@ -568,51 +462,6 @@ public class UserController {
 		mav.setViewName("category.html"); 
 		return mav;
 	}
-	
-	/* category
-	@GetMapping("category/new")
-	public String categoryCreate() {
-		return "workbook/cCreate.html";
-	}
-	@PostMapping("category/new/upload")
-	public String categoryCreate(CategoryDomain categoryDomain) {
-		workbookService.insertCategory(categoryDomain);
-		return "redirect:/category";
-	}
-	@GetMapping("category/delete/{id}")
-	public String categoryCreateUpload(@PathVariable("id") String id) {
-		Map map = new HashMap<String, String>();
-		map.put("id", id);
-		workbookService.deleteCategory(map);
-		return "redirect:/category";
-	}
-	@GetMapping("category/{id}")
-	public ModelAndView categoryDetail(@PathVariable("id") String id) {
-		ModelAndView mav=new ModelAndView();
-		Map map = new HashMap<String, String>();
-		map.put("id", id);
-		CategoryDomain category = workbookService.selectOneCategory(map);
-		mav.addObject("item",category);
-		mav.setViewName("workbook/cDetail.html"); 
-		return mav;
-	}
-	@GetMapping("category/update/{id}")
-	public ModelAndView categoryUpdate(@PathVariable("id") String id) {
-		ModelAndView mav=new ModelAndView();
-		Map map = new HashMap<String, String>();
-		map.put("id", id);
-		CategoryDomain category = workbookService.selectOneCategory(map);
-		mav.addObject("item",category);
-		mav.setViewName("workbook/cUpdate.html"); 
-		return mav;
-	}
-	@PostMapping("category/update/upload")
-	public String categoryUpdateUpload(CategoryDomain categoryDomain) {
-		workbookService.updateCategory(categoryDomain);
-		return "redirect:/category";
-	}
-	*/
-	
 	
 	
 	/*

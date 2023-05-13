@@ -28,6 +28,11 @@ public interface WorkbookMapper {
     // delete
     public void deleteWorkbook(Map map);
     
+    /*
+     * 
+     * problem
+     * 
+     */
 
     // problem select by workbook
     public List<ProblemDomain> selectAllProblem(Map map);
@@ -39,6 +44,13 @@ public interface WorkbookMapper {
     public void updateProblem(ProblemDomain problemDoamin);
     // problem delete
     public void deleteProblem(Map map);
+    
+    // problem option
+    public ProblemDomain selectPrevProblem(Map map);
+    public ProblemDomain selectNextProblem(Map map);
+    public int getTotalProblemByWorkbookId(Map map); 
+	public List<ProblemDomain> selectAllProblemSort(Map map);
+    
     
     // record insert
 	public void insertRecord(RecordDomain recordDomain);
@@ -64,7 +76,9 @@ public interface WorkbookMapper {
 	//search
 	public List<SearchDomain> searchProblem(Map map);
 	
-	
 	//home
 	public List<ProblemDomain> selectRandomProblem(Map map);
+	
+	//util
+	public void updateRanking(Map map);
 }

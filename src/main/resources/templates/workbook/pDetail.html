@@ -9,7 +9,7 @@
 <div th:if=${session.id} layout:fragment="header">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
 		<div class="d-flex">
-			<a href="/workbook/" th:attrappend="href=${item.workbook}" class="float-md-start mb-0 me-4 text-decoration-none btn btn-outline-primary">
+			<a href="/workbook/" th:attrappend="href=${currProblem.workbook}" class="float-md-start mb-0 me-4 text-decoration-none btn btn-outline-primary">
 				<i class="bi bi-chevron-left"></i>
 			</a>
 			<h3 class="float-md-end mb-0">
@@ -17,18 +17,18 @@
 			</h3>
 		</div>
 		<div class="justify-content-between float-md-end" id="problem_tool">
-			<button class="text-decoration-none btn btn-outline-primary" th:onclick="|updateProblem(${item.id})|">
+			<button class="text-decoration-none btn btn-outline-primary" th:onclick="|updateProblem(${currProblem.id})|">
 				<i class="bi bi-pencil"></i> 수정
 			</button>
-			<button class="text-decoration-none btn btn-outline-danger" th:onclick="|deleteProblem(${item.id},${item.workbook})|">
+			<button class="text-decoration-none btn btn-outline-danger" th:onclick="|deleteProblem(${currProblem.id},${currProblem.workbook})|">
 				<i class="bi bi-trash"></i> 삭제
 			</button>
 		</div>
 		<div class="justify-content-between float-md-end hide" id="problem_tool_update">
-			<button class="text-decoration-none btn btn-outline-secondary" th:onclick="|updateCancelProblem(${item.id})|">
+			<button class="text-decoration-none btn btn-outline-secondary" th:onclick="|updateCancelProblem(${currProblem.id})|">
 				취소
 			</button>
-			<button class="text-decoration-none btn btn-outline-primary" th:onclick="|updateOkProblem(${item.id})|">
+			<button class="text-decoration-none btn btn-outline-primary" th:onclick="|updateOkProblem(${currProblem.id})|">
 				변경
 			</button>
 		</div>
@@ -39,9 +39,15 @@
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-1 border-bottom">
 		<div class="justify-content-between"></div>
 		<div class="justify-content-center btn-group">
-			<button class="btn btn-secondary"><del>왼쪽</del></button>
-			<button class="btn btn-secondary"><del>1 / 2</del></button>
-			<button class="btn btn-secondary"><del>오른쪽</del></button>
+			<a href="#" role="button" class="btn btn-outline-secondary disabled" th:if="${#strings.isEmpty(prevProblem)}" disabled><del>이전</del></a>
+			<a href="/problem/" role="button" th:attrappend="href=${prevProblem.id}" class="btn btn-outline-secondary" th:if="${not #strings.isEmpty(prevProblem)}">이전</a>
+			
+			<button type="button" class="btn btn-outline-info">
+				<span th:text="${currProblem.ranking}"></span> / <span th:text="${totalProblem}"></span>
+			</button>
+			
+			<a href="#" role="button" class="btn btn-outline-secondary disabled" th:if="${#strings.isEmpty(nextProblem)}" disabled><del>다음</del></a>
+			<a href="/problem/" role="button" th:attrappend="href=${nextProblem.id}" class="btn btn-outline-secondary" th:if="${not #strings.isEmpty(nextProblem)}">다음</a>
 		</div>
 		<div class="justify-content-between float-md-end">
 			<button id="showVertical" class="btn btn-outline-secondary">
@@ -59,13 +65,13 @@
 	
 	<!-- Vertical -->
 	<div class="showVertical">
-		<div class="row row-cols-1 g-1">
+		<div class="row row-cols-1 g-1" th:ondblclick="|updateProblem(${currProblem.id})|">
 			<div class="col">
          		<div class="card shadow-sm">
             		<div class="card-body">
               			<p class="card-text">
 							<label for="problem_question" class="form-label">문제</label>
-  							<input type="text" class="form-control" id="problem_question" th:value="${item.question}" placeholder="문제를 입력하세요"  readonly>
+  							<input type="text" class="form-control" id="problem_question" th:value="${currProblem.question}" placeholder="더블클릭으로 입력"  readonly>
 			  			</p>
             		</div>
           		</div>
@@ -76,7 +82,7 @@
 	            	<div class="card-body">
 		              	<p class="card-text">
 							<label for="problem_answer" class="form-label">정답</label>
-  							<input type="text" class="form-control" id="problem_answer" th:value="${item.answer}" placeholder="정답을 입력하세요" readonly>
+  							<input type="text" class="form-control" id="problem_answer" th:value="${currProblem.answer}" placeholder="더블클릭으로 입력" readonly>
 					  	</p>
 	            	</div>
 	          	</div>
@@ -86,13 +92,13 @@
     
     <!-- Horizontal -->
     <div class="showHorizontal">
-		<div class="row row-cols-2 g-2">
+		<div class="row row-cols-2 g-2" th:ondblclick="|updateProblem(${currProblem.id})|">
 			<div class="col">
 	        	<div class="card shadow-sm">
 	            	<div class="card-body">
 	              		<p class="card-text">
 							<label for="problem_question" class="form-label">문제</label>
-  							<input type="text" class="form-control" id="problem_question" th:value="${item.question}" placeholder="문제를 입력하세요"  readonly>
+  							<input type="text" class="form-control" id="problem_question" th:value="${currProblem.question}" placeholder="더블클릭으로 입력"  readonly>
 				  		</p>
             		</div>
 	          	</div>
@@ -103,7 +109,7 @@
 	            	<div class="card-body">
 		              	<p class="card-text">
 						  	<label for="problem_answer" class="form-label">정답</label>
-  							<input type="text" class="form-control" id="problem_answer" th:value="${item.answer}" placeholder="정답을 입력하세요" readonly>
+  							<input type="text" class="form-control" id="problem_answer" th:value="${currProblem.answer}" placeholder="더블클릭으로 입력" readonly>
 					  	</p>
             		</div>
 	          	</div>
@@ -182,6 +188,7 @@ function updateOkProblem(id){
 	})
 }
 </script>
+
 </div>
 
 </html>

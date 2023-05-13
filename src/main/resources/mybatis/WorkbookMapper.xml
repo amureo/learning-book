@@ -73,13 +73,39 @@
        		workbook,
        		question,
        		answer,
-       		ranking
+       		ranking,
+       		createAt,
+       		updateAt
        	FROM
        		jsp.problem
        	WHERE
        		workbook=#{id}
        	ORDER BY
        		ranking ASC
+    </select>
+    <select id="selectAllProblemSort" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
+       	SELECT
+       		id,
+       		workbook,
+       		question,
+       		answer,
+       		ranking,
+       		createAt,
+       		updateAt
+       	FROM
+       		jsp.problem
+       	WHERE
+       		workbook=#{id}
+   		<trim prefix="ORDER BY">
+            <if test="sortStd == 'ranking'"> ranking </if>
+            <if test="sortStd == 'question'"> question </if>
+            <if test="sortStd == 'answer'"> answer </if>
+            <if test="sortStd == 'createAt'"> createAt </if>
+            <if test="sortStd == 'updateAt'"> updateAt </if>
+			   
+            <if test="sort == 'ASC'"> ASC </if>
+            <if test="sort == 'DESC'"> DESC </if>                       
+        </trim>
     </select>
     <!-- problem select by id -->
     <select id="selectOneProblem" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
@@ -88,7 +114,9 @@
        		workbook,
        		question,
        		answer,
-       		ranking
+       		ranking,
+       		createAt,
+       		updateAt
        	FROM
        		jsp.problem
        	WHERE
@@ -103,13 +131,17 @@
 	       		workbook,
 	       		question,
 	       		answer,
-	       		ranking)
+	       		ranking,
+	       		createAt,
+	       		updateAt)
        	VALUES(
        		#{id},
        		#{workbook},
        		#{question},
        		#{answer},
-       		(SELECT count(*) as c from jsp.problem as p)+1)
+       		(SELECT count(*) as c from jsp.problem as p)+1),
+       		NOW(),
+       		NOW()
 	</insert>
 	
 	<!-- problem update -->
@@ -118,7 +150,8 @@
        		jsp.problem
        	SET
        		question=#{question},
-       		answer=#{answer}
+       		answer=#{answer},
+       		updateAt=NOW()
        	WHERE
        		id=#{id}
     </update>
@@ -130,6 +163,49 @@
        	WHERE
        		id=#{id}
     </delete>
+    
+    
+    <!-- problem prev select by problem id -->
+    <select id="selectPrevProblem" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
+       	SELECT
+       		id,
+       		workbook,
+       		question,
+       		answer,
+       		ranking
+       	FROM
+       		jsp.problem
+       	WHERE
+       		workbook=#{workbookId} AND
+       		ranking=#{ranking}-1
+    </select>
+    <!-- problem next select by problem id -->
+    <select id="selectNextProblem" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
+       	SELECT
+       		id,
+       		workbook,
+       		question,
+       		answer,
+       		ranking
+       	FROM
+       		jsp.problem
+       	WHERE
+       		workbook=#{workbookId} AND
+       		ranking=#{ranking}+1
+    </select>
+    <!-- problem total count by workbook id -->
+    <select id="getTotalProblemByWorkbookId" parameterType="hashMap" resultType="int">
+       	SELECT
+       		count(*)
+       	FROM
+       		jsp.problem
+       	GROUP BY
+       		workbook
+       	HAVING
+       		workbook=#{workbookId}
+    </select>
+    
+    
     
 	
 	<!-- record insert -->
@@ -291,4 +367,30 @@
 		ORDER BY
        		ranking ASC
 	</select>
+	
+	
+	
+	
+	<!-- util -->
+	
+	
+	<!-- ranking update -->
+    <update id="updateRanking" parameterType="hashMap">
+        UPDATE 
+			(SELECT
+				id,
+				ROW_NUMBER() OVER (ORDER BY ranking asc) AS ranking
+			FROM
+				jsp.problem
+			WHERE
+				workbook=#{workbookId}
+			ORDER BY ranking ASC
+			) AS p2,
+			jsp.problem AS p1
+		SET
+			p1.ranking=p2.ranking
+		WHERE
+			p1.id=p2.id AND
+			p1.workbook=#{workbookId};
+    </update>
 </mapper>

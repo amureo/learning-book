@@ -40,9 +40,48 @@
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-1 border-bottom">
 		<div class="justify-content-between"></div>
 		<div class="justify-content-center btn-group">
-			<button class="btn btn-secondary"><del>이름순</del></button>
-			<button class="btn btn-secondary"><del>생성순</del></button>
-			<button class="btn btn-secondary"><del>수정순</del></button>
+			
+			
+			<a th:href="@{/workbook/{id}(id=${item.id},sort=${sortStd eq 'ranking'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=ranking)}"
+				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'ranking'} ? active : ''">
+				기본
+				<span th:if="${sortStd eq 'ranking'}">
+					<span th:if="${sort eq 'ASC'}"><i class="bi bi-sort-alpha-down"></i></span>
+					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
+				</span>
+			</a>
+			<a th:href="@{/workbook/{id}(id=${item.id},sort=${sortStd eq 'question'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=question)}"
+				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'question'} ? active : ''">
+				문제
+				<span th:if="${sortStd eq 'question'}">
+					<span th:if="${sort eq 'ASC'}"><i class="bi bi-sort-alpha-down"></i></span>
+					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
+				</span>
+			</a>
+			<a th:href="@{/workbook/{id}(id=${item.id},sort=${sortStd eq 'answer'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=answer)}"
+				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'answer'} ? active : ''">
+				답안
+				<span th:if="${sortStd eq 'answer'}">
+					<span th:if="${sort eq 'ASC'}"><i class="bi bi-sort-alpha-down"></i></span>
+					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
+				</span>
+			</a>
+			<a th:href="@{/workbook/{id}(id=${item.id},sort=${sortStd eq 'createAt'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=createAt)}"
+				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'createAt'} ? active : ''">
+				생성
+				<span th:if="${sortStd eq 'createAt'}">
+					<span th:if="${sort eq 'ASC'}"><i class="bi bi-sort-alpha-down"></i></span>
+					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
+				</span>
+			</a>
+			<a th:href="@{/workbook/{id}(id=${item.id},sort=${sortStd eq 'updateAt'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=updateAt)}"
+				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'updateAt'} ? active : ''">
+				수정
+				<span th:if="${sortStd eq 'updateAt'}">
+					<span th:if="${sort eq 'ASC'}"><i class="bi bi-sort-alpha-down"></i></span>
+					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
+				</span>
+			</a>
 		</div>
 		<div class="justify-content-between float-md-end">
 			<button id="showList" class="btn btn-outline-secondary" data-bs-toggle="button">
@@ -80,6 +119,9 @@
 						  	</a>
 					  	</p>
 		            </div>
+		            <div class="card-footer">
+						<div th:text="${#dates.format(item.updateAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
+					</div>
 	          	</div>
 	        </div>
 	 	 </div>

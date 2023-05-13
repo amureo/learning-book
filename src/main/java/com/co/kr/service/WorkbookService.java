@@ -28,6 +28,14 @@ public interface WorkbookService {
 	public void updateProblem(ProblemDomain problemDomain);
 	public void deleteProblem(Map map);
 	
+	// problem option
+	public ProblemDomain selectPrevProblem(Map map);
+	public ProblemDomain selectNextProblem(Map map);
+	public int getTotalProblemByWorkbookId(Map map);
+	// problem sort
+	public List<ProblemDomain> selectAllProblemSort(Map map);
+	
+	
 	//record
 	public void insertRecord(RecordDomain recordDomain);
 	public List<RecordDomain> selectAllRecord(Map map);
@@ -35,7 +43,7 @@ public interface WorkbookService {
 	public void deleteRecord(Map map);
 	
 	
-	// category
+	//category
 	public void insertCategory(CategoryDomain categoryDomain);
 	public List<CategoryDomain> selectAllCategory();
 	public CategoryDomain selectOneCategory(Map map);
@@ -43,7 +51,7 @@ public interface WorkbookService {
 	public void deleteCategory(Map map);
 	
 
-//	search
+	//search
 	public List<SearchDomain> searchProblem(Map map);
 	
 	

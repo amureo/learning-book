@@ -1,7 +1,10 @@
 package com.co.kr.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +18,8 @@ import com.co.kr.domain.RecordDomain;
 import com.co.kr.domain.SearchDomain;
 import com.co.kr.domain.WorkbookDomain;
 import com.co.kr.mapper.WorkbookMapper;
+import com.co.kr.sort.ProblemSort;
+import com.co.kr.sort.ProblemSortStd;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,10 +67,22 @@ public class WorkbookServiceImpl implements WorkbookService{
 	@Override
 	public void insertProblem(ProblemDomain problemDomain) {
 		workbookMapper.insertProblem(problemDomain);
+		
+
+		Map map=new HashMap<String,Object>();
+		int workbookId=problemDomain.getWorkbook();
+		map.put("workbookId", workbookId);
+		
+		workbookMapper.updateRanking(map);
 	}
 	@Override
 	public void insertProblemBlank(ProblemDomain problemDomain) {
 		workbookMapper.insertProblem(problemDomain);
+		
+		Map map=new HashMap<String,Object>();
+		int workbookId=problemDomain.getWorkbook();
+		map.put("workbookId", workbookId);
+		workbookMapper.updateRanking(map);
 	}
 	@Override
 	public List<ProblemDomain> selectAllProblem(Map map){
@@ -81,9 +98,44 @@ public class WorkbookServiceImpl implements WorkbookService{
 	}
 	@Override
 	public void deleteProblem(Map map) {
+		int workbookId=this.selectOneProblem(map).getWorkbook();
+		map.put("workbookId", workbookId);
+		
 		workbookMapper.deleteProblem(map);
+		workbookMapper.updateRanking(map);
 	}
 	
+
+	@Override
+	public ProblemDomain selectPrevProblem(Map map) {
+		ProblemDomain problemDomain =this.selectOneProblem(map);
+		int ranking=problemDomain.getRanking();
+		int workbookId=problemDomain.getWorkbook();
+		
+		if(ranking==1) return null;
+		map.put("ranking", ranking);
+		return workbookMapper.selectPrevProblem(map);
+	}
+	@Override
+	public ProblemDomain selectNextProblem(Map map) {
+		ProblemDomain problemDomain =this.selectOneProblem(map);
+		int ranking=problemDomain.getRanking();
+		int workbookId=problemDomain.getWorkbook();
+		map.put("workbookId", workbookId);
+		
+		int total=this.getTotalProblemByWorkbookId(map);
+		if(ranking==total) return null;
+		map.put("ranking", ranking);
+		return workbookMapper.selectNextProblem(map);
+	}
+	@Override
+	public int getTotalProblemByWorkbookId(Map map) {
+		return workbookMapper.getTotalProblemByWorkbookId(map);
+	}
+	@Override
+	public List<ProblemDomain> selectAllProblemSort(Map map){
+		return workbookMapper.selectAllProblemSort(map);
+	}
 	
 	
 
