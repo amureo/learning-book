@@ -441,7 +441,7 @@ public class UserController {
 		mav.addObject("workbook", workbook);
 		mav.addObject("total", items.size());
 		mav.addObject("current", current);
-		mav.setViewName("testing.html"); 
+		mav.setViewName("workbook/testDetail.html"); 
 		
 		return mav;
 	}

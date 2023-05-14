@@ -119,32 +119,25 @@
 	<div class="showCard">
 		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 			<div class="col">
-		        <div class="card shadow-sm">
-		            <div class="card-body">
-						<p class="card-text text-center">
-							<button th:onclick="|createProblem(${item.id})|" class="btn">
-								<i class="bi bi-plus-square-dotted"></i> 문제 추가하기
-							</button>
-				    	</p>
-		            </div>
+				
+		        <div class="card shadow-sm h-100">
+						<button th:onclick="|createProblem(${item.id})|" class="btn h-100 w-100">
+							<i class="bi bi-plus-square-dotted"></i> 문제 추가하기
+						</button>
 	          	</div>
 			</div>
 			
 			<div class="col" th:each="item : ${items}">
-				<a href="/problem/" th:attrappend="href=${item.id}" class="card shadow-sm text-decoration-none link-dark" th:data-problem-id="${item.id}">
+				<a href="/problem/" th:attrappend="href=${item.id}" class="card shadow-sm text-decoration-none link-dark h-100" th:data-problem-id="${item.id}">
 					<div class="card-body w-auto">
-						<p class="card-text" th:text="${item.question}">q</p>
-						<hr>
-						<p class="card-text" th:text="${item.answer}">a</p>
+						<h4 class="card-title text-truncate" th:text="${item.question}">q</h4>
+						<p class="card-text text-truncate" th:text="${item.answer}">a</p>
 					</div>
-		            <div class="card-footer">
-						<div th:text="${#dates.format(item.updateAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
+		            <div class="card-footer text-muted">
+						<div th:text="${#dates.format(#dates.create(#dates.year(item.updateAt),#dates.month(item.updateAt),#dates.day(item.updateAt),#dates.hour(item.updateAt)%12,#dates.minute(item.updateAt)), 'yyyy.MM.dd '+((#dates.hour(item.updateAt) >= 12)?'오후':'오전')+' HH시 mm분')}"></div>
 					</div>
 			  	</a>
 			</div>
-			
-			
-		        
 				
 	 	 </div>
 	</div>

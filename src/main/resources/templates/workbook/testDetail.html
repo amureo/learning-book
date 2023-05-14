@@ -51,7 +51,7 @@
 		<!-- content -->
 		<div th:if="${end} !=0">
 		<div>
-			<form action="/testing" method="post">
+			<form action="|/testing/${workbook}|" method="post">
 				<input type="hidden" name="workbook" th:value="${workbook}">
 				<input type="hidden" name="current" th:value="${current}+1">
 				<input type="hidden" th:name="|list[${listStat.index}]|" th:value="${list}" th:each="list, listStat : ${list}">
@@ -62,7 +62,7 @@
 			</form>
 			<span th:text="${score}"></span><span>/</span><span th:text="${total}"></span>
 			
-			<form action="/testing" method="post">
+			<form th:action="|/testing/${workbook}|" method="post">
 				<input type="hidden" name="workbook" th:value="${workbook}">
 				<input type="hidden" name="current" th:value="${current}+1">
 				<input type="hidden" th:name="|list[${listStat.index}]|" th:value="${list}" th:each="list, listStat : ${list}">
@@ -75,7 +75,7 @@
 		<hr>
 		<div th:if="${total}>0">
 			<div th:if="${current} == 0">
-				<form action="/testing" method="post">
+				<form th:action="|/testing/${workbook}|" method="post">
 					<input type="hidden" name="workbook" th:value="${workbook}">
 					<input type="hidden" name="current" th:value="${current}+1">
 					<input type="hidden" th:name="|list[${listStat.index}]|" th:value="${list}" th:each="list, listStat : ${list}">
