@@ -9,27 +9,49 @@
 <div th:if=${session.id} layout:fragment="header">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
 		<div class="d-flex">
-			<a href="/workbook" class="float-md-start mb-0 me-4 text-decoration-none btn btn-outline-primary">
-				<i class="bi bi-chevron-left"></i>
-			</a>
-			<h3 class="float-md-end mb-0">
-				<span th:text="${item.title}"></span> - <span th:text="${category.title}"></span>
-			</h3>
+			<div id="problem_header">
+				<a href="/workbook" class="float-md-start mb-0 me-4 text-decoration-none btn btn-outline-primary">
+					<i class="bi bi-chevron-left"></i>
+				</a>
+				<h3 class="float-md-end mb-0">
+					<span th:text="${item.title}"></span> - <span th:text="${category.title}"></span>
+				</h3>
+			</div>
+			<div class="hide" id="select_problem_header">
+				<button class="btn btn-outline-primary float-md-start mb-0 me-4" onclick="selectAllProblem(event)" id="btn_select_all_problem">
+					<i class="bi bi-circle"></i> 전체선택
+				</button>
+				<h3 class="float-md-start mb-0">
+					<span id="select_problem_count">0</span>개 선택됨
+				</h3>
+				<button class="btn btn-outline-primary float-md-end ms-4 mb-0" onclick="selectProblemModeOff(event)">
+					<i class="bi bi-x-circle"></i></i> 취소
+				</button>
+			</div>
+			
 		</div>
+		
+		
+			
 		<div class="justify-content-between float-md-end">
 			<a th:href="@{/testing(workbook=${item.id})}" class="text-decoration-none btn btn-outline-primary">
 				<i class="bi bi-journal-check"></i> 테스트
 			</a>
-			<button class="text-decoration-none btn btn-outline-primary">
+			<button class="btn btn-outline-primary">
 				<del><i class="bi bi-clipboard-data"></i> 통계</del>
 			</button>
-			<button class="text-decoration-none btn btn-outline-primary">
-				<del><i class="bi bi-check-circle"></i> 선택</del>
+			<button class="btn btn-outline-primary" onclick="selectProblemModeOn(event)">
+				<i class="bi bi-check-circle"></i> 선택
 			</button>
-			<button class="text-decoration-none btn btn-outline-primary" th:onclick="|updateWorkbook(${item.id})|">
+			<button class="btn btn-outline-primary" th:onclick="|updateWorkbook(${item.id})|">
 				<i class="bi bi-pencil"></i> 수정
 			</button>
-			<button class="text-decoration-none btn btn-outline-danger" th:onclick="|deleteWorkbook(${item.id})|">
+			<button class="btn btn-outline-danger" th:onclick="|deleteWorkbook(${item.id})|">
+				<i class="bi bi-trash"></i> 삭제
+			</button>
+			
+			<!-- 문제 선택 -->
+			<button class="btn btn-outline-danger hide" id="btn_delete_problem" onclick="deleteProblem()">
 				<i class="bi bi-trash"></i> 삭제
 			</button>
 		</div>
@@ -108,22 +130,23 @@
 		            </div>
 	          	</div>
 			</div>
-		        
-	        <div class="col" th:each="item : ${items}">
-				<div class="card shadow-sm">
-					<div class="card-body">
-		            	<p class="card-text">
-				  			<a href="/problem/" th:attrappend="href=${item.id}" class="list-group w-auto text-decoration-none">
-								<span class="list-group-item" th:text="${item.question}">q</span>
-								<span class="list-group-item" th:text="${item.answer}">a</span>
-						  	</a>
-					  	</p>
-		            </div>
+			
+			<div class="col" th:each="item : ${items}">
+				<a href="/problem/" th:attrappend="href=${item.id}" class="card shadow-sm text-decoration-none link-dark" th:data-problem-id="${item.id}">
+					<div class="card-body w-auto">
+						<p class="card-text" th:text="${item.question}">q</p>
+						<hr>
+						<p class="card-text" th:text="${item.answer}">a</p>
+					</div>
 		            <div class="card-footer">
 						<div th:text="${#dates.format(item.updateAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
 					</div>
-	          	</div>
-	        </div>
+			  	</a>
+			</div>
+			
+			
+		        
+				
 	 	 </div>
 	</div>
 	<!-- List View -->      
@@ -278,6 +301,122 @@ function createProblem(workbook){
 	})
 }
 </script>
+
+<script>
+const selectSet = new Set();
+let count=0;
+
+function selectProblemModeOn(event){
+	// 레이아웃 설정
+	$("#btn_delete_problem").removeClass("hide").siblings().addClass("hide");
+	$("#select_problem_header").removeClass('hide');
+	$("#problem_header").addClass('hide');
+	
+	// 문제 클릭 시 이벤트 처리
+	$(document).on("click","a.card",selectProblem);
+}
+
+function selectProblemModeOff(event){
+	// 레이아웃 설정
+	$("#btn_delete_problem").addClass("hide").siblings().removeClass("hide");
+	$("#select_problem_header").addClass('hide');
+	$("#problem_header").removeClass('hide');
+	$("a.card").removeClass("text-bg-primary link-light").addClass("link-dark");
+	
+	// 문제 클릭 시 이벤트 처리 삭제
+	$(document).off("click","a.card");
+	
+	// set 처리
+	selectSet.clear();
+	$("#select_problem_count").text(selectSet.size);
+	// 전체선택 활성화
+	$(".bi-record-circle").addClass("bi-circle").removeClass("bi-record-circle");
+	$("#btn_select_all_problem").removeClass("active");
+}
+
+function selectAllProblem(event){
+	
+	// 전체선택됨
+	if(selectSet.size==$("a.card").length){
+		// set에 추가
+		$("a.card").each((index,element)=>{
+			selectSet.delete($(element).data("problemId"))
+		});
+		// 레이아웃
+		$("a.card").removeClass("text-bg-primary link-light").addClass("link-dark");
+		
+		// 전체선택 활성화
+		$(".bi-record-circle").addClass("bi-circle").removeClass("bi-record-circle");
+		$("#btn_select_all_problem").removeClass("active");
+	}else{
+		// set에 추가
+		$("a.card").each((index,element)=>{
+			selectSet.add($(element).data("problemId"))
+		});
+		
+		// 레이아웃
+		$("a.card").addClass("text-bg-primary link-light").removeClass("link-dark");
+		// 전체선택 비활성화
+		$(".bi-circle").addClass("bi-record-circle").removeClass("bi-circle");
+		$("#btn_select_all_problem").addClass("active");
+	}
+	
+	// 선택된 개수 표시
+	$("#select_problem_count").text(selectSet.size);
+}
+
+function selectProblem(event){
+	event.preventDefault();
+	// 선택된 카드 전환
+	$(this).toggleClass("text-bg-primary link-light link-dark");
+	let problemId=$(this).data("problemId");
+	// set에 선택된 problem id 추가 및 삭제
+	if(selectSet.has(problemId)) selectSet.delete(problemId);
+	else selectSet.add(problemId);
+	
+	// 선택된 개수 표시
+	$("#select_problem_count").text(selectSet.size);
+	
+	// 전체선택 비활성화
+	if(selectSet.size==$("a.card").length){
+		$(".bi-circle").addClass("bi-record-circle").removeClass("bi-circle");
+		$("#btn_select_all_problem").addClass("active");
+	}
+	else{
+		$(".bi-record-circle").addClass("bi-circle").removeClass("bi-record-circle");
+		$("#btn_select_all_problem").removeClass("active");
+	}
+}
+
+
+function deleteProblem(event){
+	if ( !confirm('선택하신 문제들을 삭제할까요?') ) {
+        return false;
+    }
+    let total=selectSet.size
+    selectSet.forEach((id)=>{
+		$.ajax({
+			url:"/api/problem/"+id,
+			type:"DELETE",
+			async:false,
+			success:function(response){
+				count++;
+				if(total==count){
+					location.href=location.href;
+				}
+			},
+			error:function(request, status, error){
+				console.log(error);
+			}
+		});
+	});
+	
+	selectProblemModeOff();
+}
+
+</script>
+
+
 </div>
 
 </html>

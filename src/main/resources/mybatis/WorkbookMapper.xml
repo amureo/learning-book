@@ -139,9 +139,9 @@
        		#{workbook},
        		#{question},
        		#{answer},
-       		(SELECT count(*) as c from jsp.problem as p)+1),
+       		(SELECT count(*) as c from jsp.problem as p)+1,
        		NOW(),
-       		NOW()
+       		NOW())
 	</insert>
 	
 	<!-- problem update -->
