@@ -38,9 +38,11 @@
 <div th:if=${session.id} layout:fragment="toolbar">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-1 border-bottom">
 		<div class="justify-content-between"></div>
-		<div class="justify-content-center btn-group">
-			<a href="#" role="button" class="btn btn-outline-secondary disabled" th:if="${#strings.isEmpty(prevProblem)}" disabled><del>이전</del></a>
-			<a href="/problem/" role="button" th:attrappend="href=${prevProblem.id}" class="btn btn-outline-secondary" th:if="${not #strings.isEmpty(prevProblem)}">이전</a>
+		<div class="justify-content-center btn-group" id="navigation">
+			<a href="#" role="button" class="btn btn-outline-secondary disabled"
+				th:if="${#strings.isEmpty(prevProblem)}" disabled><del>이전</del></a>
+			<a href="/problem/" role="button" th:attrappend="href=${prevProblem.id}"
+				class="btn btn-outline-secondary" th:if="${not #strings.isEmpty(prevProblem)}">이전</a>
 			
 			<button type="button" class="btn btn-outline-info">
 				<span th:text="${currProblem.ranking}"></span> / <span th:text="${totalProblem}"></span>
@@ -187,6 +189,39 @@ function updateOkProblem(id){
 		}
 	})
 }
+</script>
+<script>
+let startPoint = 0;
+let endPoint = 0;
+// PC slide
+window.addEventListener("mousedown", (e) => {
+  startPoint = e.pageX;
+});
+
+window.addEventListener("mouseup", (e) => {
+  endPoint = e.pageX;
+  if (startPoint+100 < endPoint) {
+	  if($("#navigation").find("a").eq(0).attr("href")!="#")
+	 	location.href= $("#navigation").find("a").eq(0).attr("href");
+  } else if (startPoint-100 > endPoint) {
+	  if($("#navigation").find("a").eq(1).attr("href")!="#")
+	 	location.href= $("#navigation").find("a").eq(1).attr("href");
+  }
+});
+
+window.addEventListener("keypress",(e)=>{
+	console.log(e);
+	if ($(e.target).closest("input")[0]) {
+        return;
+    }
+    if(e.keyCode==65 ||e.keyCode==97 || e.keyCode==12609){
+		if($("#navigation").find("a").eq(0).attr("href")!="#")
+	 	location.href= $("#navigation").find("a").eq(0).attr("href");
+	}else if(e.keyCode==68 ||e.keyCode==100 || keyCode==12615){
+	  if($("#navigation").find("a").eq(1).attr("href")!="#")
+	 	location.href= $("#navigation").find("a").eq(1).attr("href");
+	}
+})
 </script>
 
 </div>
