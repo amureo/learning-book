@@ -343,29 +343,42 @@ public class UserController {
 	 * 
 	 */
 	
-	
 	@GetMapping("testing")
-	public ModelAndView testing(@RequestParam("workbook") String workbook) {
-		System.out.println("testing ==> "+ workbook);
+	public ModelAndView testing(HttpServletRequest request) {
+		Map map=CommonUtils.getMember(request);
+		ModelAndView mav=new ModelAndView();
+		
+		List<WorkbookDomain> workbookList=workbookService.selectAllWorkbook(map);
+		mav.addObject("workbookList", workbookList);
+		
+		mav.setViewName("testing.html"); 
+		return mav;
+	}
+	
+	
+	
+	@GetMapping("testing/{workbookId}")
+	public ModelAndView testingDetail(@PathVariable("workbookId") String workbookId) {
+		System.out.println("testing ==> "+ workbookId);
 		
 		ModelAndView mav=new ModelAndView();
 		
 		Map map = new HashMap<String, String>();
-		map.put("id", workbook);
+		map.put("id", workbookId);
 		
 		List<ProblemDomain> items = workbookService.selectAllProblem(map);
 		
-		mav.addObject("workbook", workbook);
+		mav.addObject("workbook", workbookId);
 		mav.addObject("total", items.size());
 		mav.addObject("current", "0");
 		mav.addObject("score", "0");
-		mav.setViewName("testing.html"); 
+		mav.setViewName("workbook/testDetail.html"); 
 		
 		return mav;
 	}
 	
-	@PostMapping("testing")
-	public ModelAndView testingProgress(TestingVO testingVO, HttpServletRequest request) {
+	@PostMapping("testing/{workbookId}")
+	public ModelAndView testingContinue(@PathVariable("workbookId") String workbookId, TestingVO testingVO, HttpServletRequest request) {
 		int current=testingVO.getCurrent();
 		int workbook=testingVO.getWorkbook();
 		int score=testingVO.getScore();
