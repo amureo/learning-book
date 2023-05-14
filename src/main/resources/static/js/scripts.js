@@ -22,11 +22,12 @@ window.addEventListener('DOMContentLoaded', event => {
             localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
         });
     }
-
 });
 
-
+// sidebar active
 $(function(){
-	$('.sidebar1 a.active').removeClass("active");
-    $('.sidebar1 a').filter(function(e){return this.href==location.href;}).addClass('active').removeClass('link-dark');
+    $('.sidebar1 a').filter(function(e){
+		if(location.href.indexOf("problem") != -1 && this.href.indexOf("workbook") != -1) return true;
+		return location.href.indexOf(this.href) !== -1
+	}).addClass('active').removeClass("link-dark")
 })
