@@ -10,12 +10,18 @@
 	       		id,
 	       		title,
 	       		category,
-	       		owner)
+	       		owner,
+	       		ranking,
+	       		createAt,
+	       		updateAt)
        	VALUES(
        		#{id},
        		#{title},
        		#{category},
-       		#{owner})
+       		#{owner},
+       		(SELECT count(*) as c from jsp.workbook as p)+1,
+       		NOW(),
+       		NOW())
     </insert>
     
     
@@ -24,19 +30,47 @@
        	SELECT
        		id,
        		title,
-       		category
+       		category,
+       		ranking,
+       		createAt,
+       		updateAt
        	FROM
        		jsp.workbook
        	WHERE
        		owner=#{owner}
     </select>
-    
+    <!-- select all sort -->
+    <select id="selectAllWorkbookSort" parameterType="hashMap" resultType="com.co.kr.domain.WorkbookDomain">
+       	SELECT
+       		id,
+       		title,
+       		category,
+       		ranking,
+       		createAt,
+       		updateAt
+       	FROM
+       		jsp.workbook
+       	WHERE
+       		owner=#{owner}
+   		<trim prefix="ORDER BY">
+            <if test="sortStd == 'ranking'"> ranking </if>
+            <if test="sortStd == 'title'"> title </if>
+            <if test="sortStd == 'createAt'"> createAt </if>
+            <if test="sortStd == 'updateAt'"> updateAt </if>
+			   
+            <if test="sort == 'ASC'"> ASC </if>
+            <if test="sort == 'DESC'"> DESC </if>                       
+        </trim>
+    </select>
     <!-- select one -->
     <select id="selectOneWorkbook" parameterType="hashMap" resultType="com.co.kr.domain.WorkbookDomain">
        	SELECT
        		id,
        		title,
-       		category
+   			category,
+   			ranking,
+       		createAt,
+       		updateAt
        	FROM
        		jsp.workbook
        	WHERE
@@ -49,7 +83,8 @@
        		jsp.workbook
        	SET
        		title=#{title},
-       		category=#{category}
+       		category=#{category},
+       		updateAt=NOW()
        	WHERE
        		id=#{id} AND owner=#{owner}
     </update>
@@ -83,6 +118,7 @@
        	ORDER BY
        		ranking ASC
     </select>
+    
     <select id="selectAllProblemSort" parameterType="hashMap" resultType="com.co.kr.domain.ProblemDomain">
        	SELECT
        		id,
@@ -392,5 +428,25 @@
 		WHERE
 			p1.id=p2.id AND
 			p1.workbook=#{workbookId};
+    </update>
+    
+    <!-- workbook ranking update -->
+    <update id="updateWorkbookRanking" parameterType="hashMap">
+        UPDATE 
+			(SELECT
+				id,
+				ROW_NUMBER() OVER (ORDER BY ranking asc) AS ranking
+			FROM
+				jsp.workbook
+			WHERE
+				owner=#{owner}
+			ORDER BY ranking ASC
+			) AS w2,
+			jsp.workbook AS w1
+		SET
+			w1.ranking=w2.ranking
+		WHERE
+			w1.id=w2.id AND
+			w1.owner=#{owner};
     </update>
 </mapper>

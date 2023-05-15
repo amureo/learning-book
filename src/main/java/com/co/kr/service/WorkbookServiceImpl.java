@@ -54,6 +54,13 @@ public class WorkbookServiceImpl implements WorkbookService{
 	@Override
 	public void deleteWorkbook(Map map) {
 		workbookMapper.deleteWorkbook(map);
+		workbookMapper.updateWorkbookRanking(map);
+	}
+	
+
+	@Override
+	public List<WorkbookDomain> selectAllWorkbookSort(Map map){
+		return workbookMapper.selectAllWorkbookSort(map);
 	}
 	
 	

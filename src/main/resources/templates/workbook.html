@@ -6,26 +6,80 @@
     <title>workbook</title>
 </head>
 
-
 <div th:if=${session.id} layout:fragment="header">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-		<h3 class="float-md-start mb-0">워크북</h3>
+		<div class="d-flex">
+			<div id="workbook_header">
+				<a href="/workbook" class="float-md-start mb-0 me-4 text-decoration-none btn btn-outline-primary">
+					<i class="bi bi-chevron-left"></i>
+				</a>
+				<h3 class="float-md-end mb-0">워크북</h3>
+			</div>
+			<div class="hide" id="select_workbook_header">
+				<button class="btn btn-outline-primary float-md-start mb-0 me-4" onclick="selectAllWorkbook(event)" id="btn_select_all_workbook">
+					<i class="bi bi-circle"></i> 전체선택
+				</button>
+				<h3 class="float-md-start mb-0">
+					<span id="select_workbook_count">0</span>개 선택됨
+				</h3>
+			</div>
+		</div>
 		
-		<div class="justify-content-between float-md-end">
-			<button class="text-decoration-none btn btn-outline-primary">
-				<del><i class="bi bi-check-circle"></i>선택</del>
+		<div class="justify-content-between float-md-end default-tool" id="workbook_menu">
+			<button class="btn btn-outline-primary" onclick="selectWorkbookModeOn(event)">
+				<i class="bi bi-check-circle"></i> 선택
+			</button>
+		</div>
+		
+		<!-- 문제집 선택 메뉴 -->
+		<div class="justify-content-between float-md-end hide" id="select_workbook_menu">
+			<button class="btn btn-outline-primary" onclick="selectWorkbookModeOff(event)">
+				<i class="bi bi-x-circle"></i></i> 취소
+			</button>
+			<button class="btn btn-outline-danger" onclick="deleteWorkbook()">
+				<i class="bi bi-trash"></i> 삭제
 			</button>
 		</div>
 	</div>
 </div>
 
+
 <div th:if=${session.id} layout:fragment="toolbar">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-1 border-bottom">
 		<div class="justify-content-between"></div>
 		<div class="justify-content-center btn-group">
-			<button class="btn btn-secondary"><del>문제</del></button>
-			<button class="btn btn-secondary"><del>생성</del></button>
-			<button class="btn btn-secondary"><del>수정</del></button>
+			<a th:href="@{/workbook(sort=${sortStd eq 'ranking'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=ranking)}"
+				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'ranking'} ? active : ''">
+				기본
+				<span th:if="${sortStd eq 'ranking'}">
+					<span th:if="${sort eq 'ASC'}"><i class="bi bi-sort-alpha-down"></i></span>
+					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
+				</span>
+			</a>
+			<a th:href="@{/workbook(sort=${sortStd eq 'title'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=title)}"
+				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'title'} ? active : ''">
+				이름
+				<span th:if="${sortStd eq 'title'}">
+					<span th:if="${sort eq 'ASC'}"><i class="bi bi-sort-alpha-down"></i></span>
+					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
+				</span>
+			</a>
+			<a th:href="@{/workbook(sort=${sortStd eq 'createAt'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=createAt)}"
+				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'createAt'} ? active : ''">
+				생성
+				<span th:if="${sortStd eq 'createAt'}">
+					<span th:if="${sort eq 'ASC'}"><i class="bi bi-sort-alpha-down"></i></span>
+					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
+				</span>
+			</a>
+			<a th:href="@{/workbook(sort=${sortStd eq 'updateAt'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=updateAt)}"
+				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'updateAt'} ? active : ''">
+				수정
+				<span th:if="${sortStd eq 'updateAt'}">
+					<span th:if="${sort eq 'ASC'}"><i class="bi bi-sort-alpha-down"></i></span>
+					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
+				</span>
+			</a>
 		</div>
 		<div class="justify-content-between float-md-end">
 			<button id="showList" class="btn btn-outline-secondary" data-bs-toggle="button">
@@ -38,32 +92,28 @@
 <div th:if=${session.id} layout:fragment="content" class="mb-auto">
 	<!-- content -->
 	
-	<!-- Card View -->   
+	<!-- Card View -->
 	<div class="showCard">
 		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 			<div class="col">
 		        <div class="card shadow-sm h-100">
-		            <div class="card-body text-center">
-						<p class="card-text text-center">
-							<button onclick="crateWorkbook()" class="btn">
-								<i class="bi bi-plus-square-dotted"></i> 워크북 추가하기
-							</button>
-				    	</p>
-		            </div>
+					<button onclick="crateWorkbook()" class="btn btn h-100 w-100">
+						<i class="bi bi-plus-square-dotted"></i> 워크북 추가하기
+					</button>
 	          	</div>
 			</div>
-	    
 	      	<div th:if="!${items}">워크북이 없습니다</div>
-		        
-	        <div class="col" th:each="item : ${items}">
-				<div class="card shadow-sm h-100">
-					<div class="card-body">
-		            	<p class="card-text">
-							<a href="/workbook/" th:attrappend="href=${item.id}" th:text="${item.title}"></a>
-					  	</p>
-		            </div>
-	          	</div>
-	        </div>
+			
+			<div class="col" th:each="workbook : ${items}">
+				<a href="/workbook/" th:attrappend="href=${workbook.id}" class="card shadow-sm text-decoration-none link-dark h-100" th:data-workbook-id="${workbook.id}">
+					<div class="card-body w-auto py-5">
+						<h5 class="card-title text-truncate text-center" th:text="${workbook.title}">title</h5>
+					</div>
+					<div class="card-footer text-muted">
+						<div th:text="${#dates.format(#dates.create(#dates.year(workbook.updateAt),#dates.month(workbook.updateAt),#dates.day(workbook.updateAt),#dates.hour(workbook.updateAt)%12,#dates.minute(workbook.updateAt)), 'yyyy.MM.dd '+((#dates.hour(workbook.updateAt) >= 12)?'오후':'오전')+' HH시 mm분')}"></div>
+					</div>
+			  	</a>
+			</div>
 	 	 </div>
 	</div>
 	<!-- List View -->      
@@ -166,6 +216,121 @@ function createOkWorkbook(){
 			console.log(error);
 		}
 	})
+}
+</script>
+<script>
+
+const selectSet = new Set();
+let count=0;
+
+function selectWorkbookModeOn(event){
+	// 레이아웃 설정
+	$("#select_workbook_menu").removeClass("hide")
+	$("#workbook_menu").addClass("hide");
+	$("#select_workbook_header").removeClass('hide');
+	$("#workbook_header").addClass('hide');
+	
+	// 문제 클릭 시 이벤트 처리
+	$(document).on("click","a.card",selectWorkbook);
+}
+
+function selectWorkbookModeOff(event){
+	// 레이아웃 설정
+	$("#select_workbook_menu").addClass("hide")
+	$("#workbook_menu").removeClass("hide");
+	$("#select_workbook_header").addClass('hide');
+	$("#workbook_header").removeClass('hide');
+	$("a.card").removeClass("text-bg-primary link-light").addClass("link-dark");
+	
+	// 문제 클릭 시 이벤트 처리 삭제
+	$(document).off("click","a.card");
+	
+	// set 처리
+	selectSet.clear();
+	$("#select_workbook_count").text(selectSet.size);
+	// 전체선택 활성화
+	$(".bi-record-circle").addClass("bi-circle").removeClass("bi-record-circle");
+	$("#btn_select_all_workbook").removeClass("active");
+}
+
+function selectAllWorkbook(event){
+	
+	// 전체선택됨
+	if(selectSet.size==$("a.card").length){
+		// set에 추가
+		$("a.card").each((index,element)=>{
+			selectSet.delete($(element).data("workbookId"))
+		});
+		// 레이아웃
+		$("a.card").removeClass("text-bg-primary link-light").addClass("link-dark");
+		
+		// 전체선택 활성화
+		$(".bi-record-circle").addClass("bi-circle").removeClass("bi-record-circle");
+		$("#btn_select_all_workbook").removeClass("active");
+	}else{
+		// set에 추가
+		$("a.card").each((index,element)=>{
+			selectSet.add($(element).data("workbookId"))
+		});
+		
+		// 레이아웃
+		$("a.card").addClass("text-bg-primary link-light").removeClass("link-dark");
+		// 전체선택 비활성화
+		$(".bi-circle").addClass("bi-record-circle").removeClass("bi-circle");
+		$("#btn_select_all_workbook").addClass("active");
+	}
+	
+	// 선택된 개수 표시
+	$("#select_workbook_count").text(selectSet.size);
+}
+
+function selectWorkbook(event){
+	event.preventDefault();
+	// 선택된 카드 전환
+	$(this).toggleClass("text-bg-primary link-light link-dark");
+	let selectId=$(this).data("workbookId");
+	// set에 선택된 select id 추가 및 삭제
+	if(selectSet.has(selectId)) selectSet.delete(selectId);
+	else selectSet.add(selectId);
+	
+	// 선택된 개수 표시
+	$("#select_workbook_count").text(selectSet.size);
+	
+	// 전체선택 비활성화
+	if(selectSet.size==$("a.card").length){
+		$(".bi-circle").addClass("bi-record-circle").removeClass("bi-circle");
+		$("#btn_select_all_workbook").addClass("active");
+	}
+	else{
+		$(".bi-record-circle").addClass("bi-circle").removeClass("bi-record-circle");
+		$("#btn_select_all_workbook").removeClass("active");
+	}
+}
+
+
+function deleteWorkbook(event){
+	if ( !confirm('선택하신 문제집들을 삭제할까요?') ) {
+        return false;
+    }
+    let total=selectSet.size
+    selectSet.forEach((id)=>{
+		$.ajax({
+			url:"/api/workbook/"+id,
+			type:"DELETE",
+			async:false,
+			success:function(response){
+				count++;
+				if(total==count){
+					location.href=location.href;
+				}
+			},
+			error:function(request, status, error){
+				console.log(error);
+			}
+		});
+	});
+	
+	selectWorkbookModeOff();
 }
 </script>
 </div>

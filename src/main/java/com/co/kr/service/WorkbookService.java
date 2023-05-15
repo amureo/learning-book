@@ -19,6 +19,8 @@ public interface WorkbookService {
 	public WorkbookDomain selectOneWorkbook(Map map);
 	public void updateWorkbook(WorkbookDomain workbookDomain);
 	public void deleteWorkbook(Map map);
+	// workbook sort
+	public List<WorkbookDomain> selectAllWorkbookSort(Map map);
 	
 	//problem
 	public void insertProblem(ProblemDomain problemDomain);

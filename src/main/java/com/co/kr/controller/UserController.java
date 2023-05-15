@@ -1,7 +1,6 @@
 package com.co.kr.controller;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +32,8 @@ import com.co.kr.service.UserService;
 import com.co.kr.service.WorkbookService;
 import com.co.kr.sort.ProblemSort;
 import com.co.kr.sort.ProblemSortStd;
+import com.co.kr.sort.WorkbookSort;
+import com.co.kr.sort.WorkbookSortStd;
 import com.co.kr.util.CommonUtils;
 import com.co.kr.vo.LoginVO;
 import com.co.kr.vo.SortVO;
@@ -248,15 +249,32 @@ public class UserController {
 	 */
 	
 	@GetMapping("workbook")
-	public ModelAndView workbook(HttpServletRequest request){
+	public ModelAndView workbook(HttpServletRequest request,SortVO sort){
 		ModelAndView mav=new ModelAndView();
 		Map map=CommonUtils.getMember(request);
 		
-		List<WorkbookDomain> items = workbookService.selectAllWorkbook(map);
+		// sort setting
+		map.put("sort", sort.getSort());
+		map.put("sortStd", sort.getSortStd());
+		List<String> sortList = Stream.of(WorkbookSort.values())
+ 				.map(Enum::name)
+ 				.collect(Collectors.toList());
+		List<String> sortStdList = Stream.of(WorkbookSortStd.values())
+ 				.map(Enum::name)
+ 				.collect(Collectors.toList());
+
+		if(!sortList.contains(map.get("sort"))) map.put("sort", "ASC");
+		if(!sortStdList.contains(map.get("sortStd"))) map.put("sortStd", "ranking");
+		mav.addObject("sort", map.get("sort"));
+		mav.addObject("sortStd", map.get("sortStd"));
+		
+		// all workbook
+		List<WorkbookDomain> items = workbookService.selectAllWorkbookSort(map);
+		mav.addObject("items", items);
+
 		
 		mav.addObject("items", items);
 		mav.setViewName("workbook.html"); 
-		
 		return mav;
 	}
 	
@@ -290,7 +308,6 @@ public class UserController {
 		// this workbook's all problem
 		List<ProblemDomain> items = workbookService.selectAllProblemSort(map);
 		mav.addObject("items", items);
-		System.out.println(items);
 
 		// this workbook's category
 		map.put("id", item.getCategory());

@@ -27,6 +27,9 @@ public interface WorkbookMapper {
     public void updateWorkbook(WorkbookDomain workbookDomain);
     // delete
     public void deleteWorkbook(Map map);
+
+	public List<WorkbookDomain> selectAllWorkbookSort(Map map);
+    
     
     /*
      * 
@@ -81,4 +84,5 @@ public interface WorkbookMapper {
 	
 	//util
 	public void updateRanking(Map map);
+	public void updateWorkbookRanking(Map map);
 }
