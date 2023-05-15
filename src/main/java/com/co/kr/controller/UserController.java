@@ -375,17 +375,18 @@ public class UserController {
 	
 	
 	@GetMapping("testing/{workbookId}")
-	public ModelAndView testingDetail(@PathVariable("workbookId") String workbookId) {
-		System.out.println("testing ==> "+ workbookId);
-		
+	public ModelAndView testingDetail(@PathVariable("workbookId") String workbookId, HttpServletRequest request) {
+		Map map=CommonUtils.getMember(request);
 		ModelAndView mav=new ModelAndView();
 		
-		Map map = new HashMap<String, String>();
 		map.put("id", workbookId);
 		
 		List<ProblemDomain> items = workbookService.selectAllProblem(map);
 		
-		mav.addObject("workbook", workbookId);
+		// this workbook
+		WorkbookDomain workbook=workbookService.selectOneWorkbook(map);
+		
+		mav.addObject("workbook", workbook);
 		mav.addObject("total", items.size());
 		mav.addObject("current", "0");
 		mav.addObject("score", "0");
@@ -397,16 +398,18 @@ public class UserController {
 	@PostMapping("testing/{workbookId}")
 	public ModelAndView testingContinue(@PathVariable("workbookId") String workbookId, TestingVO testingVO, HttpServletRequest request) {
 		int current=testingVO.getCurrent();
-		int workbook=testingVO.getWorkbook();
 		int score=testingVO.getScore();
 		List<Integer> list=(List) testingVO.getList();
-		
-		System.out.println("testing problem ==> "+ current);
-		
 		ModelAndView mav=new ModelAndView();
+		Map map=CommonUtils.getMember(request);
 		
-		Map map = new HashMap<String, String>();
-		map.put("id", workbook);
+
+		map.put("id", workbookId);
+		
+		// this workbook
+		WorkbookDomain workbook=workbookService.selectOneWorkbook(map);
+		
+		
 		
 		List<ProblemDomain> items = workbookService.selectAllProblem(map);
 		ProblemDomain item=null;
