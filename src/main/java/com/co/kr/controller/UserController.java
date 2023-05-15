@@ -451,16 +451,28 @@ public class UserController {
 		ModelAndView mav=new ModelAndView();
 		Map map=CommonUtils.getMember(request);
 
+		// record
 		List<RecordDomain> items = workbookService.selectAllRecord(map);
 		items.forEach(item->{
 			map.put("id", item.getWorkbook());
 			WorkbookDomain workbookDomain=workbookService.selectOneWorkbook(map);
 			item.setTitle(workbookDomain.getTitle());
+			item.setCategory(workbookDomain.getCategory());
 		});
-		
 		mav.addObject("items",items);
-		mav.setViewName("record.html"); 
 		
+		
+		// filter setting
+		// all category
+		List<CategoryDomain> categoryList=workbookService.selectAllCategory();
+		mav.addObject("categoryList",categoryList);
+		
+		// all workbook
+		List<WorkbookDomain> workbookList=workbookService.selectAllWorkbook(map);
+		mav.addObject("workbookList",workbookList);
+		
+		
+		mav.setViewName("record.html"); 
 		return mav;
 	}
 	

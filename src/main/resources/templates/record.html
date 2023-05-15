@@ -44,11 +44,26 @@
         			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
      			</div>
       			<div class="modal-body">
-        			필터 내용
+					<ul class="list-group list-group-horizontal justify-content-center">
+				  		<ul class="list-group">
+							<h4 class="text-center">카테고리</h4>
+						  	<li class="list-group-item" th:each="category : ${categoryList}">
+						    	<input class="form-check-input me-1" name="filterCategory" th:value="${category.id}" type="checkbox" th:id="|category_${categoryStat.index}|">
+						    	<label class="form-check-label" th:for="|category_${categoryStat.index}|" th:text="${category.title}">checkbox</label>
+						  	</li>
+						</ul>
+				  		<ul class="list-group">
+							<h4 class="text-center">워크북</h4>
+						  	<li class="list-group-item" th:each="workbook : ${workbookList}">
+						    	<input class="form-check-input me-1" name="filterWorkbook" th:value="${workbook.id}" type="checkbox" th:id="|workbook_${workbookStat.index}|">
+						    	<label class="form-check-label" th:for="|workbook_${workbookStat.index}|" th:text="${workbook.title}">checkbox</label>
+						  	</li>
+						</ul>
+					</ul>
       			</div>
       			<div class="modal-footer">
     				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        			<button type="button" class="btn btn-danger" id="deleteRecord">적용</button>
+        			<button type="button" class="btn btn-danger" onclick="filterRecord()">적용</button>
       			</div>
     		</div>
   		</div>
@@ -73,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				workbook: item.workbook,
 				title: item.title,
 				start: item.createAt,
+				category:item.category,
 				allDay:true
 			}
 		}),
@@ -83,7 +99,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	        center: 'title',
 	        end: 'prevYear,prev,today,next,nextYear'
       	},
-		customButtons: {
+      	buttonIcons:{
+			  custom1:"bi bi-filter"
+	  	},
+		customButtons:{
 	        custom1: {
 	          	text: '필터',
 	          	click: filterOpen
@@ -127,6 +146,23 @@ function deleteRecord(id){
 }
 function filterOpen(){
 	filterModal.show();
+}
+
+function filterRecord(){
+	filteringWorkbook=$("input[name=filterWorkbook]").filter((index,element)=>{
+		return element.checked;
+	}).map((index,element)=>{return Number(element.value)});
+	
+	filteringCategory=$("input[name=filterCategory]").filter((index,element)=>{
+		return element.checked;
+	}).map((index,element)=>{return Number(element.value)});
+	
+	eventList=calendar.getEvents();
+	eventList.map(item=>{item.remove()});
+	calendar.addEventSource(eventList.filter(item=>{
+		return $.inArray(item.extendedProps.workbook,filteringWorkbook) >= 0 || 
+			$.inArray(item.extendedProps.category,filteringCategory) >= 0;
+	}));
 }
 
 function refetchEvent(){

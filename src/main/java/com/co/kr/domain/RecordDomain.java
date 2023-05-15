@@ -14,4 +14,5 @@ public class RecordDomain {
 	private Date createAt;
 	private Integer owner;
 	private String title;
+	private Integer category;
 }
