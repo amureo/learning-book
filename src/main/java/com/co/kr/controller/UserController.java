@@ -32,12 +32,11 @@ import com.co.kr.service.UserService;
 import com.co.kr.service.WorkbookService;
 import com.co.kr.sort.ProblemSort;
 import com.co.kr.sort.ProblemSortStd;
-import com.co.kr.sort.WorkbookSort;
-import com.co.kr.sort.WorkbookSortStd;
 import com.co.kr.util.CommonUtils;
 import com.co.kr.vo.LoginVO;
-import com.co.kr.vo.SortVO;
+import com.co.kr.vo.ProblemSortVO;
 import com.co.kr.vo.TestingVO;
+import com.co.kr.vo.WorkbookSortVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -249,22 +248,14 @@ public class UserController {
 	 */
 	
 	@GetMapping("workbook")
-	public ModelAndView workbook(HttpServletRequest request,SortVO sort){
+	public ModelAndView workbook(HttpServletRequest request,WorkbookSortVO sort){
 		ModelAndView mav=new ModelAndView();
 		Map map=CommonUtils.getMember(request);
-		
-		// sort setting
-		map.put("sort", sort.getSort());
-		map.put("sortStd", sort.getSortStd());
-		List<String> sortList = Stream.of(WorkbookSort.values())
- 				.map(Enum::name)
- 				.collect(Collectors.toList());
-		List<String> sortStdList = Stream.of(WorkbookSortStd.values())
- 				.map(Enum::name)
- 				.collect(Collectors.toList());
 
-		if(!sortList.contains(map.get("sort"))) map.put("sort", "ASC");
-		if(!sortStdList.contains(map.get("sortStd"))) map.put("sortStd", "ranking");
+		// sort setting
+		map.put("sort", sort.getSort().toString());
+		map.put("sortStd", sort.getSortStd().toString());
+		
 		mav.addObject("sort", map.get("sort"));
 		mav.addObject("sortStd", map.get("sortStd"));
 		
@@ -279,9 +270,7 @@ public class UserController {
 	}
 	
 	@GetMapping("workbook/{id}")
-	public ModelAndView wbDetail(@PathVariable("id") String id, HttpServletRequest request, SortVO sort) {
-			//@RequestParam(value="sort",required=false) ProblemSort sort, 
-			//@RequestParam(value="sortStd",required=false, defaultValue="ranking") String sortStd) {
+	public ModelAndView wbDetail(@PathVariable("id") String id, HttpServletRequest request, ProblemSortVO sort) {
 		ModelAndView mav=new ModelAndView();
 		Map map=CommonUtils.getMember(request);
 		
@@ -291,17 +280,9 @@ public class UserController {
 		mav.addObject("item", item);
 		
 		// sort setting
-		map.put("sort", sort.getSort());
-		map.put("sortStd", sort.getSortStd());
-		List<String> sortList = Stream.of(ProblemSort.values())
- 				.map(Enum::name)
- 				.collect(Collectors.toList());
-		List<String> sortStdList = Stream.of(ProblemSortStd.values())
- 				.map(Enum::name)
- 				.collect(Collectors.toList());
-
-		if(!sortList.contains(map.get("sort"))) map.put("sort", "ASC");
-		if(!sortStdList.contains(map.get("sortStd"))) map.put("sortStd", "ranking");
+		map.put("sort", sort.getSort().toString());
+		map.put("sortStd", sort.getSortStd().toString());
+		
 		mav.addObject("sort", map.get("sort"));
 		mav.addObject("sortStd", map.get("sortStd"));
 		
