@@ -36,42 +36,74 @@
     		</div>
   		</div>
 	</div>
-	
+	<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">필터</h5>
+        			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+     			</div>
+      			<div class="modal-body">
+        			필터 내용
+      			</div>
+      			<div class="modal-footer">
+    				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        			<button type="button" class="btn btn-danger" id="deleteRecord">적용</button>
+      			</div>
+    		</div>
+  		</div>
+	</div>
+
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js'></script>
 <script>
 let calendar;
 let myModal;
+let filterModal;
 
 document.addEventListener('DOMContentLoaded', function() {
-	myModal=new bootstrap.Modal('#exampleModal')
-	
+	myModal=new bootstrap.Modal('#exampleModal');
+	filterModal=new bootstrap.Modal('#filterModal');
     var calendarEl = document.getElementById('calendar');
     calendar = new FullCalendar.Calendar(calendarEl, {
+		timeZone: 'UTC+9',
 		initialView: 'dayGridMonth',
-		eventClick: detailRecord
+		events:items.map(item=>{
+			return {
+				id:item.id,
+				workbook: item.workbook,
+				title: item.title,
+				start: item.createAt,
+				allDay:true
+			}
+		}),
+		eventClick: detailRecord,
+		themeSystem: 'bootstrap5',
+		headerToolbar: {
+	        start: 'custom1',
+	        center: 'title',
+	        end: 'prevYear,prev,today,next,nextYear'
+      	},
+		customButtons: {
+	        custom1: {
+	          	text: '필터',
+	          	click: filterOpen
+	        }
+      	}
     });
     calendar.render();
-	addEvent(calendar);
 });
 
 function detailRecord(info){
-	let id=info.event.id;
-	$.ajax({
-		url:"/api/record/"+id,
-		type:"GET",
-		contentType : 'application/json; charset=utf-8',
-		success:function(response){
-			$(".modal-body").html(`<p>워크북 번호: ${response.workbook}</p>
-				<p>시기: ${response.createAt}</p>`)
-			$(".modal-footer").html(`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-        			<button type="button" class="btn btn-danger" onclick="deleteRecord(${response.id})">삭제</button>`)
-			
-   			myModal.show();
-		},
-		error:function(request, status, error){
-			console.log(error);
-		}
-	})
+	let d=info.event.start;
+	let dd=d.getFullYear() + '.' + (d.getMonth()+1) + '.'+ d.getDate() + ' ' + 
+	+ d.getHours() + ':' + d.getMinutes();
+	
+	$("#exampleModal .modal-body").html(`<p>워크북 제목: ${info.event.title}</p>
+				<p>시기: ${dd}</p>`)
+	$("#exampleModal .modal-footer").html(`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+			<button type="button" class="btn btn-danger" onclick="deleteRecord(${info.event.id})">삭제</button>`)
+	
+	myModal.show();
 }
 
 function deleteRecord(id){
@@ -86,27 +118,31 @@ function deleteRecord(id){
 			let event=calendar.getEventById(id);
 			event.remove();
    			myModal.hide();
+   			
 		},
 		error:function(request, status, error){
 			console.log(error);
 		}
 	})
 }
+function filterOpen(){
+	filterModal.show();
+}
+
+function refetchEvent(){
+	eventList=calendar.getEvents();
+	eventList.map(item=>{item.remove()});
+	calendar.addEventSource(eventList.filter(item=>{
+		console.log(item.extendedProps.workbook);
+		return item.extendedProps.workbook==3;
+	}));
+}
+
 </script>
 
 <script th:inline="javascript">
 /*<![CDATA[*/
-function addEvent(calendar){
-	const items=[[${items}]];
-	items.forEach(item=>{
-		calendar.addEvent({
-			id:item.id,
-			workbook: item.workbook,
-			title: item.workbook,
-			start: item.createAt.slice(0,10)
-		})
-	})
-}
+const items=[[${items}]];
 /*]]>*/
 </script>
 </div>

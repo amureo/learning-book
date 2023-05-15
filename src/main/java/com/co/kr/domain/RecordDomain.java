@@ -1,6 +1,8 @@
 package com.co.kr.domain;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
@@ -8,6 +10,8 @@ import lombok.Data;
 public class RecordDomain {
 	private Integer id;
 	private Integer workbook;
-	private LocalDateTime createAt;
+	@DateTimeFormat(pattern ="yyyy-MM-dd'T'HH:mm:ss")
+	private Date createAt;
 	private Integer owner;
+	private String title;
 }

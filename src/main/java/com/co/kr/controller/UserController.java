@@ -450,8 +450,13 @@ public class UserController {
 	public ModelAndView record(HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
 		Map map=CommonUtils.getMember(request);
-		
+
 		List<RecordDomain> items = workbookService.selectAllRecord(map);
+		items.forEach(item->{
+			map.put("id", item.getWorkbook());
+			WorkbookDomain workbookDomain=workbookService.selectOneWorkbook(map);
+			item.setTitle(workbookDomain.getTitle());
+		});
 		
 		mav.addObject("items",items);
 		mav.setViewName("record.html"); 
