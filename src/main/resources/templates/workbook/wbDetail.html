@@ -24,15 +24,10 @@
 				<h3 class="float-md-start mb-0">
 					<span id="select_problem_count">0</span>개 선택됨
 				</h3>
-				<button class="btn btn-outline-primary float-md-end ms-4 mb-0" onclick="selectProblemModeOff(event)">
-					<i class="bi bi-x-circle"></i></i> 취소
-				</button>
 			</div>
-			
 		</div>
 		
-		
-		<div class="justify-content-between float-md-end">
+		<div class="justify-content-between float-md-end default-tool" id="problem_area">
 			<a th:href="@{/testing/{id}(id=${item.id})}" class="text-decoration-none btn btn-outline-primary">
 				<i class="bi bi-journal-check"></i> 테스트
 			</a>
@@ -48,9 +43,14 @@
 			<button class="btn btn-outline-danger" th:onclick="|deleteWorkbook(${item.id})|">
 				<i class="bi bi-trash"></i> 삭제
 			</button>
-			
-			<!-- 문제 선택 -->
-			<button class="btn btn-outline-danger hide" id="btn_delete_problem" onclick="deleteProblem()">
+		</div>
+		
+		<!-- 문제 선택 메뉴 -->
+		<div class="justify-content-between float-md-end hide" id="problem_select_area">
+			<button class="btn btn-outline-primary" onclick="selectProblemModeOff(event)">
+				<i class="bi bi-x-circle"></i></i> 취소
+			</button>
+			<button class="btn btn-outline-danger" id="btn_delete_problem" onclick="deleteProblem()">
 				<i class="bi bi-trash"></i> 삭제
 			</button>
 		</div>
@@ -300,7 +300,8 @@ let count=0;
 
 function selectProblemModeOn(event){
 	// 레이아웃 설정
-	$("#btn_delete_problem").removeClass("hide").siblings().addClass("hide");
+	$("#problem_select_area").removeClass("hide")
+	$("#problem_area").addClass("hide");
 	$("#select_problem_header").removeClass('hide');
 	$("#problem_header").addClass('hide');
 	
@@ -310,7 +311,8 @@ function selectProblemModeOn(event){
 
 function selectProblemModeOff(event){
 	// 레이아웃 설정
-	$("#btn_delete_problem").addClass("hide").siblings().removeClass("hide");
+	$("#problem_select_area").addClass("hide")
+	$("#problem_area").removeClass("hide");
 	$("#select_problem_header").addClass('hide');
 	$("#problem_header").removeClass('hide');
 	$("a.card").removeClass("text-bg-primary link-light").addClass("link-dark");
