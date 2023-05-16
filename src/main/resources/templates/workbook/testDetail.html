@@ -94,15 +94,44 @@
 		</div>
 		
 		<hr>
+		
 		<!-- 문제 표시 -->
 		<div th:if="${total}>0" class="mx-auto w-75 text-center" onclick="displayAnswer()">
-			<div class="card shadow-sm mb-4 px-5 pt-4 pb-5">
-				<h5 class="card-title text-start text-muted">Question</h5>
-				<h5 class="card-text" th:text="${problem.question}">question</h5>
+			<div class="showVertical">
+				<div class="card shadow-sm mb-4 px-5 pt-4 pb-5">
+					<h5 class="card-title text-start text-muted">Question</h5>
+					<h5 class="card-text" th:text="${problem.question}">question</h5>
+				</div>
+				<div class="card shadow-sm px-5 pt-4 pb-5 hide answer">
+					<h5 class="card-title text-start text-muted">Answer</h5>
+					<h5 class="card-text" th:text="${problem.answer}">answer</h5>
+				</div>
 			</div>
-			<div class="card shadow-sm px-5 pt-4 pb-5 hide" id="answer">
-				<h5 class="card-title text-start text-muted">Answer</h5>
-				<h5 class="card-text" th:text="${problem.answer}">answer</h5>
+			<div class="showHorizontal hide">
+				<div class="row">
+  					<div class="col-sm-6">
+						<div class="card shadow-sm mb-4 px-5 pt-4 pb-5">
+							<h5 class="card-title text-start text-muted">Question</h5>
+							<h5 class="card-text" th:text="${problem.question}">question</h5>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="card shadow-sm px-5 pt-4 pb-5 hide answer">
+							<h5 class="card-title text-start text-muted">Answer</h5>
+							<h5 class="card-text" th:text="${problem.answer}">answer</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="showOverlap hide">
+				<div class="card shadow-sm mb-4 px-5 pt-4 pb-5 question">
+					<h5 class="card-title text-start text-muted">Question</h5>
+					<h5 class="card-text" th:text="${problem.question}">question</h5>
+				</div>
+				<div class="card shadow-sm px-5 pt-4 pb-5 hide answer">
+					<h5 class="card-title text-start text-muted">Answer</h5>
+					<h5 class="card-text" th:text="${problem.answer}">answer</h5>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -127,7 +156,18 @@
 </style>
 <script>
 $(document).ready(function(){
-	
+	$("#showOverlap").on("click",function(){
+		$("#showOverlap").addClass("active").siblings().removeClass("active");
+		$(".showOverlap").removeClass("hide").siblings().addClass("hide");
+	})
+	$("#showVertical").on("click",function(){
+		$("#showVertical").addClass("active").siblings().removeClass("active");
+		$(".showVertical").removeClass("hide").siblings().addClass("hide");
+	})
+	$("#showHorizontal").on("click",function(){
+		$("#showHorizontal").addClass("active").siblings().removeClass("active");
+		$(".showHorizontal").removeClass("hide").siblings().addClass("hide");
+	})
 })
 	
 	
@@ -144,7 +184,12 @@ function submitRight(){
 	$("#next").submit();
 }
 function displayAnswer(){
-	$("#answer").removeClass("hide");
+	if($("#showOverlap").hasClass("active")){
+		$(".question").toggleClass("hide");
+		$(".answer").toggleClass("hide");
+	}else{
+		$(".answer").removeClass("hide");
+	}
 }
 
 </script>
