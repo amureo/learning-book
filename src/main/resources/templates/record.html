@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				workbook: item.workbook,
 				title: item.title,
 				start: item.createAt,
+				categoryId:item.categoryId,
 				category:item.category,
 				allDay:true
 			}
@@ -117,8 +118,10 @@ function detailRecord(info){
 	let dd=d.getFullYear() + '.' + (d.getMonth()+1) + '.'+ d.getDate() + ' ' + 
 	+ d.getHours() + ':' + d.getMinutes();
 	
-	$("#exampleModal .modal-body").html(`<p>워크북 제목: ${info.event.title}</p>
-				<p>시기: ${dd}</p>`)
+	$("#exampleModal .modal-body").html(`
+		<p>카테고리: ${info.event.extendedProps.category}</p>
+		<p>워크북 제목: ${info.event.title}</p>
+		<p>시기: ${dd}</p>`)
 	$("#exampleModal .modal-footer").html(`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 			<button type="button" class="btn btn-danger" onclick="deleteRecord(${info.event.id})">삭제</button>`)
 	
@@ -164,16 +167,6 @@ function filterRecord(){
 			$.inArray(item.extendedProps.category,filteringCategory) >= 0;
 	}));
 }
-
-function refetchEvent(){
-	eventList=calendar.getEvents();
-	eventList.map(item=>{item.remove()});
-	calendar.addEventSource(eventList.filter(item=>{
-		console.log(item.extendedProps.workbook);
-		return item.extendedProps.workbook==3;
-	}));
-}
-
 </script>
 
 <script th:inline="javascript">

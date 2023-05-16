@@ -450,26 +450,31 @@ public class UserController {
 	public ModelAndView record(HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
 		Map map=CommonUtils.getMember(request);
+		
+		// filter setting
+				// all category
+				List<CategoryDomain> categoryList=workbookService.selectAllCategory();
+				mav.addObject("categoryList",categoryList);
+				
+				// all workbook
+				List<WorkbookDomain> workbookList=workbookService.selectAllWorkbook(map);
+				mav.addObject("workbookList",workbookList);
 
-		// record
+		// all record
 		List<RecordDomain> items = workbookService.selectAllRecord(map);
 		items.forEach(item->{
 			map.put("id", item.getWorkbook());
 			WorkbookDomain workbookDomain=workbookService.selectOneWorkbook(map);
 			item.setTitle(workbookDomain.getTitle());
-			item.setCategory(workbookDomain.getCategory());
+			item.setCategoryId(workbookDomain.getCategory());
+			
+			//category
+			map.put("id", item.getCategoryId());
+			item.setCategory(workbookService.selectOneCategory(map).getTitle());
 		});
 		mav.addObject("items",items);
+
 		
-		
-		// filter setting
-		// all category
-		List<CategoryDomain> categoryList=workbookService.selectAllCategory();
-		mav.addObject("categoryList",categoryList);
-		
-		// all workbook
-		List<WorkbookDomain> workbookList=workbookService.selectAllWorkbook(map);
-		mav.addObject("workbookList",workbookList);
 		
 		
 		mav.setViewName("record.html"); 
