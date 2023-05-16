@@ -61,8 +61,6 @@
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-1 border-bottom">
 		<div class="justify-content-between"></div>
 		<div class="justify-content-center btn-group">
-			
-			
 			<a th:href="@{/workbook/{id}(id=${item.id},sort=${sortStd eq 'ranking'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=ranking)}"
 				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'ranking'} ? active : ''">
 				기본
