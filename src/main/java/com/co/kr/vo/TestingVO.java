@@ -7,9 +7,11 @@ import lombok.Data;
 @Data
 public class TestingVO {
 	private Integer workbook;
-	private Integer isRight;
-	private Integer current;
-	private Integer problem;
-	private Integer score;
-	private List<Integer> list;
+	private Integer problemId;
+	private Integer total;
+
+	private Boolean isRight;
+	private Boolean isRand;
+	private Integer count;
+	private List<Integer> problemIdList;
 }

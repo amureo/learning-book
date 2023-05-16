@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,8 +29,6 @@ import com.co.kr.domain.SearchDomain;
 import com.co.kr.domain.WorkbookDomain;
 import com.co.kr.service.UserService;
 import com.co.kr.service.WorkbookService;
-import com.co.kr.sort.ProblemSort;
-import com.co.kr.sort.ProblemSortStd;
 import com.co.kr.util.CommonUtils;
 import com.co.kr.vo.LoginVO;
 import com.co.kr.vo.ProblemSortVO;
@@ -369,8 +366,7 @@ public class UserController {
 		
 		mav.addObject("workbook", workbook);
 		mav.addObject("total", items.size());
-		mav.addObject("current", "0");
-		mav.addObject("score", "0");
+		mav.addObject("count", 0);
 		mav.setViewName("workbook/testDetail.html"); 
 		
 		return mav;
@@ -378,70 +374,72 @@ public class UserController {
 	
 	@PostMapping("testing/{workbookId}")
 	public ModelAndView testingContinue(@PathVariable("workbookId") String workbookId, TestingVO testingVO, HttpServletRequest request) {
-		int current=testingVO.getCurrent();
-		int score=testingVO.getScore();
-		List<Integer> list=(List) testingVO.getList();
+		System.out.println(testingVO);
 		ModelAndView mav=new ModelAndView();
+		int count=testingVO.getCount();
+		int total=testingVO.getTotal();
+		List<Integer> problemIdList=(testingVO.getProblemIdList()==null)?null:(List)testingVO.getProblemIdList();
 		Map map=CommonUtils.getMember(request);
+		ProblemDomain targetProblem=null;
 		
-
-		map.put("id", workbookId);
-		
-		// this workbook
-		WorkbookDomain workbook=workbookService.selectOneWorkbook(map);
-		
-		
-		
-		List<ProblemDomain> items = workbookService.selectAllProblem(map);
-		ProblemDomain item=null;
-		
-		// 정답 검사 -> 문제 로드 -> 끝내기
-		//문제가 처음인가?	
-		if(current>0) {
+		// 초기 문제집 설정
+		if(count==0){
+			if(problemIdList==null) problemIdList=new ArrayList<>();
 			
-			// 오답 처리
-			
-			if(list==null) list=new ArrayList() {};
-			
-			// 오답 시 처리
-			if(testingVO.getIsRight()==0) {
-				int problem=testingVO.getProblem();
-				list.add(problem);
+			map.put("id", workbookId);
+			for(ProblemDomain item : workbookService.selectAllProblem(map)) {
+				problemIdList.add(item.getId());
+			}
+			total=problemIdList.size();
+		}
+		
+		// 진행
+		if(count<=total) {
+			// 정답 처리
+			if(count!=0) {
+				int problemId=testingVO.getProblemId();
+				problemIdList.remove(problemIdList.indexOf(problemId));
+				if(testingVO.getIsRight()==true) {
+					count++;
+				}else {
+					problemIdList.add(problemId);
+				}
 			}else {
-				// 정답 시 처리
-				score++;
+				count=1;
 			}
 			
-			// 오답 넣기
-			mav.addObject("list", list);
+			if (count<=total){
+				//문제 선택
+				int randomProblemId=(testingVO.getIsRand()==true)? 
+					(int)Math.round(Math.random()%(problemIdList.size()-1)):
+					0;
+				int targetProblemId=problemIdList.get(randomProblemId);
+				
+				map.put("id",targetProblemId);
+				targetProblem=workbookService.selectOneProblem(map);
+			}
+			
 		}
 		
-		//어떤 문제를 가져오는가?
-		if(current<=items.size()) {
-			item=items.get(current-1);
-		}else if(score<=items.size()){
-			map.put("id", list.get(0));
-			list.remove(0);
-			item=workbookService.selectOneProblem(map);
-		}
-
-		//문제가 끝인가?
-		if (score>items.size()){
+		// 종료
+		if (count>total){
 			mav.addObject("end",0);
 			RecordDomain recordDomain=new RecordDomain();
 			recordDomain.setWorkbook(testingVO.getWorkbook());
 			recordDomain.setOwner((Integer)CommonUtils.getMember(request).get("owner"));
 			workbookService.insertRecord(recordDomain);
 		}
-
-		// 문제 넣기
-		mav.addObject("item", item);
-
-		//점수 초기화
-		mav.addObject("score",score);
-		mav.addObject("workbook", workbook);
-		mav.addObject("total", items.size());
-		mav.addObject("current", current);
+		
+		// problem's workbook
+		map=CommonUtils.getMember(request);;
+		map.put("id", workbookId);
+		mav.addObject("workbook", workbookService.selectOneWorkbook(map));
+		
+		mav.addObject("problemIdList",problemIdList);
+		mav.addObject("total",total);
+		mav.addObject("count", count);
+		mav.addObject("problem", targetProblem);
+		mav.addObject("isRand", testingVO.getIsRand());
 		mav.setViewName("workbook/testDetail.html"); 
 		
 		return mav;
@@ -473,9 +471,6 @@ public class UserController {
 			item.setCategory(workbookService.selectOneCategory(map).getTitle());
 		});
 		mav.addObject("items",items);
-
-		
-		
 		
 		mav.setViewName("record.html"); 
 		return mav;
@@ -493,8 +488,8 @@ public class UserController {
 		ModelAndView mav=new ModelAndView();
 		
 		List<CategoryDomain> categoryList = workbookService.selectAllCategory();
-
 		mav.addObject("categoryList",categoryList);
+		
 		mav.setViewName("category.html"); 
 		return mav;
 	}
