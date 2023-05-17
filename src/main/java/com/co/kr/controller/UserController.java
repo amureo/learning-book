@@ -1,11 +1,11 @@
 package com.co.kr.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -223,11 +223,29 @@ public class UserController {
 		List<CategoryDomain> categoryList=workbookService.selectAllCategory();
 		mav.addObject("categoryList", categoryList);
 
-		List<ProblemDomain> problemList=workbookService.selectRandomProblem(map);
-		mav.addObject("problemList", problemList);
+		//List<ProblemDomain> problemList=workbookService.selectRandomProblem(map);
+		//mav.addObject("problemList", problemList);
+		
+		List<WorkbookDomain> workbookList=workbookService.selectAllWorkbook(map);
+		mav.addObject("workbookList", workbookList);
+		
+		
+		
+
 		
 		List<RecordDomain> recordList=workbookService.selectAllRecord(map);
+		recordList.forEach(item->{
+			map.put("id", item.getWorkbook());
+			item.setTitle(workbookService.selectOneWorkbook(map).getTitle());
+
+			// date format
+			String format = "yyyy-MM-dd aa hh:mm:ss";
+			SimpleDateFormat type = new SimpleDateFormat(format);
+			item.setCreateAtStr(type.format(item.getCreateAt()));
+			
+		});
 		mav.addObject("recordList", recordList);
+		
 		
 		mav.setViewName("home.html"); 
 		return mav;
