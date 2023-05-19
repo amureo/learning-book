@@ -31,6 +31,7 @@ import com.co.kr.service.UserService;
 import com.co.kr.service.WorkbookService;
 import com.co.kr.util.CommonUtils;
 import com.co.kr.vo.LoginVO;
+import com.co.kr.vo.ProblemDetailVO;
 import com.co.kr.vo.ProblemSortVO;
 import com.co.kr.vo.TestingVO;
 import com.co.kr.vo.WorkbookSortVO;
@@ -324,7 +325,7 @@ public class UserController {
 	 */
 	
 	@GetMapping("problem/{id}")
-	public ModelAndView pDetail(@PathVariable("id") String id) throws ConversionFailedException{
+	public ModelAndView pDetail(@PathVariable("id") String id, ProblemDetailVO view) throws ConversionFailedException{
 		ModelAndView mav=new ModelAndView();
 		
 		Map map = new HashMap<String, String>();
@@ -333,6 +334,9 @@ public class UserController {
 		// current problem
 		ProblemDomain currProblem = workbookService.selectOneProblem(map);
 		mav.addObject("currProblem", currProblem);
+
+		// view
+		mav.addObject("view", view.getView().toString());
 		
 		// navigation
 		map.put("problemId", id);

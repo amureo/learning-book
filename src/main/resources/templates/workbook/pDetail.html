@@ -41,7 +41,7 @@
 		<div class="justify-content-center btn-group" id="navigation">
 			<a href="#" role="button" class="btn btn-outline-secondary disabled"
 				th:if="${#strings.isEmpty(prevProblem)}" disabled><del>이전</del></a>
-			<a href="/problem/" role="button" th:attrappend="href=${prevProblem.id}"
+			<a th:href="@{/problem/{id}(id=${prevProblem.id},view=${view eq 'HORIZONTAL'}?'HORIZONTAL':'VERTICAL')}" role="button" 
 				class="btn btn-outline-secondary" th:if="${not #strings.isEmpty(prevProblem)}">이전</a>
 			
 			<button type="button" class="btn btn-outline-info">
@@ -49,15 +49,15 @@
 			</button>
 			
 			<a href="#" role="button" class="btn btn-outline-secondary disabled" th:if="${#strings.isEmpty(nextProblem)}" disabled><del>다음</del></a>
-			<a href="/problem/" role="button" th:attrappend="href=${nextProblem.id}" class="btn btn-outline-secondary" th:if="${not #strings.isEmpty(nextProblem)}">다음</a>
+			<a th:href="@{/problem/{id}(id=${nextProblem.id},view=${view eq 'HORIZONTAL'}?'HORIZONTAL':'VERTICAL')}"  class="btn btn-outline-secondary" th:if="${not #strings.isEmpty(nextProblem)}">다음</a>
 		</div>
 		<div class="justify-content-between float-md-end">
-			<button id="showVertical" class="btn btn-outline-secondary">
+			<a th:href="@{/problem/{id}(id=${currProblem.id},view='VERTICAL')}" class="btn btn-outline-secondary" th:attrappend="class=${view eq 'VERTICAL'}? ' active':''">
 				<i class="bi bi-view-stacked"></i>
-			</button>
-			<button id="showHorizontal" class="btn btn-outline-secondary">
+			</a>
+			<a th:href="@{/problem/{id}(id=${currProblem.id},view='HORIZONTAL')}" class="btn btn-outline-secondary" th:attrappend="class=${view eq 'HORIZONTAL'}?' active':''">
 				<i class="bi bi-vr"></i>
-			</button>
+			</a>
 		</div>
 	</div>
 </div>
@@ -65,59 +65,29 @@
 <div th:if=${session.id} layout:fragment="content" class="mb-auto">
 	<!-- content -->
 	
-	<!-- Vertical -->
-	<div class="showVertical">
-		<div class="row row-cols-1 g-1" th:ondblclick="|updateProblem(${currProblem.id})|">
-			<div class="col">
-         		<div class="card shadow-sm">
-            		<div class="card-body">
-              			<p class="card-text">
-							<label for="problem_question" class="form-label">문제</label>
-  							<input type="text" class="form-control" id="problem_question" th:value="${currProblem.question}" placeholder="더블클릭으로 입력"  readonly>
-			  			</p>
-            		</div>
-          		</div>
-        	</div>
-        
-			<div class="col">
-	          	<div class="card shadow-sm">
-	            	<div class="card-body">
-		              	<p class="card-text">
-							<label for="problem_answer" class="form-label">정답</label>
-  							<input type="text" class="form-control" id="problem_answer" th:value="${currProblem.answer}" placeholder="더블클릭으로 입력" readonly>
-					  	</p>
-	            	</div>
-	          	</div>
-	        </div>
+	<div class="row" th:ondblclick="|updateProblem(${currProblem.id})|" th:attrappend="class=${view eq 'VERTICAL'}?' row-cols-1 g-1':' row-cols-2 g-2'">
+		<div class="col">
+     		<div class="card shadow-sm">
+        		<div class="card-body">
+          			<p class="card-text">
+						<label for="problem_question" class="form-label">문제</label>
+						<input type="text" class="form-control" id="problem_question" th:value="${currProblem.question}" placeholder="더블클릭으로 입력"  readonly>
+		  			</p>
+        		</div>
+      		</div>
+    	</div>
+    
+		<div class="col">
+          	<div class="card shadow-sm">
+            	<div class="card-body">
+	              	<p class="card-text">
+						<label for="problem_answer" class="form-label">정답</label>
+						<input type="text" class="form-control" id="problem_answer" th:value="${currProblem.answer}" placeholder="더블클릭으로 입력" readonly>
+				  	</p>
+            	</div>
+          	</div>
         </div>
     </div>
-    
-    <!-- Horizontal -->
-    <div class="showHorizontal">
-		<div class="row row-cols-2 g-2" th:ondblclick="|updateProblem(${currProblem.id})|">
-			<div class="col">
-	        	<div class="card shadow-sm">
-	            	<div class="card-body">
-	              		<p class="card-text">
-							<label for="problem_question" class="form-label">문제</label>
-  							<input type="text" class="form-control" id="problem_question" th:value="${currProblem.question}" placeholder="더블클릭으로 입력"  readonly>
-				  		</p>
-            		</div>
-	          	</div>
-	        </div>
-	        
-			<div class="col">
-	          	<div class="card shadow-sm">
-	            	<div class="card-body">
-		              	<p class="card-text">
-						  	<label for="problem_answer" class="form-label">정답</label>
-  							<input type="text" class="form-control" id="problem_answer" th:value="${currProblem.answer}" placeholder="더블클릭으로 입력" readonly>
-					  	</p>
-            		</div>
-	          	</div>
-	    	</div>
-		</div>
-	</div>
 </div>
 
 <div th:if=${session.id} layout:fragment="etc">
@@ -126,26 +96,6 @@
 .hide{display:none;}
 </style>
 <script>
-$(document).ready(function(){
-	$(".showHorizontal").addClass("hide");
-	$("#showVertical").addClass("active");
-	 
-	$("#showHorizontal").on("click",function(){
-		$(".showHorizontal").removeClass("hide");
-		$(".showVertical").addClass("hide");
-		
-		$("#showVertical").removeClass("active");
-		$("#showHorizontal").addClass("active");
-	});
-	$("#showVertical").on("click",function(){
-		$(".showHorizontal").addClass("hide");
-		$(".showVertical").removeClass("hide");
-		
-		$("#showVertical").addClass("active");
-		$("#showHorizontal").removeClass("active");
-	});
-})
-
 function deleteProblem(id,workbook){
 	if ( !confirm('선택하신 문제를 삭제할까요?') ) {
         return false;
@@ -182,7 +132,7 @@ function updateOkProblem(id){
 		contentType : 'application/json; charset=utf-8',
         data : JSON.stringify(param),
 		success:function(response){
-			location.href="/problem/"+id;
+			location.href=location.href;
 		},
 		error:function(request, status, error){
 			console.log(error);
