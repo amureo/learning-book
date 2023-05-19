@@ -305,19 +305,24 @@
 		INSERT INTO
 			jsp.category(
 				id,
-				title)
+				title,
+				owner)
 		VALUES(
 			#{id},
-			#{title});
+			#{title},
+			#{owner});
 	</insert>
     
     <!-- category select all -->
-	<select id="selectAllCategory" resultType="com.co.kr.domain.CategoryDomain">
+	<select id="selectAllCategory" parameterType="hashMap" resultType="com.co.kr.domain.CategoryDomain">
 		SELECT
 			id,
-			title
+			title,
+			owner
 		FROM
 			jsp.category
+		WHERE
+			owner=0 OR owner=#{owner}
 		ORDER BY
 			id
 	</select>
@@ -326,7 +331,8 @@
 	<select id="selectOneCategory" parameterType="hashMap" resultType="com.co.kr.domain.CategoryDomain">
 		SELECT
 			id,
-			title
+			title,
+			owner
 		FROM
 			jsp.category
 		WHERE
@@ -340,7 +346,7 @@
 		SET
 			title=#{title}
 		WHERE
-			id=#{id};
+			id=#{id} AND id!=0 AND owner=#{owner};
 	</update>
 	
     <!-- category delete -->
@@ -348,7 +354,7 @@
 		DELETE FROM
 			jsp.category
 		WHERE
-			id=#{id};
+			id=#{id} AND id!=0 AND owner=#{owner};
 	</delete>
     
     

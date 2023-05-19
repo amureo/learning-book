@@ -47,7 +47,7 @@ public interface WorkbookService {
 	
 	//category
 	public void insertCategory(CategoryDomain categoryDomain);
-	public List<CategoryDomain> selectAllCategory();
+	public List<CategoryDomain> selectAllCategory(Map map);
 	public CategoryDomain selectOneCategory(Map map);
 	public void updateCategory(CategoryDomain categoryDomain);
 	public void deleteCategory(Map map);

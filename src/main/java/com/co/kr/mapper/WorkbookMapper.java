@@ -67,14 +67,14 @@ public interface WorkbookMapper {
 	// category create
 	public void insertCategory(CategoryDomain categoryDomain);
 	// category select all
-	public List<CategoryDomain> selectAllCategory();
+	public List<CategoryDomain> selectAllCategory(Map map);
 	// category select one by category id
 	public CategoryDomain selectOneCategory(Map map);
 	// category update
 	public void updateCategory(CategoryDomain categoryDomain);
 	// category delete by category id
 	public void deleteCategory(Map map);
-	
+
 	
 	//search
 	public List<SearchDomain> searchProblem(Map map);

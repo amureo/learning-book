@@ -220,7 +220,7 @@ public class UserController {
 		Map map=CommonUtils.getMember(request);
 		ModelAndView mav = new ModelAndView();
 
-		List<CategoryDomain> categoryList=workbookService.selectAllCategory();
+		List<CategoryDomain> categoryList=workbookService.selectAllCategory(map);
 		mav.addObject("categoryList", categoryList);
 
 		//List<ProblemDomain> problemList=workbookService.selectRandomProblem(map);
@@ -468,13 +468,13 @@ public class UserController {
 		Map map=CommonUtils.getMember(request);
 		
 		// filter setting
-				// all category
-				List<CategoryDomain> categoryList=workbookService.selectAllCategory();
-				mav.addObject("categoryList",categoryList);
-				
-				// all workbook
-				List<WorkbookDomain> workbookList=workbookService.selectAllWorkbook(map);
-				mav.addObject("workbookList",workbookList);
+		// all category
+		List<CategoryDomain> categoryList=workbookService.selectAllCategory(map);
+		mav.addObject("categoryList",categoryList);
+		
+		// all workbook
+		List<WorkbookDomain> workbookList=workbookService.selectAllWorkbook(map);
+		mav.addObject("workbookList",workbookList);
 
 		// all record
 		List<RecordDomain> items = workbookService.selectAllRecord(map);
@@ -502,11 +502,13 @@ public class UserController {
 	 */
 
 	@GetMapping("category")
-	public ModelAndView category() {
+	public ModelAndView category(HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
+		Map map=CommonUtils.getMember(request);
 		
-		List<CategoryDomain> categoryList = workbookService.selectAllCategory();
+		List<CategoryDomain> categoryList = workbookService.selectAllCategory(map);
 		mav.addObject("categoryList",categoryList);
+		mav.addObject("owner",map.get("owner"));
 		
 		mav.setViewName("category.html"); 
 		return mav;

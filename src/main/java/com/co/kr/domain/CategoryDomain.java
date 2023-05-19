@@ -6,4 +6,5 @@ import lombok.Data;
 public class CategoryDomain {
 	private Integer id;
 	private String title;
+	private Integer owner;
 }

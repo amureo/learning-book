@@ -175,8 +175,8 @@ public class WorkbookServiceImpl implements WorkbookService{
 	public void insertCategory(CategoryDomain categoryDomain) {
 		workbookMapper.insertCategory(categoryDomain);
 	}
-	public List<CategoryDomain> selectAllCategory(){
-		return workbookMapper.selectAllCategory();
+	public List<CategoryDomain> selectAllCategory(Map map){
+		return workbookMapper.selectAllCategory(map);
 	}
 	public CategoryDomain selectOneCategory(Map map) {
 		return workbookMapper.selectOneCategory(map);

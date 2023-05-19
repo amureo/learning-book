@@ -113,12 +113,15 @@ public class RestApiController {
 	 */
 	
 	@RequestMapping(value="/api/category",method=RequestMethod.POST)
-	public void categoryCreate(@RequestBody CategoryDomain categoryDomain) {
+	public void categoryCreate(@RequestBody CategoryDomain categoryDomain, HttpServletRequest request) {
+		Map map=CommonUtils.getMember(request);
+		categoryDomain.setOwner(Integer.parseInt(map.get("owner").toString()));
 		workbookService.insertCategory(categoryDomain);
 	}
 	@RequestMapping(value="/api/category",method=RequestMethod.GET)
-	public List<CategoryDomain> categoryList() {
-		return workbookService.selectAllCategory();
+	public List<CategoryDomain> categoryList(HttpServletRequest request) {
+		Map map=CommonUtils.getMember(request);
+		return workbookService.selectAllCategory(map);
 	}
 	@RequestMapping(value="/api/category/{id}",method=RequestMethod.GET)
 	public CategoryDomain categoryOne(@PathVariable("id") String id) {
@@ -127,12 +130,14 @@ public class RestApiController {
 		return workbookService.selectOneCategory(map);
 	}
 	@RequestMapping(value="/api/category/{id}",method=RequestMethod.PUT)
-	public void categoryModify(@PathVariable("id") String id, @RequestBody CategoryDomain categoryDomain) {
+	public void categoryModify(@PathVariable("id") String id, @RequestBody CategoryDomain categoryDomain, HttpServletRequest request) {
+		Map map=CommonUtils.getMember(request);
+		categoryDomain.setOwner(Integer.parseInt(map.get("owner").toString()));
 		workbookService.updateCategory(categoryDomain);
 	}
 	@RequestMapping(value="/api/category/{id}",method=RequestMethod.DELETE)
-	public void categoryRemove(@PathVariable("id") String id) {
-		Map map = new HashMap<String, String>();
+	public void categoryRemove(@PathVariable("id") String id, HttpServletRequest request) {
+		Map map=CommonUtils.getMember(request);
 		map.put("id", id);
 		workbookService.deleteCategory(map);
 	}
