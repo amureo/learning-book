@@ -10,11 +10,54 @@
 <div th:if=${session.id} layout:fragment="header">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
 		<h3 class="float-md-start mb-0">기록</h3>
+		<div class="justify-content-between float-md-end">
+			<button class="d-flex btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+	    		<i class="bi bi-filter"></i> 필터
+	  		</button>			  
+	 	</div>
 	</div>
 </div>
 
 <div th:if=${session.id} layout:fragment="content" class="mb-auto">
 	<!-- content -->
+	<div class="collapse mb-3" id="collapseExample">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>카테고리</th>
+					<th>워크북</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<ul class="list-group">
+						  	<li class="list-group-item" th:each="category : ${categoryList}">
+						    	<input class="form-check-input me-1" name="filterCategory" th:value="${category.id}" type="checkbox" th:id="|category_${categoryStat.index}|">
+						    	<label class="form-check-label" th:for="|category_${categoryStat.index}|" th:text="${category.title}">checkbox</label>
+						  	</li>
+						</ul>	
+					</td>
+					<td>
+						<ul class="list-group">
+						  	<li class="list-group-item" th:each="workbook : ${workbookList}">
+						    	<input class="form-check-input me-1" name="filterWorkbook" th:value="${workbook.id}" type="checkbox" th:id="|workbook_${workbookStat.index}|">
+					    		<label class="form-check-label" th:for="|workbook_${workbookStat.index}|" th:text="${workbook.title}">checkbox</label>
+					  		</li>
+						</ul>	
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div class="text-end">
+							<button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#collapseExample">취소</button>
+							<button type="button" class="btn btn-danger" onclick="filterRecord()">적용</button>
+				 		</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 	<div id='calendar'></div>
 </div>
 
@@ -36,78 +79,27 @@
     		</div>
   		</div>
 	</div>
-	<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">필터</h5>
-        			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-     			</div>
-      			<div class="modal-body">
-					<ul class="list-group list-group-horizontal justify-content-center">
-				  		<ul class="list-group">
-							<h4 class="text-center">카테고리</h4>
-						  	<li class="list-group-item" th:each="category : ${categoryList}">
-						    	<input class="form-check-input me-1" name="filterCategory" th:value="${category.id}" type="checkbox" th:id="|category_${categoryStat.index}|">
-						    	<label class="form-check-label" th:for="|category_${categoryStat.index}|" th:text="${category.title}">checkbox</label>
-						  	</li>
-						</ul>
-				  		<ul class="list-group">
-							<h4 class="text-center">워크북</h4>
-						  	<li class="list-group-item" th:each="workbook : ${workbookList}">
-						    	<input class="form-check-input me-1" name="filterWorkbook" th:value="${workbook.id}" type="checkbox" th:id="|workbook_${workbookStat.index}|">
-						    	<label class="form-check-label" th:for="|workbook_${workbookStat.index}|" th:text="${workbook.title}">checkbox</label>
-						  	</li>
-						</ul>
-					</ul>
-      			</div>
-      			<div class="modal-footer">
-    				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        			<button type="button" class="btn btn-danger" onclick="filterRecord()">적용</button>
-      			</div>
-    		</div>
-  		</div>
-	</div>
-
+	
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js'></script>
 <script>
 let calendar;
 let myModal;
-let filterModal;
 
 document.addEventListener('DOMContentLoaded', function() {
 	myModal=new bootstrap.Modal('#exampleModal');
-	filterModal=new bootstrap.Modal('#filterModal');
     var calendarEl = document.getElementById('calendar');
+    
+    
     calendar = new FullCalendar.Calendar(calendarEl, {
 		timeZone: 'UTC+9',
 		initialView: 'dayGridMonth',
-		events:items.map(item=>{
-			return {
-				id:item.id,
-				workbook: item.workbook,
-				title: item.title,
-				start: item.createAt,
-				categoryId:item.categoryId,
-				category:item.category,
-				allDay:true
-			}
-		}),
+		events:getItems(),
 		eventClick: detailRecord,
 		themeSystem: 'bootstrap5',
 		headerToolbar: {
-	        start: 'custom1',
+			start:'',
 	        center: 'title',
 	        end: 'prevYear,prev,today,next,nextYear'
-      	},
-      	buttonIcons:{
-			  custom1:"bi bi-filter"
-	  	},
-		customButtons:{
-	        custom1: {
-	          	text: '필터',
-	          	click: filterOpen
-	        }
       	}
     });
     calendar.render();
@@ -120,9 +112,10 @@ function detailRecord(info){
 	
 	$("#exampleModal .modal-body").html(`
 		<p>카테고리: ${info.event.extendedProps.category}</p>
-		<p>워크북 제목: ${info.event.title}</p>
+		<p>워크북 제목: ${info.event.extendedProps.workbook}</p>
 		<p>시기: ${dd}</p>`)
 	$("#exampleModal .modal-footer").html(`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+			<a href="testing/${info.event.extendedProps.workbookId}" class="btn btn-primary">복습</a>
 			<button type="button" class="btn btn-danger" onclick="deleteRecord(${info.event.id})">삭제</button>`)
 	
 	myModal.show();
@@ -147,9 +140,6 @@ function deleteRecord(id){
 		}
 	})
 }
-function filterOpen(){
-	filterModal.show();
-}
 
 function filterRecord(){
 	filteringWorkbook=$("input[name=filterWorkbook]").filter((index,element)=>{
@@ -162,9 +152,9 @@ function filterRecord(){
 	
 	eventList=calendar.getEvents();
 	eventList.map(item=>{item.remove()});
-	calendar.addEventSource(eventList.filter(item=>{
-		return $.inArray(item.extendedProps.workbook,filteringWorkbook) >= 0 || 
-			$.inArray(item.extendedProps.category,filteringCategory) >= 0;
+	
+	calendar.addEventSource(getItems().filter(item=>{
+		return ($.inArray(item.workbookId,filteringWorkbook) >= 0 || $.inArray(item.categoryId,filteringCategory) >= 0);
 	}));
 }
 </script>
@@ -172,6 +162,20 @@ function filterRecord(){
 <script th:inline="javascript">
 /*<![CDATA[*/
 const items=[[${items}]];
+function getItems(){
+	return items.map(item=>{
+		return {
+			id:item.id,
+			workbookId: item.workbook,
+			workbook: item.title,
+			title: item.title,
+			start: item.createAt,
+			categoryId:item.categoryId,
+			category:item.category,
+			allDay:true
+		}
+	})
+}
 /*]]>*/
 </script>
 </div>
