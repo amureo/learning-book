@@ -117,25 +117,23 @@
  	 </div>
 	
 	<!-- List View -->      
-	<div class="showList" th:if="${view eq 'list'}">
-		<div class="list-group w-auto">
-			<div class="list-group-item gap-3 py-3 w-100 justify-content-between" id="new_workbook">
-				<button onclick="crateWorkbook()" class="btn mb-0 text-center">
-					<i class="bi bi-plus-square-dotted"></i> 워크북 추가하기
-				</button>
-			</div>
-	
-			<a href="/workbook/" th:attrappend="href=${workbook.id}"
-				class="list-group-item list-group-item-action d-flex gap-3 py-3 selected_target text-decoration-none link-dark"
-				aria-current="true" th:each="workbook : ${items}" th:data-workbook-id="${workbook.id}">
-				<div class="d-flex gap-2 w-100 justify-content-between">
-					<h6 class="text-truncate text-center" th:text="${workbook.title}">title</h6>
-					<div th:text="${#dates.format(#dates.create(#dates.year(workbook.updateAt),#dates.month(workbook.updateAt),#dates.day(workbook.updateAt),#dates.hour(workbook.updateAt)%12,#dates.minute(workbook.updateAt)), 'yyyy.MM.dd '+((#dates.hour(workbook.updateAt) >= 12)?'오후':'오전')+' HH시 mm분')}"></div>
-				</div>
-			</a>
-			
-      		<div th:if="!${items}">워크북이 없습니다</div>
+	<div class="list-group w-auto" th:if="${view eq 'list'}">
+		<div class="list-group-item gap-3 py-3 w-100 justify-content-between" id="new_workbook">
+			<button onclick="crateWorkbook()" class="btn mb-0 text-center">
+				<i class="bi bi-plus-square-dotted"></i> 워크북 추가하기
+			</button>
 		</div>
+
+		<a href="/workbook/" th:attrappend="href=${workbook.id}"
+			class="list-group-item list-group-item-action d-flex gap-3 py-3 selected_target text-decoration-none link-dark"
+			aria-current="true" th:each="workbook : ${items}" th:data-workbook-id="${workbook.id}">
+			<div class="d-flex gap-2 w-100 justify-content-between">
+				<h5 class="text-truncate text-center" th:text="${workbook.title}">title</h5>
+				<div th:text="${#dates.format(#dates.create(#dates.year(workbook.updateAt),#dates.month(workbook.updateAt),#dates.day(workbook.updateAt),#dates.hour(workbook.updateAt)%12,#dates.minute(workbook.updateAt)), 'yyyy.MM.dd '+((#dates.hour(workbook.updateAt) >= 12)?'오후':'오전')+' HH시 mm분')}"></div>
+			</div>
+		</a>
+		
+  		<div th:if="!${items}">워크북이 없습니다</div>
 	</div>
 </div>
 
@@ -245,11 +243,11 @@ function selectWorkbookModeOff(event){
 	$("#workbook_header").removeClass('hide');
 	$("a.selected_target").removeClass("text-bg-primary link-light").addClass("link-dark");
 	
-	// 워크북 추가 비활성화
+	// 워크북 추가 활성화
 	$("#new_workbook").removeClass("hide");
 	$("#new_workbook + a").css({"border-top-left-radius": "0","border-top-right-radius":"0","border-top-width": 0});
 	
-	// 툴바 비활성화
+	// 툴바 활성화
 	$("#toolbar").removeClass("hide");
 	
 	// 문제 클릭 시 이벤트 처리 삭제

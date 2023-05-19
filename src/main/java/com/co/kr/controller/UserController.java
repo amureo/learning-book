@@ -301,6 +301,7 @@ public class UserController {
 		
 		mav.addObject("sort", map.get("sort"));
 		mav.addObject("sortStd", map.get("sortStd"));
+		mav.addObject("view", sort.getView().toString());
 		
 		// this workbook's all problem
 		List<ProblemDomain> items = workbookService.selectAllProblemSort(map);
