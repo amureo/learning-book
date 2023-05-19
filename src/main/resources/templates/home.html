@@ -56,21 +56,21 @@
 	<h3>카테고리들 <a th:href="@{/category}" class="text-muted fs-6 link-dark">더보기</a></h3>
 	<hr>
 	<div class="overflow-auto text-nowrap">
-		<div class="card h-100 w-25 p-5 mx-2 my-4 fs-5 d-inline-block text-center" th:each="category : ${categoryList}">
-			<a th:href="@{/category}" th:text="${category.title}" class="link-dark text-decoration-none"></a>
-		</div>
+		<a class="card h-100 w-25 p-5 mx-2 my-4 fs-5 d-inline-block text-center link-dark text-decoration-none"
+			th:each="category : ${categoryList}" th:href="@{/category}" th:text="${category.title}">
+		</a>
 	</div>
 	<h3>문제집들 <a th:href="@{/workbook}" class="text-muted fs-6 link-dark">더보기</a></h3>
 	<hr>
 	<div class="overflow-auto text-nowrap">
-		<div class="card h-100 w-25 px-2 py-5 mx-2 my-4 fs-5 d-inline-block text-center" th:each="workbook : ${workbookList}" >
-			<a th:href="@{/workbook/{id}(id=${workbook.id})}" th:text="${workbook.title}" class="link-dark text-decoration-none"></a>
-		</div>
+		<a class="card h-100 w-25 p-5 mx-2 my-4 fs-5 d-inline-block text-center link-dark text-decoration-none"
+			th:each="workbook : ${workbookList}" th:href="@{/workbook/{id}(id=${workbook.id})}" th:text="${workbook.title}">
+		</a>
 	</div>
 	<h3>최근 기록 <a th:href="@{/record}" class="text-muted fs-6 link-dark">더보기</a></h3>
 	<hr>
 	<div class="overflow-auto text-nowrap">
-		<div class="card h-100 w-25 px-2 py-3 mx-2 my-4 fs-5 d-inline-block text-center" th:each="record : ${recordList}">
+		<div class="card h-100 w-25 px-2 py-3 mx-2 my-4 fs-5 d-inline-block text-center overflow-hidden" th:each="record : ${recordList}">
 			<p>
 				<a th:href="@{/workbook/{id}(id=${record.workbook})}" th:text="${record.title}" class="link-dark text-decoration-none"></a>
 			</p>
