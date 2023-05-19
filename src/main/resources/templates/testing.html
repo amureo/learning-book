@@ -19,8 +19,9 @@
 <div th:if=${session.id} layout:fragment="content">
 	<!-- content -->
 	<div class="overflow-auto text-nowrap">
-		<a class="card h-100 w-25 p-5 mx-2 my-4 fs-5 d-inline-block text-center"
-		th:href="@{/testing/{workbookId}(workbookId=${workbook.id})}" th:each="workbook : ${workbookList}" th:text="${workbook.title}"></a>
+		<a class="card h-100 w-25 p-5 mx-2 my-4 fs-5 d-inline-block text-center link-dark text-decoration-none"
+			th:each="workbook : ${workbookList}" th:href="@{/workbook/{id}(id=${workbook.id})}" th:text="${workbook.title}">
+		</a>
 	</div>
 </div>
 <div th:if=${session.id} layout:fragment="etc">
