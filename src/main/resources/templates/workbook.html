@@ -41,11 +41,11 @@
 </div>
 
 
-<div th:if=${session.id} layout:fragment="toolbar">
+<div th:if=${session.id} layout:fragment="toolbar" id="toolbar">
 	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-1 border-bottom">
 		<div class="justify-content-between"></div>
 		<div class="justify-content-center btn-group">
-			<a th:href="@{/workbook(sort=${sortStd eq 'ranking'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=ranking)}"
+			<a th:href="@{/workbook(sort=${sortStd eq 'ranking'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=ranking,view=${view eq 'list'}?'list':'card')}"
 				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'ranking'} ? active : ''">
 				기본
 				<span th:if="${sortStd eq 'ranking'}">
@@ -53,7 +53,7 @@
 					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
 				</span>
 			</a>
-			<a th:href="@{/workbook(sort=${sortStd eq 'title'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=title)}"
+			<a th:href="@{/workbook(sort=${sortStd eq 'title'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=title,view=${view eq 'list'}?'list':'card')}"
 				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'title'} ? active : ''">
 				이름
 				<span th:if="${sortStd eq 'title'}">
@@ -61,7 +61,7 @@
 					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
 				</span>
 			</a>
-			<a th:href="@{/workbook(sort=${sortStd eq 'createAt'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=createAt)}"
+			<a th:href="@{/workbook(sort=${sortStd eq 'createAt'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=createAt,view=${view eq 'list'}?'list':'card')}"
 				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'createAt'} ? active : ''">
 				생성
 				<span th:if="${sortStd eq 'createAt'}">
@@ -69,7 +69,7 @@
 					<span th:if="${sort eq 'DESC'}"><i class="bi bi-sort-alpha-down-alt"></i></span>
 				</span>
 			</a>
-			<a th:href="@{/workbook(sort=${sortStd eq 'updateAt'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=updateAt)}"
+			<a th:href="@{/workbook(sort=${sortStd eq 'updateAt'}? (${sort eq 'ASC'}? DESC:ASC):ASC,sortStd=updateAt,view=${view eq 'list'}?'list':'card')}"
 				class="btn btn-outline-secondary" th:classappend ="${sortStd eq 'updateAt'} ? active : ''">
 				수정
 				<span th:if="${sortStd eq 'updateAt'}">
@@ -79,9 +79,10 @@
 			</a>
 		</div>
 		<div class="justify-content-between float-md-end">
-			<button id="showList" class="btn btn-outline-secondary" data-bs-toggle="button">
+			<a class="btn btn-outline-secondary " th:attrappend="class=${view eq 'list'}?'active':''"
+				th:href="@{/workbook(sort=${sort},sortStd=${sortStd},view=${view eq 'list'}?'card':'list')}">
 				<i class="bi bi-list-ul"></i>
-			</button>
+			</a>
 		</div>
 	</div>
 </div>	
@@ -90,45 +91,50 @@
 	<!-- content -->
 	
 	<!-- Card View -->
-	<div class="showCard">
-		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-			<div class="col">
-		        <div class="card shadow-sm h-100">
-					<button onclick="crateWorkbook()" class="btn btn h-100 w-100">
-						<i class="bi bi-plus-square-dotted"></i> 워크북 추가하기
-					</button>
-	          	</div>
-			</div>
-	      	<div th:if="!${items}">워크북이 없습니다</div>
-			
-			<div class="col" th:each="workbook : ${items}">
-				<a href="/workbook/" th:attrappend="href=${workbook.id}" class="card shadow-sm text-decoration-none link-dark h-100" th:data-workbook-id="${workbook.id}">
-					<div class="card-body w-auto py-5">
-						<h5 class="card-title text-truncate text-center" th:text="${workbook.title}">title</h5>
-					</div>
-					<div class="card-footer text-muted">
-						<div th:text="${#dates.format(#dates.create(#dates.year(workbook.updateAt),#dates.month(workbook.updateAt),#dates.day(workbook.updateAt),#dates.hour(workbook.updateAt)%12,#dates.minute(workbook.updateAt)), 'yyyy.MM.dd '+((#dates.hour(workbook.updateAt) >= 12)?'오후':'오전')+' HH시 mm분')}"></div>
-					</div>
-			  	</a>
-			</div>
-	 	 </div>
-	</div>
+	<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" th:if="${view eq 'card'}">
+		<div class="col" id="new_workbook">
+	        <div class="card shadow-sm h-100">
+				<button onclick="crateWorkbook()" class="btn btn h-100 w-100">
+					<i class="bi bi-plus-square-dotted"></i> 워크북 추가하기
+				</button>
+          	</div>
+		</div>
+		
+		<div class="col" th:each="workbook : ${items}">
+			<a href="/workbook/" th:attrappend="href=${workbook.id}"
+				class="card shadow-sm text-decoration-none link-dark h-100 selected_target"
+				th:data-workbook-id="${workbook.id}">
+				<div class="card-body w-auto py-5">
+					<h5 class="card-title text-truncate text-center" th:text="${workbook.title}">title</h5>
+				</div>
+				<div class="card-footer">
+					<div th:text="${#dates.format(#dates.create(#dates.year(workbook.updateAt),#dates.month(workbook.updateAt),#dates.day(workbook.updateAt),#dates.hour(workbook.updateAt)%12,#dates.minute(workbook.updateAt)), 'yyyy.MM.dd '+((#dates.hour(workbook.updateAt) >= 12)?'오후':'오전')+' HH시 mm분')}"></div>
+				</div>
+		  	</a>
+		</div>
+		
+      	<div th:if="!${items}">워크북이 없습니다</div>
+ 	 </div>
+	
 	<!-- List View -->      
-	<div class="showList">
+	<div class="showList" th:if="${view eq 'list'}">
 		<div class="list-group w-auto">
-			<div class="list-group-item d-flex gap-3 py-3 w-100 justify-content-between">
+			<div class="list-group-item gap-3 py-3 w-100 justify-content-between" id="new_workbook">
 				<button onclick="crateWorkbook()" class="btn mb-0 text-center">
 					<i class="bi bi-plus-square-dotted"></i> 워크북 추가하기
 				</button>
 			</div>
 	
-			<a href="/workbook/" th:attrappend="href=${item.id}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true" th:each="item : ${items}">
+			<a href="/workbook/" th:attrappend="href=${workbook.id}"
+				class="list-group-item list-group-item-action d-flex gap-3 py-3 selected_target text-decoration-none link-dark"
+				aria-current="true" th:each="workbook : ${items}" th:data-workbook-id="${workbook.id}">
 				<div class="d-flex gap-2 w-100 justify-content-between">
-	  				<div>
-	   					<h6 class="mb-0" th:text="${item.title}"></h6>
-	  				</div>
+					<h6 class="text-truncate text-center" th:text="${workbook.title}">title</h6>
+					<div th:text="${#dates.format(#dates.create(#dates.year(workbook.updateAt),#dates.month(workbook.updateAt),#dates.day(workbook.updateAt),#dates.hour(workbook.updateAt)%12,#dates.minute(workbook.updateAt)), 'yyyy.MM.dd '+((#dates.hour(workbook.updateAt) >= 12)?'오후':'오전')+' HH시 mm분')}"></div>
 				</div>
 			</a>
+			
+      		<div th:if="!${items}">워크북이 없습니다</div>
 		</div>
 	</div>
 </div>
@@ -169,13 +175,6 @@
 let myModal;
 $(document).ready(function(){
 	myModal=new bootstrap.Modal('#createWorkbookModal')
-	
-	$(".showList").addClass("hide");
-	$("#showList").on("click",function(){
-		$(".showList").toggleClass("hide");
-		$(".showCard").toggleClass("hide");
-		$("#showList").toggleClass("active");
-	});
 })
 
 function crateWorkbook(){
@@ -207,7 +206,7 @@ function createOkWorkbook(){
 		contentType : 'application/json; charset=utf-8',
         data : JSON.stringify(param),
 		success:function(response){
-			location.href="/workbook";
+			location.href=location.href;
 		},
 		error:function(request, status, error){
 			console.log(error);
@@ -227,8 +226,15 @@ function selectWorkbookModeOn(event){
 	$("#select_workbook_header").removeClass('hide');
 	$("#workbook_header").addClass('hide');
 	
+	// 워크북 추가 비활성화
+	$("#new_workbook").addClass("hide");
+	$("#new_workbook + a").css({"border-top-left-radius": "inherit","border-top-right-radius":"inherit","border-top-width": 1});
+	
+	// 툴바 비활성화
+	$("#toolbar").addClass("hide");
+	
 	// 문제 클릭 시 이벤트 처리
-	$(document).on("click","a.card",selectWorkbook);
+	$(document).on("click","a.selected_target",selectWorkbook);
 }
 
 function selectWorkbookModeOff(event){
@@ -237,10 +243,17 @@ function selectWorkbookModeOff(event){
 	$("#workbook_menu").removeClass("hide");
 	$("#select_workbook_header").addClass('hide');
 	$("#workbook_header").removeClass('hide');
-	$("a.card").removeClass("text-bg-primary link-light").addClass("link-dark");
+	$("a.selected_target").removeClass("text-bg-primary link-light").addClass("link-dark");
+	
+	// 워크북 추가 비활성화
+	$("#new_workbook").removeClass("hide");
+	$("#new_workbook + a").css({"border-top-left-radius": "0","border-top-right-radius":"0","border-top-width": 0});
+	
+	// 툴바 비활성화
+	$("#toolbar").removeClass("hide");
 	
 	// 문제 클릭 시 이벤트 처리 삭제
-	$(document).off("click","a.card");
+	$(document).off("click","a.selected_target");
 	
 	// set 처리
 	selectSet.clear();
@@ -253,25 +266,25 @@ function selectWorkbookModeOff(event){
 function selectAllWorkbook(event){
 	
 	// 전체선택됨
-	if(selectSet.size==$("a.card").length){
+	if(selectSet.size==$("a.selected_target").length){
 		// set에 추가
-		$("a.card").each((index,element)=>{
+		$("a.selected_target").each((index,element)=>{
 			selectSet.delete($(element).data("workbookId"))
 		});
 		// 레이아웃
-		$("a.card").removeClass("text-bg-primary link-light").addClass("link-dark");
+		$("a.selected_target").removeClass("text-bg-primary link-light").addClass("link-dark");
 		
 		// 전체선택 활성화
 		$(".bi-record-circle").addClass("bi-circle").removeClass("bi-record-circle");
 		$("#btn_select_all_workbook").removeClass("active");
 	}else{
 		// set에 추가
-		$("a.card").each((index,element)=>{
+		$("a.selected_target").each((index,element)=>{
 			selectSet.add($(element).data("workbookId"))
 		});
 		
 		// 레이아웃
-		$("a.card").addClass("text-bg-primary link-light").removeClass("link-dark");
+		$("a.selected_target").addClass("text-bg-primary link-light").removeClass("link-dark");
 		// 전체선택 비활성화
 		$(".bi-circle").addClass("bi-record-circle").removeClass("bi-circle");
 		$("#btn_select_all_workbook").addClass("active");
@@ -294,7 +307,7 @@ function selectWorkbook(event){
 	$("#select_workbook_count").text(selectSet.size);
 	
 	// 전체선택 비활성화
-	if(selectSet.size==$("a.card").length){
+	if(selectSet.size==$("a.selected_target").length){
 		$(".bi-circle").addClass("bi-record-circle").removeClass("bi-circle");
 		$("#btn_select_all_workbook").addClass("active");
 	}
@@ -306,10 +319,14 @@ function selectWorkbook(event){
 
 
 function deleteWorkbook(event){
+    let total=selectSet.size
+	if(total==0){
+		alert("선택하신 문제가 없습니다.");
+		return 0;
+	}
 	if ( !confirm('선택하신 문제집들을 삭제할까요?') ) {
         return false;
     }
-    let total=selectSet.size
     selectSet.forEach((id)=>{
 		$.ajax({
 			url:"/api/workbook/"+id,
