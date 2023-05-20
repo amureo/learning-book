@@ -402,6 +402,7 @@ public class UserController {
 		ModelAndView mav=new ModelAndView();
 		int count=testingVO.getCount();
 		int total=testingVO.getTotal();
+		String view=testingVO.getView().toString();
 		List<Integer> problemIdList=(testingVO.getProblemIdList()==null)?null:(List)testingVO.getProblemIdList();
 		Map map=CommonUtils.getMember(request);
 		ProblemDomain targetProblem=null;
@@ -460,6 +461,7 @@ public class UserController {
 		mav.addObject("workbook", workbookService.selectOneWorkbook(map));
 		
 		mav.addObject("problemIdList",problemIdList);
+		mav.addObject("view",view);
 		mav.addObject("total",total);
 		mav.addObject("count", count);
 		mav.addObject("problem", targetProblem);

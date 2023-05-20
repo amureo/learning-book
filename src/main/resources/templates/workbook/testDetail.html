@@ -33,17 +33,17 @@
 			</button>
 		</div>
 		<div class="position-absolute end-0">
-			<button id="showOverlap" class="btn btn-outline-secondary">
+			<button id="showOverlap" class="btn btn-outline-secondary" th:attrappend="class=${view eq 'OVERLAP'}?' active':''")>
 				<del>
 					<i class="bi bi-layers"></i></i>
 				</del>
 			</button>
-			<button id="showVertical" class="btn btn-outline-secondary active">
+			<button id="showVertical" class="btn btn-outline-secondary" th:attrappend="class=${view eq 'VERTICAL'}?' active':''")>
 				<del>
 					<i class="bi bi-view-stacked"></i>
 				</del>
 			</button>
-			<button id="showHorizontal" class="btn btn-outline-secondary">
+			<button id="showHorizontal" class="btn btn-outline-secondary" th:attrappend="class=${view eq 'HORIZONTAL'}?' active':''")>
 				<del>
 					<i class="bi bi-vr"></i>
 				</del>
@@ -66,6 +66,7 @@
 				<input type="hidden" name="total" th:value="${total}">
 				<input type="hidden" th:name="|problemIdList[${listStat.index}]|" th:value="${list}" th:each="list : ${problemIdList}">
 				<input type="hidden" name="count" th:value="${count}">
+				<input type="hidden" name="view" th:value="${view}">
 				<input type="hidden" name="isRand" value="false">
 				<input type="submit" value="시작하기" class="btn btn-primary btn-lg">
 			</form>
@@ -85,6 +86,7 @@
 				<input type="hidden" th:name="|problemIdList[${listStat.index}]|" th:value="${list}" th:each="list : ${problemIdList}">
 				<input type="hidden" name="problemId" th:if="${problem}" th:value="${problem.id}">
 				<input type="hidden" name="count" th:value="${count}" >
+				<input type="hidden" name="view" th:value="${view}" id="test_view" >
 				<input type="hidden" name="isRand" th:value="${isRand}" id="isRand">
 				
 				<input type="button" value="오답" class="btn btn-outline-danger" onclick="submitWrong()">
@@ -97,7 +99,7 @@
 		
 		<!-- 문제 표시 -->
 		<div th:if="${total}>0" class="mx-auto w-75 text-center" onclick="displayAnswer()">
-			<div class="showVertical">
+			<div class="showVertical" th:attrappend="class=${view eq 'VERTICAL'}?'':' hide'">
 				<div class="card shadow-sm mb-4 px-5 pt-4 pb-5">
 					<h5 class="card-title text-start text-muted">Question</h5>
 					<h5 class="card-text" th:text="${problem.question}">question</h5>
@@ -107,7 +109,7 @@
 					<h5 class="card-text" th:text="${problem.answer}">answer</h5>
 				</div>
 			</div>
-			<div class="showHorizontal hide">
+			<div class="showHorizontal" th:attrappend="class=${view eq 'HORIZONTAL'}?'':' hide'">
 				<div class="row">
   					<div class="col-sm-6">
 						<div class="card shadow-sm mb-4 px-5 pt-4 pb-5">
@@ -123,7 +125,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="showOverlap hide">
+			<div class="showOverlap" th:attrappend="class=${view eq 'OVERLAP'}?'':' hide'">
 				<div class="card shadow-sm mb-4 px-5 pt-4 pb-5 question">
 					<h5 class="card-title text-start text-muted">Question</h5>
 					<h5 class="card-text" th:text="${problem.question}">question</h5>
@@ -159,14 +161,17 @@ $(document).ready(function(){
 	$("#showOverlap").on("click",function(){
 		$("#showOverlap").addClass("active").siblings().removeClass("active");
 		$(".showOverlap").removeClass("hide").siblings().addClass("hide");
+		$("#test_view").val("OVERLAP");
 	})
 	$("#showVertical").on("click",function(){
 		$("#showVertical").addClass("active").siblings().removeClass("active");
 		$(".showVertical").removeClass("hide").siblings().addClass("hide");
+		$("#test_view").val("VERTICAL");
 	})
 	$("#showHorizontal").on("click",function(){
 		$("#showHorizontal").addClass("active").siblings().removeClass("active");
 		$(".showHorizontal").removeClass("hide").siblings().addClass("hide");
+		$("#test_view").val("HORIZONTAL");
 	})
 })
 	
@@ -186,10 +191,8 @@ function submitRight(){
 function displayAnswer(){
 	if($("#showOverlap").hasClass("active")){
 		$(".question").toggleClass("hide");
-		$(".answer").toggleClass("hide");
-	}else{
-		$(".answer").removeClass("hide");
 	}
+	$(".answer").toggleClass("hide");
 }
 
 </script>
