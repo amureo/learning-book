@@ -190,7 +190,13 @@ function submitRight(){
 }
 function displayAnswer(){
 	if($("#showOverlap").hasClass("active")){
-		$(".question").toggleClass("hide");
+		if($(".answer").hasClass("hide")){
+			$(".question").addClass("hide");
+			$(".answer").removeClass("hide");
+		}else{
+			$(".question").removeClass("hide");
+			$(".answer").addClass("hide");
+		}
 	}
 	$(".answer").toggleClass("hide");
 }

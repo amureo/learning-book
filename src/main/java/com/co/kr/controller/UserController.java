@@ -313,7 +313,7 @@ public class UserController {
 		CategoryDomain category = workbookService.selectOneCategory(map);
 		mav.addObject("category", category);
 		
-		mav.setViewName("workBook/wbDetail.html"); 
+		mav.setViewName("workbook/wbDetail.html"); 
 		return mav;
 	}
 	
@@ -351,7 +351,7 @@ public class UserController {
 		int total=workbookService.getTotalProblemByWorkbookId(map);
 		mav.addObject("totalProblem", total);
 		
-		mav.setViewName("workBook/pDetail.html"); 
+		mav.setViewName("workbook/pDetail.html"); 
 		return mav;
 	}
 
@@ -543,7 +543,6 @@ public class UserController {
 		mav.addObject("resultList",resultList);
 		mav.addObject("search_query",search_query);
 		mav.setViewName("searchResult.html"); 
-		
 		
 		return mav;
 	}
