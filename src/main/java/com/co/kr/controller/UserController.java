@@ -102,18 +102,16 @@ public class UserController {
 		map.put("mbId", loginVO.getId());
 		map.put("mbPw", loginVO.getPw());
 		
-		
 		// 중복체크
 		int dupleCheck = userService.mbDuplicationCheck(map);
 		System.out.println(dupleCheck);
 
 		if(dupleCheck > 0) { // 가입되있으면  
 			String alertText = "중복이거나 유효하지 않은 접근입니다";
-			String redirectPath = "/singin";
+			String redirectPath = "/signin";
 			System.out.println(loginVO.getAdmin());
 			CommonUtils.redirect(alertText, redirectPath, response);
 		}else {
-			
 			//현재아이피 추출
 			String IP = CommonUtils.getClientIP(request);
 			
