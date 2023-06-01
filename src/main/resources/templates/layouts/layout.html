@@ -2,35 +2,30 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net/nz/thymeleaf/layout">
 
 <head th:replace="fragments/head :: headFragment">
-   <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">learning book</title>
+   <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">LB</title>
 </head>
 
-<body class="d-flex flex-column">
-	<div class="d-flex" id="wrapper">
+<body class="d-flex">
+    <!-- sidebar wrapper-->
+	<div id="layout-sidebar-wrapper">
         <header th:replace="fragments/header :: headerFragment"></header>
-        
-        <!-- Page content wrapper-->
-        <div id="page-content-wrapper">
-			<div class="album py-5 bg-light">
-				<div class="container d-flex w-100 h-100 p-3 mx-auto flex-column">
-					<div layout:fragment="header"></div>
-					<div layout:fragment="toolbar"></div>
-					<div layout:fragment="content"></div>
-				</div>
-			</div>
-		</div>	
+	</div>
+    
+    <!-- content wrapper-->
+    <div id="layout-content-wrapper" class="py-3 bg-light">
+		<div class="container d-flex w-100 h-100 p-3 mx-auto flex-column">
+			<div layout:fragment="header"></div>
+			<div layout:fragment="toolbar"></div>
+			<div layout:fragment="content"></div>
+		</div>
+	</div>	
 			
-    </div>
-    
-    <!--
-    <footer th:replace="fragments/footer :: footerFragment"></footer>
-    -->
-    
+    <!-- etc(script, modal, ...) -->
 	<div layout:fragment="etc"></div>
         
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-    <script th:src="@{/js/scripts.js}"></script>
+    <!-- Custom JS-->
+    <script th:src="@{/js/script.js}"></script>
 </body>
 </html>

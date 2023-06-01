@@ -1,54 +1,56 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header th:fragment="headerFragment" class="d-flex flex-nowrap">
+<header th:fragment="headerFragment" class="d-flex flex-nowrap h-100">
 <!-- Sidebar-->
-	<div class="d-flex flex-column flex-shrink-0 p-3 bg-light border-end" style="width: 280px;"  id="sidebar-wrapper">
-    	<a th:href="@{/home}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-      		<svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+	<div class="d-flex flex-column flex-shrink-0 p-3 bg-light border-end w-100">
+		<h1 class="text-center border-bottom mb-4 pb-2">
+		<a th:href="@{/home}" class="d-flex align-items-center justify-content-center link-dark text-decoration-none">
+      		<i class="bi bi-book me-2"></i>
       		<span class="fs-4">Learning book</span>
     	</a>
-    	<hr>
+		</h1>
+		
     	<ul class="nav nav-pills flex-column mb-auto sidebar1">
       		<li class="nav-item">
        			<a th:href="@{/home}" class="nav-link link-dark" aria-current="page">
-        	  		<i class="bi bi-house"></i>
+        	  		<i class="bi bi-house me-1"></i>
           			Home
         		</a>
       		</li>
       		<li>
 		        <a th:href="@{/search}" class="nav-link link-dark">
-			    	<i class="bi bi-search"></i>
+			    	<i class="bi bi-search me-1"></i>
 			        Search
 			    </a>
 		    </li>
       		<li>
 		        <a th:href="@{/category}" class="nav-link link-dark">
-			    	<i class="bi bi-tags"></i>
-			        category
+			    	<i class="bi bi-tags me-1"></i>
+			        Category
 			    </a>
 		    </li>
       		<li>
 		        <a th:href="@{/workbook}" class="nav-link link-dark">
-			    	<i class="bi bi-journals"></i>
-			        workbook
+			    	<i class="bi bi-journals me-1"></i>
+			        Workbook
 			    </a>
 		    </li>
       		<li>
 		        <a th:href="@{/testing}" class="nav-link link-dark">
-			    	<i class="bi bi-journal-check"></i>
-			        testing
+			    	<i class="bi bi-journal-check me-1"></i>
+			        Testing
 			    </a>
 		    </li>
       		<li>
 		        <a th:href="@{/record}" class="nav-link link-dark">
-			    	<i class="bi bi-calendar"></i>
-			        record
+			    	<i class="bi bi-calendar me-1"></i>
+			        Record
 			    </a>
 		    </li>
       		<li>
 		        <a th:href="@{/info}" class="nav-link link-dark">
-			    	<i class="bi bi-info-circle"></i>
-			        info
+			    	<i class="bi bi-info-circle me-1"></i>
+			        My Information
 			    </a>
 		    </li>
       		<li>
@@ -62,7 +64,7 @@
 		        <span>Logout</span>
 		    </a>
 	      
-	    </div>
+	    </div>		
 	</div>
 </header>
 </html>

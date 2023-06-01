@@ -1,0 +1,29 @@
+body{
+	overflow-x:hidden;
+}
+
+
+#layout-content-wrapper{
+	min-width:100vw;
+}
+
+#layout-sidebar-wrapper {
+	width:20rem;
+	min-height: 100vh;
+	margin-left: -20rem;
+	transition: margin 0.25s ease-out;
+}
+
+@media (min-width: 768px) {
+	#layout-content-wrapper {
+    	min-width: 0;
+    	width: 100%;
+  	}
+  	#layout-sidebar-wrapper {
+    	margin-left: 0;
+  	}
+}
+
+
+
+
